@@ -59,7 +59,7 @@ def reset_time_index(arr: sparse.COO, time_id: np.ndarray, ts_level=True, ts_idx
     )
     new_time_idx = sparse.COO(
         coords=new_coords,
-        data=time_id.astype(np.float_)[arr.coords[time_idx]] * index_scale,
+        data=time_id.astype(np.float64)[arr.coords[time_idx]] * index_scale,
         fill_value=arr.fill_value,
     )
     if ts_level:
