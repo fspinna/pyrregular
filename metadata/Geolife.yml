@@ -1,0 +1,12 @@
+title: "Geolife"
+author:
+ - Yu Zheng
+ - Hao Fu
+ - Xing Xie
+ - Wei-Ying Ma
+ - Quannan Li
+source: https://www.microsoft.com/en-us/research/publication/geolife-gps-trajectory-dataset-user-guide/
+license: "CC0: Public Domain"
+configs:
+  default:
+    task: other

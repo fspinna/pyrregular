@@ -1,0 +1,14 @@
+title: "Localization Data for Person Activity"
+author:
+    - Jing Yuan
+    - Yu Zheng
+    - Xing Xie
+    - Guangzhong Sun
+    - Chengyang Zhang
+    - Wenlei Xie
+    - Yan Huang
+source: https://www.kaggle.com/datasets/arashnic/tdriver
+license: to cite
+configs:
+  default:
+    task: other # classification, regression

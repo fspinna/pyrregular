@@ -1,0 +1,28 @@
+title: "GPS Data of Seabirds"
+author:
+ - Browning, Ella
+ - Bolton, Mark
+ - Owen, Ellie
+ - Shoji, Akiko
+ - Guilford, Tim
+ - Freeman, Robin
+source: https://www.kaggle.com/datasets/saurabhshahane/predicting-animal-behavior-using-gps
+license: "https://doi.org/10.5061/dryad.t7ck5"
+configs:
+  default:
+    task: classification
+    split: split_default
+    target: species
+  regression:
+    task: regression
+    split: split_default
+    target: avg_speed
+#  infer_colony:
+#    task: classification # classification, regression
+#    split: split_colony
+#    target: colony2
+#  inder_bird_id:
+#    task: classification # classification, regression
+#    split: split_bird
+#    target: bird
+

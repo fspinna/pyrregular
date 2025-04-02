@@ -1,0 +1,18 @@
+title: "Localization Data for Person Activity"
+author:
+    - Vedrana Vidulin
+    - Mitja Lustrek
+    - Bostjan Kaluza
+    - Rok Piltaver
+    - Jana Krivec
+source: https://archive.ics.uci.edu/dataset/196/localization+data+for+person+activity
+license: CC BY 4.0
+configs:
+  default:
+    task: classification
+    split: split_default
+    target: Activity
+  regression:
+    task: regression
+    split: split_default
+    target: avg_speed

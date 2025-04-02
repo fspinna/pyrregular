@@ -1,0 +1,14 @@
+title: "Productivity Prediction of Garment Employees"
+author:
+    - NA
+source: https://archive.ics.uci.edu/dataset/597/productivity+prediction+of+garment+employees
+license: CC BY 4.0
+configs:
+  default:
+    task: classification # classification, regression
+    split: split
+    target: productivity_binary
+  regression:
+    task: regression
+    split: split
+    target: productivity_numerical

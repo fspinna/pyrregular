@@ -1,0 +1,10 @@
+title: "PAMAP2 Physical Activity Monitoring"
+author:
+ - NA
+source: https://archive.ics.uci.edu/dataset/231/pamap2+physical+activity+monitoring
+license: "CC BY 4.0"
+configs:
+  default:
+    task: classification # classification, regression
+    split: split_default
+    target: class_default

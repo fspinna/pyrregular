@@ -1,0 +1,17 @@
+title: "PhysioNet 2012"
+author:
+    - Ikaro Silva
+    - George Moody
+    - Roger Mark
+    - Leo Anthony Celi
+source: https://physionet.org/content/challenge-2012/1.0.0/
+license: ODC-By
+configs:
+  default:
+    task: classification
+    split: split_default
+    target: In-hospital_death
+  regression:
+    task: regression
+    split: split_default
+    target: SAPS-I

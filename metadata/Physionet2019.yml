@@ -1,0 +1,22 @@
+title: "PhysioNet 2019"
+author:
+    - Matthew Reyna
+    - Chris Josef
+    - Russell Jeter
+    - Supreeth Shashikumar
+    - Benjamin Moody
+    - M. Brandon Westover
+    - Ashish Sharma
+    - Shamim Nemati
+    - Gari D. Clifford 
+source: https://physionet.org/content/challenge-2019/1.0.0/
+license: CC BY 4.0
+configs:
+  default:
+    task: classification
+    split: split_default
+    target: class_default
+  regression:
+    task: regression
+    split: split_default
+    target: Age

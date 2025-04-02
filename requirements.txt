@@ -1,0 +1,8 @@
+awkward
+numpy
+pandas
+xarray
+sparse
+h5py
+pyarrow
+pooch

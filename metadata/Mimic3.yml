@@ -1,0 +1,16 @@
+title: "MIMIC-III Clinical Database Demo"
+author:
+    - Alistair Johnson
+    - Tom Pollard
+    - Roger Mark
+source: https://physionet.org/content/mimiciii-demo/1.4/
+license: ODbL v1.0
+configs:
+  default:
+    task: classification
+    split: split
+    target: y_true
+  regression:
+    task: regression
+    split: split
+    target: Age_fix

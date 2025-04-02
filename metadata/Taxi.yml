@@ -1,0 +1,14 @@
+title: "Taxi"
+author:
+ - "ECML/PKDD 15: Taxi Trip Time Prediction (II) Competition"
+source: https://www.kaggle.com/datasets/crailtap/taxi-trajectory
+license: NA
+configs:
+  default:
+    task: classification
+    split: split_default
+    target: class_default
+  regression:
+    task: regression
+    split: split_default
+    target: avg_speed

@@ -1,0 +1,14 @@
+title: "Combined Trajectories"
+author:
+ - NA
+source: https://www.kaggle.com/datasets/donotmess/combined-trajectories
+license: CC BY-NC-SA 4.0
+configs:
+  default:
+    task: classification
+    split: split_default
+    target: class_default
+  regression:
+    task: regression
+    split: split_default
+    target: avg_speed

@@ -1,0 +1,10 @@
+title: "Vehicles"
+author:
+ - NA
+source: https://dl.acm.org/doi/pdf/10.1145/3167132.3167225
+license: NA
+configs:
+  default:
+    task: classification
+    split: split_default
+    target: class_default
