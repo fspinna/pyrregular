@@ -2,7 +2,7 @@ awkward
 numpy
 pandas
 xarray
-sparse
+sparse<=0.15.4
 h5py
 pyarrow
 pooch
