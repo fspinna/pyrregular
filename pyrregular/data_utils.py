@@ -3,8 +3,8 @@ import numpy as np
 import pathlib
 
 HUGGINGFACE_REPO_NAME = "pyrregular"
-DATA_ORIGINAL_FOLDER = "data" + "/" + HUGGINGFACE_REPO_NAME + "/" + "data_raw"
-DATA_INTERMEDIATE_FOLDER = "data" + "/" + HUGGINGFACE_REPO_NAME + "/" + "data_mid"
+DATA_ORIGINAL_FOLDER = "data" + "/" + HUGGINGFACE_REPO_NAME + "/" + "data_original"
+DATA_INTERMEDIATE_FOLDER = "data" + "/" + HUGGINGFACE_REPO_NAME + "/" + "data_intermediate"
 DATA_FINAL_FOLDER = "data" + "/" + HUGGINGFACE_REPO_NAME + "/" + "data_final"
 METADATA_FOLDER = "metadata"
 
