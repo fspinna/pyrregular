@@ -6,3 +6,4 @@ sparse<=0.15.4
 h5py
 pyarrow
 pooch
+tqdm
