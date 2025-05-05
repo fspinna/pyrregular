@@ -1,6 +1,6 @@
 import pytest
 
-from pyrregular.tests.utils import TEST_CASES_FAST, IDS_FAST
+from tests.utils import TEST_CASES_FAST, IDS_FAST
 
 
 # @pytest.mark.parametrize(

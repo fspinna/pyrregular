@@ -1,5 +1,5 @@
 import pytest
-from pyrregular.tests.utils import TEST_CASES
+from tests.utils import TEST_CASES
 import sparse
 import numpy as np
 
