@@ -5,7 +5,6 @@ import sparse
 import awkward as ak
 
 
-
 @xr.register_dataarray_accessor("irr")
 class IrregularAccessor:
     def __init__(self, da):
@@ -47,7 +46,7 @@ class IrregularAccessor:
             index_scale=index_scale,
             absolute_time=absolute_time,
             concatenate_time=concatenate_time,
-            normalize_time=normalize_time
+            normalize_time=normalize_time,
         )
 
     def to_dense(
@@ -65,7 +64,7 @@ class IrregularAccessor:
                 index_scale=index_scale,
                 absolute_time=absolute_time,
                 concatenate_time=concatenate_time,
-                normalize_time=normalize_time
+                normalize_time=normalize_time,
             )
         else:
             X = self._da.data
@@ -167,7 +166,9 @@ class IrregularAccessor:
         )
         return X.to_list(), T.to_list()
 
-    def to_long(self, reset_time_index=True, ts_level=True, index_scale=1e-9, absolute_time=True):
+    def to_long(
+        self, reset_time_index=True, ts_level=True, index_scale=1e-9, absolute_time=True
+    ):
         if reset_time_index:
             X, _ = self.reset_time_index(
                 ts_level=ts_level,
@@ -177,8 +178,12 @@ class IrregularAccessor:
             )
             return np.concatenate([X.coords, X.data[np.newaxis, :]], axis=0).T
         else:
-            T = self._da["time_id"].data.astype(np.float64)[self._da.data.coords[self.dims["time_id"]]] * index_scale
+            T = (
+                self._da["time_id"].data.astype(np.float64)[
+                    self._da.data.coords[self.dims["time_id"]]
+                ]
+                * index_scale
+            )
             if not absolute_time:
                 T = T - T[0]
             return np.concatenate([self._da.data.coords, T[np.newaxis, :]], axis=0).T
-

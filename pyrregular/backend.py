@@ -1,7 +1,9 @@
 from xarray.backends import BackendEntrypoint
 from pyrregular.io_utils import load_from_file
 from xarray.core.indexing import NdArrayLikeIndexingAdapter
-from pyrregular.accessor import IrregularAccessor  # this is needed to register the accessor
+from pyrregular.accessor import (
+    IrregularAccessor,
+)  # this is needed to register the accessor
 
 
 class IrregularEntrypoint(BackendEntrypoint):
@@ -15,4 +17,3 @@ class IrregularEntrypoint(BackendEntrypoint):
         da.data = NdArrayLikeIndexingAdapter(da.data)
         da.name = "data"
         return da.to_dataset()
-

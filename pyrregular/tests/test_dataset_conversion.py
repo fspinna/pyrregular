@@ -31,7 +31,5 @@ def test_quick_read_csv_for_exceptions(read_function):
         )
 
 
-
-
 if __name__ == "__main__":
     pytest.main()

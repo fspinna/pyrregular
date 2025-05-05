@@ -29,9 +29,7 @@ class Animals(ReaderInterface):
             "train" if i in ts_id_train else "test" for i in data["ts_id"].values
         ]
         data = data.assign_coords(
-            split_default=(
-                "ts_id", train_or_test
-            ),
+            split_default=("ts_id", train_or_test),
         )
 
         data = data.assign_coords(

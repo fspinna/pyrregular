@@ -34,7 +34,11 @@ class PyPOTSWrapper(BaseEstimator, ClassifierMixin):
 
     def _split(self, X, y):
         try:
-            X_train, X_val, y_train, y_val = train_test_split(X, y, stratify=y, random_state=self.random_state)
+            X_train, X_val, y_train, y_val = train_test_split(
+                X, y, stratify=y, random_state=self.random_state
+            )
         except ValueError:
-            X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=self.random_state)
+            X_train, X_val, y_train, y_val = train_test_split(
+                X, y, random_state=self.random_state
+            )
         return to_pypots(X_train, y_train), to_pypots(X_val, y_val)

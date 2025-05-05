@@ -29,7 +29,9 @@ class Abf(ReaderInterface):
         split_default = ["train" if i == 1 else "test" for i in data["split"]]
         data = data.assign_coords(split_default=("ts_id", split_default))
         # the following is necessary to make the data compatible with some model benchmarks
-        data = data.assign_coords(time_id=("time_id", (data["time_id"].to_numpy() * 100_000_000).astype(int)))
+        data = data.assign_coords(
+            time_id=("time_id", (data["time_id"].to_numpy() * 100_000_000).astype(int))
+        )
         data = data.rename({"class_default": "class_labels"})
         data = data.rename({"y": "class_default"})
         return data
@@ -121,7 +123,9 @@ def _save_long_icbf(
     df = _generate_long_abf(
         instances_per_class, size, skewness, random_state, noise, noise_level
     )
-    df.to_csv(data_original_folder() / "alembics_bowls_flasks" / "abf_long.csv", index=False)
+    df.to_csv(
+        data_original_folder() / "alembics_bowls_flasks" / "abf_long.csv", index=False
+    )
     return
 
 

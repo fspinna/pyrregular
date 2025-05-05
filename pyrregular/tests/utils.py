@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 def filename_to_classname(filename):
-    return ''.join(word.capitalize() for word in filename.stem.split('_'))
+    return "".join(word.capitalize() for word in filename.stem.split("_"))
 
 
 def load_classes(directory_path):
@@ -15,8 +15,8 @@ def load_classes(directory_path):
     classes = []
     class_names = []
 
-    for file_path in directory.glob('*.py'):
-        if file_path.name == '__init__.py':
+    for file_path in directory.glob("*.py"):
+        if file_path.name == "__init__.py":
             continue  # Skip __init__.py file
         # Convert filename to class name
         class_name = filename_to_classname(file_path)

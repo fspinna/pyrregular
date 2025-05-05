@@ -13,10 +13,7 @@ REPOSITORY.load_registry(get_project_root() / "registry.txt")
 
 
 def download_dataset_from_huggingface(
-        name,
-        use_api_token=False,
-        api_token=None,
-        progressbar=True
+    name, use_api_token=False, api_token=None, progressbar=True
 ):
     if use_api_token:
         if api_token is None:
@@ -39,4 +36,5 @@ def load_dataset_from_huggingface(name, api_token=None):
 
 
 if __name__ == "__main__":
-    df = load_dataset_from_huggingface("Garment.h5")
+    pass
+    # df = load_dataset_from_huggingface("Garment.h5")

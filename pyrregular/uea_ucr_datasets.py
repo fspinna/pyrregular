@@ -41,13 +41,19 @@ multivariate_unequal_length = [
 ]
 
 
-UEA_UCR_DATASETS = univariate_variable_length + univariate_missing_values + multivariate_unequal_length
+UEA_UCR_DATASETS = (
+    univariate_variable_length + univariate_missing_values + multivariate_unequal_length
+)
 
 
 def save_fixed_dataset(dataset_name):
-    X_coo = sparse.load_npz(data_original_folder() / dataset_name / f"{dataset_name}.npz")
+    X_coo = sparse.load_npz(
+        data_original_folder() / dataset_name / f"{dataset_name}.npz"
+    )
     split = np.load(data_original_folder() / dataset_name / f"{dataset_name}_split.npy")
-    target = np.load(data_original_folder() / dataset_name / f"{dataset_name}_target.npy")
+    target = np.load(
+        data_original_folder() / dataset_name / f"{dataset_name}_target.npy"
+    )
     le = LabelEncoder()
     target_num = le.fit_transform(target)
     metadata = dict(
@@ -63,7 +69,7 @@ def save_fixed_dataset(dataset_name):
             )
         ),
         _is_fixed=True,
-        _fixed_at=get_current_aoe_time()
+        _fixed_at=get_current_aoe_time(),
     )
     df = xr.DataArray(
         X_coo,
@@ -72,18 +78,18 @@ def save_fixed_dataset(dataset_name):
             "ts_id": np.arange(X_coo.shape[0]),
             "signal_id": np.arange(X_coo.shape[1]),
             "time_id": np.arange(X_coo.shape[2]),
-        }
+        },
     )
     df = df.assign_coords(
         split_default=("ts_id", split),
         class_default=("ts_id", target_num),
-        label=("ts_id", target)
+        label=("ts_id", target),
     )
     df.attrs = metadata
     save_to_file(
-            data_array=df,
-            filename=data_final_folder() / (dataset_name + ".h5"),
-        )
+        data_array=df,
+        filename=data_final_folder() / (dataset_name + ".h5"),
+    )
 
 
 def save_fixed_datasets():
@@ -93,5 +99,3 @@ def save_fixed_datasets():
 
 if __name__ == "__main__":
     save_fixed_datasets()
-
-

@@ -23,17 +23,19 @@ class Garment(ReaderInterface):
         mapping = {0: "low", 1: "high"}
         productivity_class = [mapping[x] for x in productivity_binary]
         split = [
-            "test"
-            if i
-            in [
-                "finishing_3",
-                "finishing_7",
-                "finishing_11",
-                "sweing_1",
-                "sweing_6",
-                "sweing_12",
-            ]
-            else "train"
+            (
+                "test"
+                if i
+                in [
+                    "finishing_3",
+                    "finishing_7",
+                    "finishing_11",
+                    "sweing_1",
+                    "sweing_6",
+                    "sweing_12",
+                ]
+                else "train"
+            )
             for i in data["ts_id"]
         ]
         data = data.drop_sel(dict(signal_id="actual_productivity"))
@@ -64,10 +66,12 @@ def _dataset_garment(filenames: list):
 
 
 def read_garment(verbose=False):
-    attrs = load_yaml(str(data_original_folder() / "garments_worker_productivity/attrs.yml"))
+    attrs = load_yaml(
+        str(data_original_folder() / "garments_worker_productivity/attrs.yml")
+    )
     return read_csv(
         filenames=data_original_folder()
-                  / "garments_worker_productivity/garments_worker_productivity.csv",
+        / "garments_worker_productivity/garments_worker_productivity.csv",
         ts_id="ts_id",
         time_id="date",
         signal_id="variable",

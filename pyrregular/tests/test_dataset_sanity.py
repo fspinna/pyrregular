@@ -9,8 +9,14 @@ import numpy as np
     TEST_CASES,
 )
 def test_does_not_have_nan_instances(dataset):
-    nan_idxs = np.where(sparse.all(sparse.isnan(dataset.load_final_version().data), axis=(1, 2)).todense())[0]
-    assert len(nan_idxs) == 0, f"Dataset {dataset.__name__} has {len(nan_idxs)} nan instances: {nan_idxs}"
+    nan_idxs = np.where(
+        sparse.all(
+            sparse.isnan(dataset.load_final_version().data), axis=(1, 2)
+        ).todense()
+    )[0]
+    assert (
+        len(nan_idxs) == 0
+    ), f"Dataset {dataset.__name__} has {len(nan_idxs)} nan instances: {nan_idxs}"
 
 
 @pytest.mark.parametrize(
@@ -36,7 +42,9 @@ def test_metadata_task_columns_exist_in_xarray(dataset):
             missing_cols.append((task_name, target))
         if split not in df.coords:
             missing_cols.append((task_name, split))
-    assert len(missing_cols) == 0, f"Dataset {dataset.__name__} is missing the following columns: {missing_cols}"
+    assert (
+        len(missing_cols) == 0
+    ), f"Dataset {dataset.__name__} is missing the following columns: {missing_cols}"
 
 
 @pytest.mark.parametrize(
@@ -54,8 +62,9 @@ def test_classes_are_label_encoded(dataset):
             if not np.all(np.unique(y) == np.arange(len(np.unique(y)))):
                 incorrect_cols.append((task_name, target))
 
-    assert len(incorrect_cols) == 0, f"Dataset {dataset.__name__} has the following columns that are not label encoded: {incorrect_cols}"
-
+    assert (
+        len(incorrect_cols) == 0
+    ), f"Dataset {dataset.__name__} has the following columns that are not label encoded: {incorrect_cols}"
 
 
 @pytest.mark.parametrize(

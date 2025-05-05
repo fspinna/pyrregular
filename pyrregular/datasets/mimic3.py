@@ -155,9 +155,9 @@ STATIC_COLUMNS = [
 GLASCOW_DICT_MOTOR = {
     "Localizes Pain": 5,
     "Obeys Commands": 6,
-    'Flex-withdraws': 4,
+    "Flex-withdraws": 4,
     "Abnormal Flexion": 3,
-    'Abnormal extension': 2,
+    "Abnormal extension": 2,
     "No response": 1,
 }
 GLASCOW_DICT_EYE = {
@@ -168,8 +168,8 @@ GLASCOW_DICT_EYE = {
 GLASCOW_DICT_VERBAL = {
     "Oriented": 5,
     "Confused": 4,
-    'Inappropriate Words': 3,
-    'Incomprehensible sounds': 2,
+    "Inappropriate Words": 3,
+    "Incomprehensible sounds": 2,
     "No Response-ETT": 1,
     "1.0 ET/Trach": 1,
     "No Response": 1,
@@ -180,16 +180,30 @@ def _dataset_mimic3(filenames: dict):
     files = filenames["ts_files"]
 
     # Read labels
-    labels_train = pd.read_csv(filenames["labels_train"]).sort_values("stay").reset_index(drop=True)
-    labels_train["SUBJECT_ID"] = labels_train["stay"].apply(lambda x: int(x.split("_")[0]))
+    labels_train = (
+        pd.read_csv(filenames["labels_train"])
+        .sort_values("stay")
+        .reset_index(drop=True)
+    )
+    labels_train["SUBJECT_ID"] = labels_train["stay"].apply(
+        lambda x: int(x.split("_")[0])
+    )
     labels_train["EPISODE"] = labels_train["stay"].apply(lambda x: x.split("_")[1])
-    labels_train["SUBJECT_ID_EPISODE"] = labels_train["SUBJECT_ID"].astype(str) + "_" + labels_train["EPISODE"]
+    labels_train["SUBJECT_ID_EPISODE"] = (
+        labels_train["SUBJECT_ID"].astype(str) + "_" + labels_train["EPISODE"]
+    )
     labels_train["split"] = "train"
 
-    labels_test = pd.read_csv(filenames["labels_test"]).sort_values("stay").reset_index(drop=True)
-    labels_test["SUBJECT_ID"] = labels_test["stay"].apply(lambda x: int(x.split("_")[0]))
+    labels_test = (
+        pd.read_csv(filenames["labels_test"]).sort_values("stay").reset_index(drop=True)
+    )
+    labels_test["SUBJECT_ID"] = labels_test["stay"].apply(
+        lambda x: int(x.split("_")[0])
+    )
     labels_test["EPISODE"] = labels_test["stay"].apply(lambda x: x.split("_")[1])
-    labels_test["SUBJECT_ID_EPISODE"] = labels_test["SUBJECT_ID"].astype(str) + "_" + labels_test["EPISODE"]
+    labels_test["SUBJECT_ID_EPISODE"] = (
+        labels_test["SUBJECT_ID"].astype(str) + "_" + labels_test["EPISODE"]
+    )
     labels_test["split"] = "test"
 
     labels = pd.concat([labels_train, labels_test], ignore_index=True)
@@ -201,16 +215,23 @@ def _dataset_mimic3(filenames: dict):
         if folder.is_dir():  # Check if it's a directory
             # Find matching files
             matching_files = [
-                file for file in folder.iterdir()
-                if
-                file.is_file() and "episode" in file.name.lower() and "timeseries" not in file.name.lower() and file.suffix == ".csv"
+                file
+                for file in folder.iterdir()
+                if file.is_file()
+                and "episode" in file.name.lower()
+                and "timeseries" not in file.name.lower()
+                and file.suffix == ".csv"
             ]
             for file in matching_files:
                 df = pd.read_csv(file)
                 df["SUBJECT_ID"] = file.parent.stem
                 df["EPISODE"] = file.stem
-                df["SUBJECT_ID_EPISODE"] = df["SUBJECT_ID"].astype(str) + "_" + df["EPISODE"].astype(str)
-                df_episodes_train = pd.concat([df_episodes_train, df], ignore_index=True)
+                df["SUBJECT_ID_EPISODE"] = (
+                    df["SUBJECT_ID"].astype(str) + "_" + df["EPISODE"].astype(str)
+                )
+                df_episodes_train = pd.concat(
+                    [df_episodes_train, df], ignore_index=True
+                )
     df_episodes_train.drop(columns=["SUBJECT_ID", "EPISODE"], inplace=True)
 
     file_path_other_test = filenames["other_test"]
@@ -219,15 +240,20 @@ def _dataset_mimic3(filenames: dict):
         if folder.is_dir():  # Check if it's a directory
             # Find matching files
             matching_files = [
-                file for file in folder.iterdir()
-                if
-                file.is_file() and "episode" in file.name.lower() and "timeseries" not in file.name.lower() and file.suffix == ".csv"
+                file
+                for file in folder.iterdir()
+                if file.is_file()
+                and "episode" in file.name.lower()
+                and "timeseries" not in file.name.lower()
+                and file.suffix == ".csv"
             ]
             for file in matching_files:
                 df = pd.read_csv(file)
                 df["SUBJECT_ID"] = file.parent.stem
                 df["EPISODE"] = file.stem
-                df["SUBJECT_ID_EPISODE"] = df["SUBJECT_ID"].astype(str) + "_" + df["EPISODE"].astype(str)
+                df["SUBJECT_ID_EPISODE"] = (
+                    df["SUBJECT_ID"].astype(str) + "_" + df["EPISODE"].astype(str)
+                )
                 df_episodes_test = pd.concat([df_episodes_test, df], ignore_index=True)
     df_episodes_test.drop(columns=["SUBJECT_ID", "EPISODE"], inplace=True)
 
@@ -236,7 +262,9 @@ def _dataset_mimic3(filenames: dict):
     # Merge labels and metadata
     all_labels = labels.merge(df_episodes, on="SUBJECT_ID_EPISODE", how="left")
     all_labels.drop(["Weight", "Height"], axis=1, inplace=True)
-    all_labels["Age_fix"] = all_labels["Age"].apply(lambda x: x if x < 300 else x - 211)  # Fix age
+    all_labels["Age_fix"] = all_labels["Age"].apply(
+        lambda x: x if x < 300 else x - 211
+    )  # Fix age
 
     # Read time series files
     for i in range(len(files)):
@@ -245,24 +273,41 @@ def _dataset_mimic3(filenames: dict):
         ts = ts.merge(all_labels, on="SUBJECT_ID_EPISODE", how="left")
 
         # Process Glascow coma scale columns
-        ts["Glascow coma scale motor response"] = ts["Glascow coma scale motor response"].apply(
-            lambda x: float(x.split(" ")[0]) if isinstance(x, str) and x.split(" ")[0].isdigit()
-            else GLASCOW_DICT_MOTOR.get(x, x)
+        ts["Glascow coma scale motor response"] = ts[
+            "Glascow coma scale motor response"
+        ].apply(
+            lambda x: (
+                float(x.split(" ")[0])
+                if isinstance(x, str) and x.split(" ")[0].isdigit()
+                else GLASCOW_DICT_MOTOR.get(x, x)
+            )
         )
-        ts["Glascow coma scale eye opening"] = ts["Glascow coma scale eye opening"].apply(
-            lambda x: float(x.split(" ")[0]) if isinstance(x, str) and x.split(" ")[0].isdigit()
-            else GLASCOW_DICT_EYE.get(x, x)
+        ts["Glascow coma scale eye opening"] = ts[
+            "Glascow coma scale eye opening"
+        ].apply(
+            lambda x: (
+                float(x.split(" ")[0])
+                if isinstance(x, str) and x.split(" ")[0].isdigit()
+                else GLASCOW_DICT_EYE.get(x, x)
+            )
         )
-        ts["Glascow coma scale verbal response"] = ts["Glascow coma scale verbal response"].apply(
-            lambda x: float(x.split(" ")[0]) if isinstance(x, str) and x.split(" ")[0].isdigit()
-            else GLASCOW_DICT_VERBAL.get(x, x)
+        ts["Glascow coma scale verbal response"] = ts[
+            "Glascow coma scale verbal response"
+        ].apply(
+            lambda x: (
+                float(x.split(" ")[0])
+                if isinstance(x, str) and x.split(" ")[0].isdigit()
+                else GLASCOW_DICT_VERBAL.get(x, x)
+            )
         )
 
-        ts_melted = ts.melt(id_vars=list(STATIC_COLUMNS) + ["Hours", "SUBJECT_ID_EPISODE"])
+        ts_melted = ts.melt(
+            id_vars=list(STATIC_COLUMNS) + ["Hours", "SUBJECT_ID_EPISODE"]
+        )
         ts_melted = ts_melted[ts_melted["value"].notna()].reset_index(drop=True)
 
         for j in range(len(ts_melted)):
-            yield ts_melted.iloc[j:j + 1].to_dict(orient="records")[0]
+            yield ts_melted.iloc[j : j + 1].to_dict(orient="records")[0]
 
 
 def read_mimic3(verbose=False):
@@ -272,20 +317,28 @@ def read_mimic3(verbose=False):
                 sorted(
                     [
                         file
-                        for file in (data_original_folder() / FOLDER_NAME / "train").glob(
-                            "*.csv"
-                        )
+                        for file in (
+                            data_original_folder() / FOLDER_NAME / "train"
+                        ).glob("*.csv")
                     ]
                 )[:-1]
                 + sorted(
                     [
                         file
-                        for file in (data_original_folder() / FOLDER_NAME / "test").glob("*.csv")
+                        for file in (
+                            data_original_folder() / FOLDER_NAME / "test"
+                        ).glob("*.csv")
                     ]
                 )[:-1]
             ),
-            "labels_train": data_original_folder() / FOLDER_NAME / "train" / "listfile.csv",
-            "labels_test": data_original_folder() / FOLDER_NAME / "test" / "listfile.csv",
+            "labels_train": data_original_folder()
+            / FOLDER_NAME
+            / "train"
+            / "listfile.csv",
+            "labels_test": data_original_folder()
+            / FOLDER_NAME
+            / "test"
+            / "listfile.csv",
             "other_train": data_original_folder() / "mimic-iii/root" / "train",
             "other_test": data_original_folder() / "mimic-iii/root" / "test",
         },

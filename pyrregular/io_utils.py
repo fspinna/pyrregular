@@ -47,7 +47,9 @@ def save_to_file(
             else:
                 f.attrs[f"__{coord}/type"] = values.dtype.kind
             f.create_dataset(f"coords_xarray/{coord}", data=values)
-            f.create_dataset(f"coords_xarray_dims/{coord}", data=np.array(dims, dtype="S"))
+            f.create_dataset(
+                f"coords_xarray_dims/{coord}", data=np.array(dims, dtype="S")
+            )
 
         # Save metadata
         for key, value in data_array.attrs.items():
@@ -71,7 +73,9 @@ def load_from_file(filename: str) -> xr.DataArray:
                 continue  # Skip special attributes
             value = f.attrs[key]
             try:
-                deserialized_value = eval(value)  # Try to interpret the string as a Python literal
+                deserialized_value = eval(
+                    value
+                )  # Try to interpret the string as a Python literal
                 attrs[key] = deserialized_value
             except (SyntaxError, NameError):
                 attrs[key] = value  # If eval fails, use the original string

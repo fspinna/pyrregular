@@ -5,7 +5,11 @@ from pyrregular.io_utils import get_current_aoe_time
 
 from xarray import DataArray
 
-from pyrregular.data_utils import data_final_folder, metadata_folder, data_intermediate_folder
+from pyrregular.data_utils import (
+    data_final_folder,
+    metadata_folder,
+    data_intermediate_folder,
+)
 from pyrregular.io_utils import save_to_file, load_from_file, load_yaml
 
 
@@ -23,14 +27,16 @@ class ReaderInterface(ABC):
         data = cls.fix_intermediate_version(data, verbose)
         save_to_file(
             data_array=data,
-            filename=data_final_folder() / (str(cls.__get_name_from_classname()) + ".h5"),
+            filename=data_final_folder()
+            / (str(cls.__get_name_from_classname()) + ".h5"),
         )
 
     @classmethod
     def save_intermediate_version(cls, verbose=True):
         save_to_file(
             data_array=cls.read_original_version(verbose=verbose),
-            filename=data_intermediate_folder() / (str(cls.__get_name_from_classname()) + ".h5"),
+            filename=data_intermediate_folder()
+            / (str(cls.__get_name_from_classname()) + ".h5"),
         )
 
     @staticmethod
@@ -50,12 +56,16 @@ class ReaderInterface(ABC):
 
     @classmethod
     def load_intermediate_version(cls) -> DataArray:
-        data = load_from_file(f"{data_intermediate_folder() / cls.__get_name_from_classname()}.h5")
+        data = load_from_file(
+            f"{data_intermediate_folder() / cls.__get_name_from_classname()}.h5"
+        )
         return data
 
     @classmethod
     def load_final_version(cls) -> DataArray:
-        data = load_from_file(f"{data_final_folder() / cls.__get_name_from_classname()}.h5")
+        data = load_from_file(
+            f"{data_final_folder() / cls.__get_name_from_classname()}.h5"
+        )
         return data
 
     @classmethod

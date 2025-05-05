@@ -54,6 +54,7 @@ class CombinedTrajectories(ReaderInterface):
 
         return data
 
+
 def __convert_date(x):
     try:
         return datetime.strptime(" ".join(x), "%Y-%m-%d %H:%M:%S").timestamp()
@@ -81,10 +82,17 @@ def _read_combined_trajectories(filenames: list):
         )
 
         df.drop(columns=["date", "time"], inplace=True)
-        df["absolute_trajectory_id"] = df[["individual_id", "trajectory_id"]].apply(lambda x: "_".join(x.astype(str)), axis=1)
+        df["absolute_trajectory_id"] = df[["individual_id", "trajectory_id"]].apply(
+            lambda x: "_".join(x.astype(str)), axis=1
+        )
 
         melted_df = df.melt(
-            id_vars=["absolute_trajectory_id", "trajectory_id", "individual_id", "timestamp"],
+            id_vars=[
+                "absolute_trajectory_id",
+                "trajectory_id",
+                "individual_id",
+                "timestamp",
+            ],
             value_vars=["longitude", "latitude", "altitude"],
         ).dropna()
 
@@ -94,7 +102,8 @@ def _read_combined_trajectories(filenames: list):
 
 def read_combined_trajectories(verbose=False):
     return read_csv(
-        filenames=data_original_folder() / "combined_trajectories/combined_trajectories.csv",
+        filenames=data_original_folder()
+        / "combined_trajectories/combined_trajectories.csv",
         ts_id="absolute_trajectory_id",
         time_id="timestamp",
         signal_id="variable",

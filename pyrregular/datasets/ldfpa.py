@@ -156,7 +156,7 @@ def read_ldfpa(verbose=False):
     )
     return read_csv(
         filenames=data_original_folder()
-                  / "localization_data_for_person_activity/ConfLongDemo_JSI.txt",
+        / "localization_data_for_person_activity/ConfLongDemo_JSI.txt",
         ts_id="tid",
         time_id="Date",
         signal_id="variable",

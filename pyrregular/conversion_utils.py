@@ -5,7 +5,6 @@ import awkward as ak
 from copy import deepcopy
 
 
-
 @nb.njit
 def dense_rank(a):
     unique_values = np.unique(a)
@@ -48,8 +47,18 @@ def remove_fill_values_from_time_idx(
     return out
 
 
-def reset_time_index(arr: sparse.COO, time_id: np.ndarray, ts_level=True, ts_idx=0, signal_idx=1, time_idx=-1,
-                     index_scale=1e-9, absolute_time=True, concatenate_time=False, normalize_time=False):
+def reset_time_index(
+    arr: sparse.COO,
+    time_id: np.ndarray,
+    ts_level=True,
+    ts_idx=0,
+    signal_idx=1,
+    time_idx=-1,
+    index_scale=1e-9,
+    absolute_time=True,
+    concatenate_time=False,
+    normalize_time=False,
+):
     new_coords = remove_fill_values_from_time_idx(
         arr.coords,
         ts_level=ts_level,
@@ -68,12 +77,23 @@ def reset_time_index(arr: sparse.COO, time_id: np.ndarray, ts_level=True, ts_idx
         new_time_idx = new_time_idx - new_time_idx[:, :, 0:1]
     if normalize_time:
         abs_mean = sparse.nanmean(new_time_idx)
-        new_time_idx = (new_time_idx - sparse.nanmin(new_time_idx, axis=2, keepdims=True))
-        new_time_idx = new_time_idx / (sparse.nanmax(new_time_idx, axis=2, keepdims=True) + (abs_mean * 1e-8))  # avoids divisions by 0 when there is only 1 timestamp
+        new_time_idx = new_time_idx - sparse.nanmin(new_time_idx, axis=2, keepdims=True)
+        new_time_idx = new_time_idx / (
+            sparse.nanmax(new_time_idx, axis=2, keepdims=True) + (abs_mean * 1e-8)
+        )  # avoids divisions by 0 when there is only 1 timestamp
     if concatenate_time:
-        return sparse.concatenate(
-            [sparse.COO(coords=new_coords, data=arr.data, fill_value=arr.fill_value), new_time_idx], axis=1
-        ), new_time_idx
+        return (
+            sparse.concatenate(
+                [
+                    sparse.COO(
+                        coords=new_coords, data=arr.data, fill_value=arr.fill_value
+                    ),
+                    new_time_idx,
+                ],
+                axis=1,
+            ),
+            new_time_idx,
+        )
     else:
         return (
             sparse.COO(coords=new_coords, data=arr.data, fill_value=arr.fill_value),
