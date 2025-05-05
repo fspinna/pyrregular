@@ -10,8 +10,26 @@ You can install via pip with:
 pip install pyrregular
 ```
 
+For third party models use:
+
+```bash
+pip install pyrregular[models]
+```
+
+
 # Quick Guide
+## List datasets
+If you want to see all the datasets available, you can use the `list_datasets` function:
+
+```python
+from pyrregular import list_datasets
+
+df = list_datasets()
+```
+
+
 ## Load a dataset
+To load a dataset, you can use the `load_dataset` function. For example, to load the "Garment" dataset, you can do:
 
 ```python
 from pyrregular import load_dataset
@@ -29,67 +47,26 @@ print(pooch.os_cache("pyrregular"))
 
 The repository is hosted at: https://huggingface.co/datasets/splandi/pyrregular/
 
-## Contributing (work in progress)
-### The "Long Format"
-The basic format to convert any dataset to our representation is the long format.
-The long format is simply a tuple:
-
-```(time_series_id, channel_id, timestamp, value, static_var_1, static_var_2, ...)```.
-
-If your dataset contains rows that are in this format, you are almost good to go. Else, there will be a little bit of preprocessing to do.
-
-#### Case 1. (easy) Your dataset is already in the long format
-
-Let's assume for now your dataset is already in this form, and you do not have static variables. Here is a minimal working example.
+## Downstream tasks
+### Classification
+To use the dataset for classification, you can just "densify" it:
 
 ```python
-from pyrregular.io_utils import read_csv
-from pyrregular.reader_interface import ReaderInterface
+from pyrregular import load_dataset
 
+df = load_dataset("Garment.h5")
+X, _ = df.irr.to_dense()
+y, split = da.irr.get_task_target_and_split()
 
-class YourDataset(ReaderInterface):
-    @staticmethod
-    def read(verbose=False):
-        return read_your_dataset(verbose=verbose)
+X_train, X_test = X[split != "test"], X[split == "test"]
+y_train, y_test = y[split != "test"], y[split == "test"]
 
-def read_your_dataset(verbose=False):
-    return read_csv(
-        filenames="your_original_dataset.csv",
-        ts_id="name_of_your_time_series_id_column",
-        time_id="name_of_your_timestamp_column",
-        signal_id="name_of_your_channel_id_column",
-        value_id="name_of_your_value_column",
-        verbose=verbose,
-    )
+# We have ready-to-go models from various libraries:
+from pyrregular.models.rocket import rocket_pipeline
+
+model = rocket_pipeline
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
 ```
 
-This gets a little bit more complicated if you also have static variables. First, you need to identify the dimension static variables depend on. 
-The most common case for a static variable is to depend on time `ts_id` (e.g., a patient's age).
 
-
-
-```python
-from pyrregular.io_utils import read_csv
-from pyrregular.reader_interface import ReaderInterface
-
-
-class YourDataset(ReaderInterface):
-    @staticmethod
-    def read(verbose=False):
-        return read_your_dataset(verbose=verbose)
-
-def read_your_dataset(verbose=False):
-    return read_csv(
-        filenames="your_original_dataset.csv",
-        ts_id="name_of_your_time_series_id_column",
-        time_id="name_of_your_timestamp_column",
-        signal_id="name_of_your_channel_id_column",
-        value_id="name_of_your_value_column",
-        dims={
-            "ts_id": ["name_of_your_static_variable_1_column", "name_of_your_static_variable_2_column"],
-            "signal_id": [],
-            "time_id": [],
-        },
-        verbose=verbose,
-    )
-```
