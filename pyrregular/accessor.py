@@ -1,6 +1,7 @@
 import numpy as np
 import xarray as xr
 from pyrregular.conversion_utils import reset_time_index, ak_dropnan, fill_time_index
+from pyrregular.io_utils import save_to_file
 import sparse
 import awkward as ak
 
@@ -187,3 +188,12 @@ class IrregularAccessor:
             if not absolute_time:
                 T = T - T[0]
             return np.concatenate([self._da.data.coords, T[np.newaxis, :]], axis=0).T
+
+    def to_hdf5(self, filename, compression="gzip", compression_opts=None):
+        save_to_file(
+            data_array=self._da,
+            filename=filename,
+            compression=compression,
+            compression_opts=compression_opts,
+        )
+
