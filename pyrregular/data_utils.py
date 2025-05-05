@@ -39,6 +39,10 @@ def list_metadata_files():
     return sorted(list(metadata_folder().glob("*.yml")))
 
 
+def list_registry_datasets():
+    return sorted(list(pd.read_csv(get_project_root() / "registry.txt", sep=" ", index_col=0).index))
+
+
 def infer_static_columns(df, id_column, dropna=False):
     df_grouped = df.groupby(id_column).nunique(dropna=dropna)
     return [
@@ -50,4 +54,4 @@ def infer_static_columns(df, id_column, dropna=False):
 
 
 if __name__ == "__main__":
-    out = list_final_datasets()
+    out = list_registry_datasets()
