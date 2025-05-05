@@ -12,15 +12,22 @@ class TimeSeriesSVCFix(TimeSeriesSVC):
         return np.eye(len(self.classes_))[self.predict(X)]
 
 
-svm_pipeline = Pipeline([
-    ("standardize", ApplyFunc(func=standardize)),
-    ("convert_to_nested", ApplyFunc(func=convert_to, fn_kwargs={"to_type": "nested_univ"})),
-    ("drop_na", DropNATransformer()),
-    ("svc", TimeSeriesSVCFix(
-        kernel=LcssTslearn(
-            global_constraint="sakoe_chiba",
-            sakoe_chiba_radius=10
+svm_pipeline = Pipeline(
+    [
+        ("standardize", ApplyFunc(func=standardize)),
+        (
+            "convert_to_nested",
+            ApplyFunc(func=convert_to, fn_kwargs={"to_type": "nested_univ"}),
         ),
-        max_iter=1000,
-    )),
-])
+        ("drop_na", DropNATransformer()),
+        (
+            "svc",
+            TimeSeriesSVCFix(
+                kernel=LcssTslearn(
+                    global_constraint="sakoe_chiba", sakoe_chiba_radius=10
+                ),
+                max_iter=1000,
+            ),
+        ),
+    ]
+)

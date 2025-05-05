@@ -7,5 +7,5 @@ lgbm_pipeline = make_pipeline(
     Tabularizer(),
     LGBMClassifier(
         n_jobs=1,
-    )
+    ),
 )

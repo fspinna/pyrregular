@@ -35,4 +35,3 @@ saits_pipeline = SAITSWrapper(
         "device": None,
     },
 )
-

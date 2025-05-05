@@ -1,6 +1,7 @@
 from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 from pypots.classification.timesnet import TimesNet
 
+
 class TimesNetWrapper(PyPOTSWrapper):
     def __init__(self, model, model_params, random_state=None):
         super().__init__(model, model_params, random_state)

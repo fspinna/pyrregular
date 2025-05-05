@@ -7,7 +7,7 @@ def dropna(x):
     x = x.dropna()
     if len(x) == 0:
         # return a series of zeros for compatibility as models expect a non-empty series
-        return pd.Series(pd.Series([0]*1))
+        return pd.Series(pd.Series([0] * 1))
     return x
 
 
@@ -16,7 +16,9 @@ def to_float(x):
 
 
 def standardize(X):
-    return (X - np.nanmean(X, axis=2, keepdims=True)) / (np.nanstd(X, axis=2, keepdims=True) + 1e-8)
+    return (X - np.nanmean(X, axis=2, keepdims=True)) / (
+        np.nanstd(X, axis=2, keepdims=True) + 1e-8
+    )
 
 
 class PassthroughTransformer(BaseEstimator, TransformerMixin):
@@ -45,6 +47,3 @@ class ApplyFunc(BaseEstimator, TransformerMixin):
 
     def transform(self, X):
         return self.func(X, **self.fn_kwargs)
-
-
-

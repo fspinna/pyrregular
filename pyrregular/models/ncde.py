@@ -23,7 +23,9 @@ def fill_time_index(arr, nan_delta=1):
     delta_mean = np.nanmean(a_diff, axis=2, keepdims=True)
 
     nans = np.isnan(delta_mean)
-    if np.any(nans):  # this can happen if there is only 1 valid value in the time series
+    if np.any(
+        nans
+    ):  # this can happen if there is only 1 valid value in the time series
         delta_mean[nans] = nan_delta
 
     # last timestep
@@ -93,22 +95,28 @@ class NeuralCDE(eqx.Module):
             width_size=width_size,
             depth=depth,
             activation=jnn.softplus,
-            key=key1
+            key=key1,
         )
         self.func = Func(
             data_size=data_size,
             hidden_size=hidden_size,
             width_size=width_size,
             depth=depth,
-            key=key2
+            key=key2,
         )
         self.readout = eqx.nn.Linear(
-            in_features=hidden_size,
-            out_features=n_classes,
-            key=key3
+            in_features=hidden_size, out_features=n_classes, key=key3
         )
 
-    def __call__(self, ts, coeffs, dt0=1e-2, evolving_out=False, solver=diffrax.Euler(), max_steps=4094):
+    def __call__(
+        self,
+        ts,
+        coeffs,
+        dt0=1e-2,
+        evolving_out=False,
+        solver=diffrax.Euler(),
+        max_steps=4094,
+    ):
         # Create a continuous path from the cubic Hermite coefficients
         control = diffrax.CubicInterpolation(ts, coeffs)
 
@@ -142,7 +150,7 @@ class NeuralCDE(eqx.Module):
             logits = jax.vmap(self.readout)(hidden_trajectories)
             return logits
         else:
-            final_hidden = solution.ys[-1]     # shape (hidden_size,)
+            final_hidden = solution.ys[-1]  # shape (hidden_size,)
             logits = self.readout(final_hidden)
             return logits
 
@@ -220,7 +228,9 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
         # 3) Separate time from data channels (train)
         data_channels_train = fill_all_nans_signals(standardize(X_train[:, :-1, :]))
         times_train = X_train[:, -1, :]
-        times_train = fill_time_index(times_train[:, None, :], nan_delta=self.dt0)[:, 0, :]
+        times_train = fill_time_index(times_train[:, None, :], nan_delta=self.dt0)[
+            :, 0, :
+        ]
         data_size = n_signals_train - 1
 
         # 4) Build cubic Hermite coefficients for each instance
@@ -228,11 +238,9 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
             # xi: shape (data_size, n_timesteps)
             # we need (n_timesteps, data_size) for diffrax
             return diffrax.backward_hermite_coefficients(
-                ti,
-                xi.T,
-                fill_forward_nans_at_end=True,
-                replace_nans_at_start=0
+                ti, xi.T, fill_forward_nans_at_end=True, replace_nans_at_start=0
             )
+
         coeffs_train = jax.vmap(_make_coeff)(data_channels_train, times_train)
 
         # Now do the same for validation data
@@ -259,19 +267,34 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
         # 7) Define the multiclass cross-entropy for training
         def _train_loss_fn(model):
             def _single_loss(coeff_i, ti, yi):
-                logits = model(ti, coeff_i, evolving_out=False, dt0=self.dt0, solver=self.solver,
-                               max_steps=self.max_steps)
+                logits = model(
+                    ti,
+                    coeff_i,
+                    evolving_out=False,
+                    dt0=self.dt0,
+                    solver=self.solver,
+                    max_steps=self.max_steps,
+                )
                 logprobs = jnn.log_softmax(logits, axis=-1)
                 return -logprobs[yi]
+
             losses = jax.vmap(_single_loss)(coeffs_train, times_train, y_train)
             return jnp.mean(losses)
 
         # Validation loss
         def _val_loss_fn(model):
             def _single_loss(coeff_i, ti, yi):
-                logits = model(ti, coeff_i, evolving_out=False, dt0=self.dt0, solver=self.solver, max_steps=self.max_steps)
+                logits = model(
+                    ti,
+                    coeff_i,
+                    evolving_out=False,
+                    dt0=self.dt0,
+                    solver=self.solver,
+                    max_steps=self.max_steps,
+                )
                 logprobs = jnn.log_softmax(logits, axis=-1)
                 return -logprobs[yi]
+
             losses = jax.vmap(_single_loss)(coeffs_val, times_val, y_val)
             return jnp.mean(losses)
 
@@ -304,7 +327,9 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
                 best_val_loss = val_loss
                 stagnation_counter_lr = 0  # Reset learning rate counter
                 stagnation_counter_es = 0  # Reset early stopping counter
-                eqx.tree_serialise_leaves(best_model_path, self.model_)  # Save best model
+                eqx.tree_serialise_leaves(
+                    best_model_path, self.model_
+                )  # Save best model
             else:
                 stagnation_counter_lr += 1
                 stagnation_counter_es += 1
@@ -324,7 +349,9 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
 
             # Display progress
             if step % self.print_step == 0 or step == self.max_iter - 1:
-                print(f"Step {step} | Train Loss: {train_loss.item():.4f} | Val Loss: {val_loss.item():.4f}")
+                print(
+                    f"Step {step} | Train Loss: {train_loss.item():.4f} | Val Loss: {val_loss.item():.4f}"
+                )
 
         # Reload the best model
         self.model_ = eqx.tree_deserialise_leaves(best_model_path, self.model_)
@@ -346,15 +373,20 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
 
         def _make_coeff(xi, ti):
             return diffrax.backward_hermite_coefficients(
-                ti,
-                xi.T,
-                fill_forward_nans_at_end=True,
-                replace_nans_at_start=0
+                ti, xi.T, fill_forward_nans_at_end=True, replace_nans_at_start=0
             )
+
         coeffs = jax.vmap(_make_coeff)(data_channels, times)
 
         def _single_forward(coeff_i, ti):
-            logits = self.model_(ti, coeff_i, evolving_out=False, dt0=self.dt0, solver=self.solver, max_steps=self.max_steps)
+            logits = self.model_(
+                ti,
+                coeff_i,
+                evolving_out=False,
+                dt0=self.dt0,
+                solver=self.solver,
+                max_steps=self.max_steps,
+            )
             return jnn.softmax(logits, axis=-1)
 
         return np.array(jax.vmap(_single_forward)(coeffs, times))
@@ -388,5 +420,5 @@ ncde_pipeline = NeuralCDEClassifier(
     patience_es=200,
     lr_reduce_factor=0.5,
     solver=diffrax.Euler(),
-    max_steps=100
+    max_steps=100,
 )

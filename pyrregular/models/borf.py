@@ -10,5 +10,5 @@ borf_pipeline = make_pipeline(
     FunctionTransformer(func=to_float),
     LGBMClassifier(
         n_jobs=1,
-    )
+    ),
 )

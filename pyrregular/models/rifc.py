@@ -6,27 +6,27 @@ from sktime.transformations.panel.summarize import RandomIntervalFeatureExtracto
 
 
 def nanskew(x):
-    return skew(x, nan_policy='omit')
+    return skew(x, nan_policy="omit")
 
 
 def nankurtosis(x):
-    return kurtosis(x, nan_policy='omit')
+    return kurtosis(x, nan_policy="omit")
 
 
 class RandomIntervalFeatureClassifier(BaseEstimator, ClassifierMixin):
     def __init__(
-            self,
-            features=(
-                    np.nanmean,
-                    np.nanstd,
-                    np.nanmin,
-                    np.nanmax,
-                    np.nanmedian,
-                    nanskew,
-                    nankurtosis
-            ),
-            random_state=None,
-            n_intervals="log"
+        self,
+        features=(
+            np.nanmean,
+            np.nanstd,
+            np.nanmin,
+            np.nanmax,
+            np.nanmedian,
+            nanskew,
+            nankurtosis,
+        ),
+        random_state=None,
+        n_intervals="log",
     ):
         self.features = features
         self.random_state = random_state
