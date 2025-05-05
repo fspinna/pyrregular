@@ -1,4 +1,6 @@
 # pyrregular
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 
 # Installation
 
@@ -25,6 +27,7 @@ import pooch
 print(pooch.os_cache("pyrregular"))
 ```
 
+The repository is hosted at: https://huggingface.co/datasets/splandi/pyrregular/
 
 ## Contributing (work in progress)
 ### The "Long Format"
