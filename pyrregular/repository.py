@@ -2,6 +2,7 @@ import pooch
 import os
 from pyrregular.io_utils import load_from_file
 from pyrregular.data_utils import get_project_root
+import xarray as xr
 
 REPOSITORY = pooch.create(
     path=pooch.os_cache("pyrregular"),
@@ -28,11 +29,19 @@ def download_dataset_from_huggingface(
     return REPOSITORY.fetch(name, downloader=downloader)
 
 
-def load_dataset_from_huggingface(name, api_token=None):
+def load_dataset_from_file(name, api_token=None):
     if ".h5" not in name:
         name += ".h5"
     file = download_dataset_from_huggingface(name, api_token)
-    return load_from_file(file)
+    return file
+
+
+def load_dataset_from_huggingface(name, api_token=None):
+    return load_from_file(load_dataset_from_file(name, api_token))
+
+
+def load_dataset_from_huggingface_via_xarray(name, api_token=None):
+    return xr.load_dataset(load_dataset_from_file(name, api_token), engine="pyrregular")
 
 
 if __name__ == "__main__":
