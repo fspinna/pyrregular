@@ -14,6 +14,20 @@ from pyrregular.io_utils import save_to_file, load_from_file, load_yaml
 
 
 class ReaderInterface(ABC):
+    """
+    Abstract base class defining the interface for reading, fixing, and
+    saving datasets as xarray DataArray objects in a consistent pipeline.
+
+    Subclasses must implement:
+      - read_original_version(verbose: bool) -> DataArray
+      - _fix_intermediate_version(data: DataArray, verbose: bool) -> DataArray
+
+    Public methods handle:
+      - writing the “intermediate” and “final” HDF5 files
+      - enriching metadata (timestamps, YAML metadata)
+      - loading back intermediate and final versions
+    """
+
     fast_to_test = False
 
     @staticmethod
