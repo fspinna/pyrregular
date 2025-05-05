@@ -7,3 +7,4 @@ h5py
 pyarrow
 pooch
 tqdm
+scikit-learn
