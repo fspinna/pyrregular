@@ -11,6 +11,20 @@ jobs:
     - uses: actions/checkout@v4
       with:
         persist-credentials: false
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r docs/requirements.txt
+
+    - name: Install pyrregular
+      run: pip install .
+
     - name: Build HTML
       uses: ammaraskar/sphinx-action@master
     - name: Upload artifacts
