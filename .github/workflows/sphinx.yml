@@ -1,34 +1,40 @@
 name: "Sphinx: Render docs"
-
 on: push
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: python:3.10
-    permissions:
-      contents: write
+
     steps:
     - uses: actions/checkout@v4
       with:
         persist-credentials: false
-    - name: Build HTML
-      uses: ammaraskar/sphinx-action@master
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
       with:
-        docs-folder: docs
-        pre-build-command: |
-          pip install -r docs/requirements.txt
-          pip install .
-        build-command: make html
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r docs/requirements.txt 
+        pip install .                         
+
+    - name: Build HTML
+      run: |
+        cd docs
+        make html
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: html-docs
         path: docs/build/html/
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
+
+    - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: docs/build/html
+        publish_dir: docs/build/html/
