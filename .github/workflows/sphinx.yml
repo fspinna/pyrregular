@@ -1,7 +1,9 @@
-name: "Sphinx: Render docs"
+name: "docs"
+
 on:
-  push:
-    branches: [ main ]
+  release:
+    types: [published, prereleased]
+  workflow_dispatch:
 
 permissions:
   contents: write
