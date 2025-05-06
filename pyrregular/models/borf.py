@@ -1,5 +1,4 @@
 """BORF pipeline.
-
 multivariate dictionary based transformer based on Bag-Of-Receptive-Fields transform.
 """
 
