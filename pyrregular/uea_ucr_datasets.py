@@ -1,11 +1,11 @@
-from pyrregular.data_utils import data_original_folder, data_final_folder
-from pyrregular.io_utils import save_to_file, get_current_aoe_time
-import sparse
 import numpy as np
+import sparse
 import xarray as xr
 from sklearn.preprocessing import LabelEncoder
 from tqdm import tqdm
 
+from pyrregular.data_utils import data_final_folder, data_original_folder
+from pyrregular.io_utils import get_current_aoe_time, save_to_file
 
 univariate_variable_length = [
     "AllGestureWiimoteX",

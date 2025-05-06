@@ -1,5 +1,6 @@
-from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 from pypots.classification.saits import SAITS
+
+from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 
 
 class SAITSWrapper(PyPOTSWrapper):

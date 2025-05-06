@@ -6,9 +6,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from xarray import DataArray
 
-from pyrregular.reader_interface import ReaderInterface
 from pyrregular.data_utils import data_original_folder
 from pyrregular.io_utils import read_csv
+from pyrregular.reader_interface import ReaderInterface
 
 
 class CombinedTrajectories(ReaderInterface):

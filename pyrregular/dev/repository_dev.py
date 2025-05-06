@@ -1,5 +1,7 @@
-import pooch
 import pathlib
+
+import pooch
+
 from pyrregular.data_utils import data_final_folder, get_project_root
 
 

@@ -1,9 +1,10 @@
-import numpy as np
-import xarray as xr
-from pyrregular.conversion_utils import reset_time_index, ak_dropnan, fill_time_index
-from pyrregular.io_utils import save_to_file
-import sparse
 import awkward as ak
+import numpy as np
+import sparse
+import xarray as xr
+
+from pyrregular.conversion_utils import ak_dropnan, fill_time_index, reset_time_index
+from pyrregular.io_utils import save_to_file
 
 
 @xr.register_dataarray_accessor("irr")

@@ -1,5 +1,6 @@
-from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 from pypots.classification.raindrop import Raindrop
+
+from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 
 
 class RaindropWrapper(PyPOTSWrapper):

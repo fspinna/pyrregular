@@ -1,5 +1,6 @@
-from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 from pypots.classification.brits import BRITS
+
+from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 
 
 class BritsWrapper(PyPOTSWrapper):

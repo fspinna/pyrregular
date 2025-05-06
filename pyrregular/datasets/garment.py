@@ -3,8 +3,8 @@ from xarray import DataArray
 
 from pyrregular.data_utils import data_original_folder
 from pyrregular.io_utils import (
-    read_csv,
     load_yaml,
+    read_csv,
 )
 from pyrregular.reader_interface import ReaderInterface
 

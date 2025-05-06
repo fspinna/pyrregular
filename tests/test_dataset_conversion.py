@@ -1,7 +1,6 @@
 import pytest
 
-from tests.utils import TEST_CASES_FAST, IDS_FAST
-
+from tests.utils import IDS_FAST, TEST_CASES_FAST
 
 # @pytest.mark.parametrize(
 #     "read_function",

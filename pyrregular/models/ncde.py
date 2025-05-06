@@ -1,15 +1,16 @@
+from copy import deepcopy
+
+import diffrax
+import equinox as eqx
 import jax
 import jax.nn as jnn
 import jax.numpy as jnp
 import jax.random as jr
-import equinox as eqx
-import optax
-import diffrax
 import numpy as np
-from copy import deepcopy
-
+import optax
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.model_selection import train_test_split
+
 from pyrregular.models.nodes import standardize
 
 

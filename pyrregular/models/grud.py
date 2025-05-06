@@ -1,5 +1,6 @@
-from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 from pypots.classification.grud import GRUD
+
+from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 
 
 class GrudWrapper(PyPOTSWrapper):

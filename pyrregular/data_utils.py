@@ -1,6 +1,7 @@
-import pandas as pd
-import numpy as np
 import pathlib
+
+import numpy as np
+import pandas as pd
 
 HUGGINGFACE_REPO_NAME = "pyrregular"
 DATA_ORIGINAL_FOLDER = "data" + "/" + HUGGINGFACE_REPO_NAME + "/" + "data_original"

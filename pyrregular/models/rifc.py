@@ -1,7 +1,7 @@
 import numpy as np
 from lightgbm import LGBMClassifier
-from scipy.stats import skew, kurtosis
-from sklearn.base import ClassifierMixin, BaseEstimator
+from scipy.stats import kurtosis, skew
+from sklearn.base import BaseEstimator, ClassifierMixin
 from sktime.transformations.panel.summarize import RandomIntervalFeatureExtractor
 
 

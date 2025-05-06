@@ -1,5 +1,6 @@
-from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 from pypots.classification.timesnet import TimesNet
+
+from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 
 
 class TimesNetWrapper(PyPOTSWrapper):

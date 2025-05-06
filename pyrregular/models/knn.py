@@ -1,6 +1,6 @@
 from tslearn.neighbors import KNeighborsTimeSeriesClassifier
-from pyrregular.wrappers.tslearn_wrapper import TslearnWrapper
 
+from pyrregular.wrappers.tslearn_wrapper import TslearnWrapper
 
 knn_dtw = TslearnWrapper(
     KNeighborsTimeSeriesClassifier(

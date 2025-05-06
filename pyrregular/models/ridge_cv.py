@@ -1,6 +1,6 @@
+import numpy as np
 from sklearn.linear_model import RidgeClassifierCV
 from sklearn.utils.extmath import softmax
-import numpy as np
 
 
 class RidgeClassifierCVFix(RidgeClassifierCV):

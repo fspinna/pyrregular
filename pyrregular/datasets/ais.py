@@ -1,22 +1,18 @@
-import pandas as pd
-from pyrregular.io_utils import (
-    read_csv,
-    load_yaml,
-    save_to_file,
-    load_from_file,
-)
-from pyrregular.data_utils import data_original_folder, data_final_folder
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
 from xarray import DataArray
 
-from pyrregular.data_utils import data_original_folder
+from pyrregular.data_utils import data_final_folder, data_original_folder
 from pyrregular.io_utils import (
-    read_csv,
+    load_from_file,
     load_yaml,
+    read_csv,
+    save_to_file,
 )
 from pyrregular.reader_interface import ReaderInterface
-import numpy as np
-from sklearn.model_selection import train_test_split
 
 
 class Ais(ReaderInterface):

@@ -1,9 +1,10 @@
 import numpy as np
+from sklearn.pipeline import Pipeline
 from sktime.classification.kernel_based import TimeSeriesSVC
-from pyrregular.models.nodes import ApplyFunc, DropNATransformer, standardize
 from sktime.datatypes import convert_to
 from sktime.dists_kernels.lcss import LcssTslearn
-from sklearn.pipeline import Pipeline
+
+from pyrregular.models.nodes import ApplyFunc, DropNATransformer, standardize
 
 
 class TimeSeriesSVCFix(TimeSeriesSVC):

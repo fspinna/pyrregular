@@ -1,8 +1,9 @@
+from copy import deepcopy
+
+import awkward as ak
 import numba as nb
 import numpy as np
 import sparse
-import awkward as ak
-from copy import deepcopy
 
 
 @nb.njit

@@ -1,7 +1,8 @@
-import pytest
-from tests.utils import TEST_CASES
-import sparse
 import numpy as np
+import pytest
+import sparse
+
+from tests.utils import TEST_CASES
 
 
 @pytest.mark.parametrize(

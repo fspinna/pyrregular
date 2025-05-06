@@ -7,9 +7,9 @@ from sklearn.preprocessing import LabelEncoder
 from tqdm.auto import tqdm
 from xarray import DataArray
 
-from pyrregular.reader_interface import ReaderInterface
-from pyrregular.io_utils import read_csv
 from pyrregular.data_utils import data_original_folder
+from pyrregular.io_utils import read_csv
+from pyrregular.reader_interface import ReaderInterface
 
 
 class TDrive(ReaderInterface):

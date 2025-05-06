@@ -1,8 +1,8 @@
 import importlib
-from pyrregular.data_utils import get_project_root
-
 import importlib.util
 from pathlib import Path
+
+from pyrregular.data_utils import get_project_root
 
 
 def filename_to_classname(filename):

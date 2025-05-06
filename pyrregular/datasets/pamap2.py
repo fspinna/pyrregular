@@ -1,17 +1,16 @@
 import glob
 
+import numpy as np
 import pandas as pd
+import sparse
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 from tqdm.auto import tqdm
 from xarray import DataArray
 
 from pyrregular.data_utils import data_original_folder
 from pyrregular.io_utils import read_csv
 from pyrregular.reader_interface import ReaderInterface
-import numpy as np
-import sparse
-
-from sklearn.preprocessing import LabelEncoder
 
 
 class Pamap2(ReaderInterface):

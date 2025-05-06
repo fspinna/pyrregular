@@ -1,5 +1,6 @@
-from pyrregular.conversion_utils import to_tslearn
 from sklearn.base import BaseEstimator, ClassifierMixin
+
+from pyrregular.conversion_utils import to_tslearn
 
 
 class TslearnWrapper(BaseEstimator, ClassifierMixin):

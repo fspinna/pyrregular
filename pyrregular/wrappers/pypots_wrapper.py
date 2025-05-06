@@ -1,7 +1,8 @@
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
-from pyrregular.conversion_utils import to_pypots
 from sklearn.model_selection import train_test_split
+
+from pyrregular.conversion_utils import to_pypots
 
 
 class PyPOTSWrapper(BaseEstimator, ClassifierMixin):

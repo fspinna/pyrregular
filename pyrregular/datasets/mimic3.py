@@ -1,12 +1,13 @@
 import pathlib
+
+import pandas as pd
+
 from pyrregular.data_utils import data_original_folder
 from pyrregular.io_utils import (
-    read_csv,
     load_yaml,
+    read_csv,
 )
-import pandas as pd
 from pyrregular.reader_interface import ReaderInterface
-
 
 FOLDER_NAME = "mimic-iii/in-hospital-mortality"
 STATIC_COLUMNS = [

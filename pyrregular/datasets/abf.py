@@ -1,16 +1,15 @@
-from scipy.stats import skewnorm
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-
-from pyrregular.data_utils import data_original_folder, data_final_folder
-from tqdm.auto import tqdm
-from pathlib import Path
-from pyrregular.io_utils import load_yaml, read_csv
-from scipy.stats import skew
-from pyrregular.reader_interface import ReaderInterface
-from xarray import DataArray
+from scipy.stats import skew, skewnorm
 from sklearn.preprocessing import LabelEncoder
+from tqdm.auto import tqdm
+from xarray import DataArray
 
+from pyrregular.data_utils import data_final_folder, data_original_folder
+from pyrregular.io_utils import load_yaml, read_csv
+from pyrregular.reader_interface import ReaderInterface
 
 LABEL_MAP = {0: "bowl", 1: "alembic", 2: "flask"}
 

@@ -1,8 +1,10 @@
-import pooch
 import os
-from pyrregular.io_utils import load_from_file
-from pyrregular.data_utils import get_project_root
+
+import pooch
 import xarray as xr
+
+from pyrregular.data_utils import get_project_root
+from pyrregular.io_utils import load_from_file
 
 REPOSITORY = pooch.create(
     path=pooch.os_cache("pyrregular"),
