@@ -1,3 +1,8 @@
+"""BORF pipeline.
+
+multivariate dictionary based transformer based on Bag-Of-Receptive-Fields transform.
+"""
+
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import FunctionTransformer
 from lightgbm import LGBMClassifier
@@ -12,3 +17,4 @@ borf_pipeline = make_pipeline(
         n_jobs=1,
     ),
 )
+"""This pipeline applies BORF → to_float → LGBMClassifier."""
