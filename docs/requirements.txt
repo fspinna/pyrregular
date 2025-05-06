@@ -1,0 +1,7 @@
+sphinx>=6.0
+myst-parser
+nbsphinx
+sphinx-autodoc-typehints
+sphinxcontrib-napoleon
+ipykernel
+nbconvert
