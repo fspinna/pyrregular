@@ -61,7 +61,7 @@ from pyrregular import load_dataset
 
 df = load_dataset("Garment.h5")
 X, _ = df.irr.to_dense()
-y, split = da.irr.get_task_target_and_split()
+y, split = df.irr.get_task_target_and_split()
 
 X_train, X_test = X[split != "test"], X[split == "test"]
 y_train, y_test = y[split != "test"], y[split == "test"]
