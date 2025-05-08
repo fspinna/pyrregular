@@ -31,8 +31,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install -r docs/requirements.txt 
-        pip install ".[models]"                         
+        pip install ".[models,docs]"                         
 
     - name: Build HTML
       run: |
