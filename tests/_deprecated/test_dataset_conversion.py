@@ -1,6 +1,6 @@
 import pytest
 
-from tests.utils import IDS_FAST, TEST_CASES_FAST
+from tests._deprecated.utils import IDS_FAST, TEST_CASES_FAST
 
 # @pytest.mark.parametrize(
 #     "read_function",

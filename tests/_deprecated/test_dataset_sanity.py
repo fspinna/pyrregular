@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 import sparse
 
-from tests.utils import TEST_CASES
+from tests._deprecated.utils import TEST_CASES
 
 
 @pytest.mark.parametrize(
