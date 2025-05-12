@@ -36,7 +36,7 @@ jobs:
     - name: Build HTML
       run: |
         cd docs
-        make clean html
+        make clean html SPHINXOPTS='-a'
 
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
