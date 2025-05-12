@@ -1,6 +1,3 @@
-# pyrregular
-
-
 ![Logo](https://github.com/fspinna/pyrregular/blob/main/assets/images/logo_01.png?raw=true)
 
 
@@ -9,7 +6,8 @@
 | **CI/CD**     | [![build](https://github.com/fspinna/pyrregular/actions/workflows/build.yml/badge.svg)](https://github.com/fspinna/pyrregular/actions/workflows/build.yml) [![docs](https://github.com/fspinna/pyrregular/actions/workflows/sphinx.yml/badge.svg)](https://github.com/fspinna/pyrregular/actions/workflows/sphinx.yml) [![pypi publish](https://github.com/fspinna/pyrregular/actions/workflows/python-publish.yml/badge.svg)](https://github.com/fspinna/pyrregular/actions/workflows/python-publish.yml) 
 | **Code**      | [![PyPI version](https://img.shields.io/pypi/v/pyrregular.svg)](https://pypi.org/project/pyrregular/) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyrregular) [![!black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)                                                   |
 | **Community** | [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/fspinna/pyrregular/issues)                                                                                                                                                                                   |
-| **Citation**  | coming soon...                                                                                                                                                                                                                                                                                                                            |
+| **Paper**     | [![arXiv](https://img.shields.io/badge/arXiv-2505.06047-b31b1b.svg)](https://arxiv.org/pdf/2505.06047)                                                                                                                                                                                                                                                                                                                            |
+
 
 
 # Installation
@@ -79,4 +77,18 @@ model.fit(X_train, y_train)
 model.score(X_test, y_test)
 ```
 
+# Citation
+If you use this package in your research, please cite the following paper:
+
+```bibtex
+@misc{spinnato2025pyrregular,
+      title={PYRREGULAR: A Unified Framework for Irregular Time Series, with Classification Benchmarks}, 
+      author={Francesco Spinnato and Cristiano Landi},
+      year={2025},
+      eprint={2505.06047},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2505.06047}, 
+}
+```
 
