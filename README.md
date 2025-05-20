@@ -77,6 +77,49 @@ model.fit(X_train, y_train)
 model.score(X_test, y_test)
 ```
 
+# Available Datasets
+
+| 📈 Dataset                                   | 📖 Source                                                             |
+|----------------------------------------------|---------------------------------------------------------------------|
+| Alembics Bowls Flasks                        | Spinnato & Landi, 2025                                              |
+| AllGestureWiimoteX                           | Guna et al., 2014                                                   |
+| AllGestureWiimoteY                           | Guna et al., 2014                                                   |
+| AllGestureWiimoteZ                           | Guna et al., 2014                                                   |
+| Animals                                      | Ferrero et al., 2018                                                |
+| AsphaltObstaclesCoordinates                  | Souza, 2018                                                         |
+| AsphaltPavementTypeCoordinates               | Souza, 2018                                                         |
+| AsphaltRegularityCoordinates                 | Souza, 2018                                                         |
+| CharacterTrajectories                        | Williams et al., 2006                                               |
+| DodgerLoopDay                                | Ihler et al., 2006                                                  |
+| DodgerLoopGame                               | Ihler et al., 2006                                                  |
+| DodgerLoopWeekend                            | Ihler et al., 2006                                                  |
+| Geolife                                      | Zheng et al., 2009; Zheng et al., 2008; Zheng et al., 2010          |
+| GestureMidAirD1                              | Caputo et al., 2018                                                 |
+| GestureMidAirD2                              | Caputo et al., 2018                                                 |
+| GestureMidAirD3                              | Caputo et al., 2018                                                 |
+| GesturePebbleZ1                              | Mezari & Maglogiannis, 2018                                         |
+| GesturePebbleZ2                              | Mezari & Maglogiannis, 2018                                         |
+| GPS Data of Seabirds                         | Browning et al., 2018                                               |
+| InsectWingbeat                               | Chen et al., 2014                                                   |
+| JapaneseVowels                               | Kudo et al., 1999                                                   |
+| Localization Data for Person Activity        | Vidulin et al., 2010                                                |
+| MelbournePedestrian                          | City of Melbourne, 2019                                             |
+| MIMIC-III Clinical Database (Demo)           | Johnson et al., 2016; Johnson et al., 2019; Goldberger et al., 2000 |
+| PAMAP2 Physical Activity Monitoring          | Reiss & Stricker, 2012                                              |
+| PhysioNet 2012                               | Silva et al., 2012                                                  |
+| PhysioNet 2019                               | Reyna et al., 2020                                                  |
+| PickupGestureWiimoteZ                        | Guna et al., 2014                                                   |
+| PLAID                                        | Gao et al., 2014                                                    |
+| Productivity Prediction of Garment Employees | Imran et al., 2021                                                  |
+| ShakeGestureWiimoteZ                         | Guna et al., 2014                                                   |
+| SpokenArabicDigits                           | Hammami & Bedda, 2010                                               |
+| Taxi                                         | Moreira-Matias et al., 2013                                         |
+| Vehicles                                     | Chorochronos Archive, 2019                                          |
+
+
+
+
+
 # Citation
 If you use this package in your research, please cite the following paper:
 
