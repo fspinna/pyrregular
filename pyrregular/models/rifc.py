@@ -2,14 +2,15 @@ import numpy as np
 from lightgbm import LGBMClassifier
 from scipy.stats import kurtosis, skew
 from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.pipeline import make_pipeline
 from sktime.transformations.panel.summarize import RandomIntervalFeatureExtractor
 
 
-def nanskew(x):
+def _nanskew(x):
     return skew(x, nan_policy="omit")
 
 
-def nankurtosis(x):
+def _nankurtosis(x):
     return kurtosis(x, nan_policy="omit")
 
 
@@ -22,8 +23,8 @@ class RandomIntervalFeatureClassifier(BaseEstimator, ClassifierMixin):
             np.nanmin,
             np.nanmax,
             np.nanmedian,
-            nanskew,
-            nankurtosis,
+            _nanskew,
+            _nankurtosis,
         ),
         random_state=None,
         n_intervals="log",
@@ -49,3 +50,7 @@ class RandomIntervalFeatureClassifier(BaseEstimator, ClassifierMixin):
     def predict_proba(self, X):
         X = self.transformer.transform(X)
         return self.clf.predict_proba(X)
+
+
+rifc_pipeline = make_pipeline(RandomIntervalFeatureClassifier())
+"""This pipeline applies RandomIntervalFeatureClassifier."""

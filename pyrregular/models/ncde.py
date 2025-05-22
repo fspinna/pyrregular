@@ -11,10 +11,10 @@ import optax
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.model_selection import train_test_split
 
-from pyrregular.models.nodes import standardize
+from pyrregular.models.nodes import _standardize
 
 
-def fill_time_index(arr, nan_delta=1):
+def _fill_time_index(arr, nan_delta=1):
     T = deepcopy(arr)
 
     # time delta
@@ -43,14 +43,14 @@ def fill_time_index(arr, nan_delta=1):
     return T
 
 
-def fill_all_nans_signals(X):
+def _fill_all_nans_signals(X):
     X_ = deepcopy(X)
     mask = np.sum(np.isnan(X_), axis=2) >= X_.shape[2] - 2
     X_[mask, :] = 0
     return X_
 
 
-class Func(eqx.Module):
+class _Func(eqx.Module):
     mlp: eqx.nn.MLP
     data_size: int
     hidden_size: int
@@ -78,9 +78,9 @@ class Func(eqx.Module):
         return self.mlp(y).reshape(self.hidden_size, self.data_size)
 
 
-class NeuralCDE(eqx.Module):
+class _NeuralCDE(eqx.Module):
     initial: eqx.nn.MLP
-    func: Func
+    func: _Func
     readout: eqx.nn.Linear  # maps hidden_size -> n_classes
 
     def __init__(self, data_size, hidden_size, width_size, depth, n_classes, *, key):
@@ -98,7 +98,7 @@ class NeuralCDE(eqx.Module):
             activation=jnn.softplus,
             key=key1,
         )
-        self.func = Func(
+        self.func = _Func(
             data_size=data_size,
             hidden_size=hidden_size,
             width_size=width_size,
@@ -165,6 +165,22 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
       - X[:, -1, :]  => the time array for each instance
 
     y.shape = (n_instances,) with integer labels in {0, 1, ..., n_classes-1}.
+
+    Args:
+        hidden_size (int): Number of hidden units in the Neural CDE.
+        width_size (int): Width of the hidden layers.
+        depth (int): Number of layers in the Neural CDE.
+        max_iter (int): Maximum number of training iterations.
+        lr (float): Learning rate for the optimizer.
+        seed (int): Random seed for reproducibility.
+        print_step (int): Frequency of printing training progress.
+        validate (bool): Whether to use validation during training.
+        patience_lr (int): Number of iterations to wait before reducing the learning rate if no improvement.
+        patience_es (int): Number of iterations to wait before early stopping if no improvement.
+        lr_reduce_factor (float): Factor by which to reduce the learning rate.
+        solver (diffrax.AbstractSolver): Numerical solver for the ODE.
+        max_steps (int): Maximum number of steps for the ODE solver.
+        reset_loss_after_lr_reduction (bool): Whether to reset loss tracking after learning rate reduction.
     """
 
     def __init__(
@@ -227,9 +243,9 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
         self.n_classes_ = int(jnp.max(y)) + 1
 
         # 3) Separate time from data channels (train)
-        data_channels_train = fill_all_nans_signals(standardize(X_train[:, :-1, :]))
+        data_channels_train = _fill_all_nans_signals(_standardize(X_train[:, :-1, :]))
         times_train = X_train[:, -1, :]
-        times_train = fill_time_index(times_train[:, None, :], nan_delta=self.dt0)[
+        times_train = _fill_time_index(times_train[:, None, :], nan_delta=self.dt0)[
             :, 0, :
         ]
         data_size = n_signals_train - 1
@@ -245,14 +261,14 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
         coeffs_train = jax.vmap(_make_coeff)(data_channels_train, times_train)
 
         # Now do the same for validation data
-        data_channels_val = fill_all_nans_signals(standardize(X_val[:, :-1, :]))
+        data_channels_val = _fill_all_nans_signals(_standardize(X_val[:, :-1, :]))
         times_val = X_val[:, -1, :]
-        times_val = fill_time_index(times_val[:, None, :], nan_delta=self.dt0)[:, 0, :]
+        times_val = _fill_time_index(times_val[:, None, :], nan_delta=self.dt0)[:, 0, :]
         coeffs_val = jax.vmap(_make_coeff)(data_channels_val, times_val)
 
         # 5) Instantiate the NeuralCDE model
         key = jr.PRNGKey(self.seed)
-        self.model_ = NeuralCDE(
+        self.model_ = _NeuralCDE(
             data_size=data_size,
             hidden_size=self.hidden_size,
             width_size=self.width_size,
@@ -368,9 +384,9 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
         if not self.is_fitted_:
             raise ValueError("NeuralCDEClassifier is not fitted yet.")
 
-        data_channels = fill_all_nans_signals(standardize(X[:, :-1, :]))
+        data_channels = _fill_all_nans_signals(_standardize(X[:, :-1, :]))
         times = X[:, -1, :]
-        times = fill_time_index(times[:, None, :], nan_delta=self.dt0)[:, 0, :]
+        times = _fill_time_index(times[:, None, :], nan_delta=self.dt0)[:, 0, :]
 
         def _make_coeff(xi, ti):
             return diffrax.backward_hermite_coefficients(
@@ -423,3 +439,4 @@ ncde_pipeline = NeuralCDEClassifier(
     solver=diffrax.Euler(),
     max_steps=100,
 )
+"""This pipeline applies NeuralCDE."""

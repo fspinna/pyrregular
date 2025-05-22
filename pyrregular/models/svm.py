@@ -4,7 +4,7 @@ from sktime.classification.kernel_based import TimeSeriesSVC
 from sktime.datatypes import convert_to
 from sktime.dists_kernels.lcss import LcssTslearn
 
-from pyrregular.models.nodes import ApplyFunc, DropNATransformer, standardize
+from pyrregular.models.nodes import ApplyFunc, DropNATransformer, _standardize
 
 
 class TimeSeriesSVCFix(TimeSeriesSVC):
@@ -15,7 +15,7 @@ class TimeSeriesSVCFix(TimeSeriesSVC):
 
 svm_pipeline = Pipeline(
     [
-        ("standardize", ApplyFunc(func=standardize)),
+        ("standardize", ApplyFunc(func=_standardize)),
         (
             "convert_to_nested",
             ApplyFunc(func=convert_to, fn_kwargs={"to_type": "nested_univ"}),
@@ -32,3 +32,4 @@ svm_pipeline = Pipeline(
         ),
     ]
 )
+"""This pipeline applies standardize → convert_to_nested → drop_na → TimeSeriesSVC with LCSS kernel."""

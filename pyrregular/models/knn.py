@@ -12,3 +12,4 @@ knn_dtw = TslearnWrapper(
         },
     )
 )
+"""This pipeline applies KNeighborsTimeSeriesClassifier with DTW and a sakoe-chiba band."""

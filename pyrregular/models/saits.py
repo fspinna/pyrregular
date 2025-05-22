@@ -36,3 +36,4 @@ saits_pipeline = SAITSWrapper(
         "device": None,
     },
 )
+"""This pipeline applies SAITS"""

@@ -4,6 +4,7 @@ from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper
 
 
 class GrudWrapper(PyPOTSWrapper):
+
     def __init__(self, model, model_params, random_state=None):
         super().__init__(model, model_params, random_state)
 
@@ -29,3 +30,4 @@ grud_pipeline = GrudWrapper(
         "device": None,
     },
 )
+"""This pipeline applies GRUD."""

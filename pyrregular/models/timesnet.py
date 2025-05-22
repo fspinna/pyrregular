@@ -33,3 +33,4 @@ timesnet_pipeline = TimesNetWrapper(
         "device": None,
     },
 )
+"""This pipeline applies TimesNet."""

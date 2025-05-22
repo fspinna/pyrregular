@@ -3,7 +3,7 @@ from sklearn.linear_model import RidgeClassifierCV
 from sklearn.utils.extmath import softmax
 
 
-class RidgeClassifierCVFix(RidgeClassifierCV):
+class _RidgeClassifierCVFix(RidgeClassifierCV):
 
     def predict_proba(self, X):
         d = self.decision_function(X)

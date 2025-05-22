@@ -8,3 +8,4 @@ lgbm_pipeline = make_pipeline(
         n_jobs=1,
     ),
 )
+"""This pipeline applies Tabularizer → LGBMClassifier."""

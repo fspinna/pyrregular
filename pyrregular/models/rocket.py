@@ -8,3 +8,4 @@ rocket_pipeline = make_pipeline(
     ),
     LGBMClassifier(n_jobs=1),
 )
+"""This pipeline applies MiniRocketMultivariateVariable → LGBMClassifier."""

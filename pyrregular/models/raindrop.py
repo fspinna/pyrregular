@@ -33,3 +33,4 @@ raindrop_pipeline = RaindropWrapper(
         "device": None,
     },
 )
+"""This pipeline applies Raindrop."""
