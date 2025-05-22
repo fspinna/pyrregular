@@ -3,7 +3,7 @@ import numpy as np
 import sparse
 import xarray as xr
 
-from pyrregular.conversion_utils import ak_dropnan, fill_time_index, reset_time_index
+from pyrregular.conversion_utils import _ak_dropnan, _fill_time_index, _reset_time_index
 from pyrregular.io_utils import save_to_file
 
 
@@ -38,7 +38,7 @@ class IrregularAccessor:
         concatenate_time=False,
         normalize_time=False,
     ):
-        return reset_time_index(
+        return _reset_time_index(
             arr=self._da.data,
             time_id=self._da["time_id"].data,
             ts_level=ts_level,
@@ -145,8 +145,8 @@ class IrregularAccessor:
         X = ak.Array(X)
         T = ak.Array(T)
         if dropna:
-            X = ak_dropnan(X)
-            T = ak_dropnan(T)
+            X = _ak_dropnan(X)
+            T = _ak_dropnan(T)
         return X, T
 
     def to_list(
@@ -197,4 +197,3 @@ class IrregularAccessor:
             compression=compression,
             compression_opts=compression_opts,
         )
-

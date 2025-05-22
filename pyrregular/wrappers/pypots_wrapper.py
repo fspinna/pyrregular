@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.model_selection import train_test_split
 
-from pyrregular.conversion_utils import to_pypots
+from pyrregular.conversion_utils import _to_pypots
 
 
 class PyPOTSWrapper(BaseEstimator, ClassifierMixin):
@@ -24,10 +24,10 @@ class PyPOTSWrapper(BaseEstimator, ClassifierMixin):
 
     def _fit(self, X, y):
         self.model = self.model(**self.model_params)
-        self.model.fit(to_pypots(X, y))
+        self.model.fit(_to_pypots(X, y))
 
     def predict_proba(self, X):
-        out = self.model.predict(to_pypots(X))["classification_proba"]
+        out = self.model.predict(_to_pypots(X))["classification_proba"]
         return out
 
     def predict(self, X):
@@ -42,4 +42,4 @@ class PyPOTSWrapper(BaseEstimator, ClassifierMixin):
             X_train, X_val, y_train, y_val = train_test_split(
                 X, y, random_state=self.random_state
             )
-        return to_pypots(X_train, y_train), to_pypots(X_val, y_val)
+        return _to_pypots(X_train, y_train), _to_pypots(X_val, y_val)

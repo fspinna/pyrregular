@@ -7,21 +7,21 @@ import sparse
 
 
 @nb.njit
-def dense_rank(a):
+def _dense_rank(a):
     unique_values = np.unique(a)
     ranks = np.searchsorted(unique_values, a)
     return ranks
 
 
 @nb.njit
-def find_breakpoints(a):
+def _find_breakpoints(a):
     return np.hstack(
         (np.array([0]), np.argwhere(np.diff(a)).ravel() + 1, np.array([len(a)]))
     )
 
 
 @nb.njit
-def find_2d_breakpoints(a, b):
+def _find_2d_breakpoints(a, b):
     return np.hstack(
         (
             np.array([0]),
@@ -36,19 +36,19 @@ def remove_fill_values_from_time_idx(
     coords, ts_level=True, ts_idx=0, signal_idx=1, time_idx=-1
 ):
     if ts_level:
-        breakpoints = find_breakpoints(coords[ts_idx, :])
+        breakpoints = _find_breakpoints(coords[ts_idx, :])
     else:
-        breakpoints = find_2d_breakpoints(coords[ts_idx, :], coords[signal_idx, :])
+        breakpoints = _find_2d_breakpoints(coords[ts_idx, :], coords[signal_idx, :])
     out = coords.copy()
     for i in nb.prange(len(breakpoints) - 1):
         start = breakpoints[i]
         end = breakpoints[i + 1]
-        dense_time = dense_rank(coords[time_idx, start:end])
+        dense_time = _dense_rank(coords[time_idx, start:end])
         out[time_idx, start:end] = dense_time
     return out
 
 
-def reset_time_index(
+def _reset_time_index(
     arr: sparse.COO,
     time_id: np.ndarray,
     ts_level=True,
@@ -102,11 +102,11 @@ def reset_time_index(
         )
 
 
-def ak_dropnan(arr, axis=None):
+def _ak_dropnan(arr, axis=None):
     return ak.drop_none(ak.nan_to_none(arr), axis=axis)
 
 
-def to_pypots(X, y=None):
+def _to_pypots(X, y=None):
     if y is None:
         return dict(
             X=np.swapaxes(X, 1, 2),
@@ -118,11 +118,11 @@ def to_pypots(X, y=None):
         )
 
 
-def to_tslearn(X):
+def _to_tslearn(X):
     return X.swapaxes(1, 2)
 
 
-def fill_time_index(arr):
+def _fill_time_index(arr):
     T = deepcopy(arr)
 
     # time delta

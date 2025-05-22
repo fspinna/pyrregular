@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 import pooch
 import xarray as xr
@@ -42,10 +43,16 @@ def load_dataset_from_huggingface(name, api_token=None):
     return load_from_file(load_dataset_from_file(name, api_token))
 
 
-def load_dataset_from_huggingface_via_xarray(name, api_token=None):
+def load_dataset_from_huggingface_via_xarray(
+    name: str, api_token: Optional[str] = None
+) -> xr.Dataset:
+    """Load a dataset from the online repository.
+
+    Args:
+        name (str): The name of the dataset to load.
+        api_token (Optional[str]): The API token to use for authentication.
+
+    Returns:
+        xr.Dataset: A dataset loaded from Hugging Face.
+    """
     return xr.load_dataset(load_dataset_from_file(name, api_token), engine="pyrregular")
-
-
-if __name__ == "__main__":
-    pass
-    # df = load_dataset_from_huggingface("Garment.h5")
