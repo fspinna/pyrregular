@@ -1,3 +1,7 @@
+"""BRITS.
+Recurrent Neural Networks for Multivariate Time Series with Missing Values.
+"""
+
 from pypots.classification.grud import GRUD
 
 from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper

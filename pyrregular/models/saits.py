@@ -1,3 +1,7 @@
+"""SAITS.
+Self-attention-based imputation for time series.
+"""
+
 from pypots.classification.saits import SAITS
 
 from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper

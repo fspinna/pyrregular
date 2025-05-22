@@ -1,3 +1,7 @@
+"""TimesNet.
+TimesNet: Temporal 2D-Variation Modeling for General Time Series Analysis
+"""
+
 from pypots.classification.timesnet import TimesNet
 
 from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper

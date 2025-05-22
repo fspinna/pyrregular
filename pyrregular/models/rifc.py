@@ -1,3 +1,7 @@
+"""RIFC Pipeline.
+Baseline classifier that uses RandomIntervalFeatureExtractor to extract simple statistical features from windows.
+"""
+
 import numpy as np
 from lightgbm import LGBMClassifier
 from scipy.stats import kurtosis, skew

@@ -1,3 +1,7 @@
+"""NCDE.
+Neural CDE for time series classification.
+"""
+
 from copy import deepcopy
 
 import diffrax

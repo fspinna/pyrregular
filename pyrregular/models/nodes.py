@@ -1,3 +1,7 @@
+"""Nodes.
+This module contains various pipeline transformer classes for data preprocessing and transformation.
+"""
+
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin

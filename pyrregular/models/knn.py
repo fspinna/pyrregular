@@ -1,3 +1,7 @@
+"""KNN.
+K-Nearest Neighbors classifier with Dynamic Time Warping (DTW) and Sakoe-Chiba band.
+"""
+
 from tslearn.neighbors import KNeighborsTimeSeriesClassifier
 
 from pyrregular.wrappers.tslearn_wrapper import TslearnWrapper

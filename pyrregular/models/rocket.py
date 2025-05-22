@@ -1,3 +1,7 @@
+"""Rocket Pipeline.
+Minirocket transformation with LightGBM downstream classifier.
+"""
+
 from lightgbm import LGBMClassifier
 from sktime.pipeline import make_pipeline
 from sktime.transformations.panel.rocket import MiniRocketMultivariateVariable

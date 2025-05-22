@@ -1,3 +1,7 @@
+"""Raindrop.
+GNN-based model for time series classification.
+"""
+
 from pypots.classification.raindrop import Raindrop
 
 from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper

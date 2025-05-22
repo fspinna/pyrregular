@@ -1,3 +1,7 @@
+"""BRITS.
+Bidirectional Recurrent Imputation for Time Series.
+"""
+
 from pypots.classification.brits import BRITS
 
 from pyrregular.wrappers.pypots_wrapper import PyPOTSWrapper

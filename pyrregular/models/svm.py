@@ -1,3 +1,7 @@
+"""SVM Pipeline.
+Supports LCSS kernel and uses a custom TimeSeriesSVC class to handle the kernel.
+"""
+
 import numpy as np
 from sklearn.pipeline import Pipeline
 from sktime.classification.kernel_based import TimeSeriesSVC
