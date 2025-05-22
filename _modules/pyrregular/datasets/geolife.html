@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrregular.datasets.geolife &mdash; pyrregular  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyrregular
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/dataset_conversion.html">Convert your Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyrregular</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyrregular.datasets.geolife</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrregular.datasets.geolife</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">glob</span><span class="w"> </span><span class="kn">import</span> <span class="n">glob</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.data_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_original_folder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_csv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.reader_interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReaderInterface</span>
+
+
+<div class="viewcode-block" id="Geolife">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.geolife.html#pyrregular.datasets.geolife.Geolife">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Geolife</span><span class="p">(</span><span class="n">ReaderInterface</span><span class="p">):</span>
+<div class="viewcode-block" id="Geolife.read_original_version">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.geolife.html#pyrregular.datasets.geolife.Geolife.read_original_version">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_original_version</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">read_geolife</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="read_geolife">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.geolife.html#pyrregular.datasets.geolife.read_geolife">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_geolife</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">filenames</span><span class="o">=</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;geolife/Data/*&quot;</span><span class="p">,</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span>
+        <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+        <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="p">},</span>
+        <span class="n">reader_fun</span><span class="o">=</span><span class="n">_read_geolife</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="n">mode_names</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;walk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bike&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bus&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;car&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;subway&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;train&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;airplane&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;boat&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;run&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;motorcycle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;taxi&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_plt</span><span class="p">(</span><span class="n">plt_file</span><span class="p">):</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">plt_file</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>
+
+    <span class="c1"># for clarity rename columns</span>
+    <span class="n">points</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;5_6&quot;</span><span class="p">:</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;alt&quot;</span><span class="p">})</span>
+
+    <span class="c1"># points.time = points.time.apply(lambda x: x.timestamp())</span>
+    <span class="n">points</span><span class="o">.</span><span class="n">alt</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">alt</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="o">-</span><span class="mi">777</span> <span class="k">else</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="c1"># remove unused columns</span>
+    <span class="n">points</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+
+    <span class="n">points</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">points</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_labels</span><span class="p">(</span><span class="n">labels_file</span><span class="p">):</span>
+    <span class="n">mode_ids</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mode_names</span><span class="p">)}</span>
+
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">labels_file</span><span class="p">,</span>
+        <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">parse_dates</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span>
+        <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># for clarity rename columns</span>
+    <span class="n">labels</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;start_time&quot;</span><span class="p">,</span> <span class="s2">&quot;end_time&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span>
+
+    <span class="c1"># replace &#39;label&#39; column with integer encoding</span>
+    <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">mode_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]]</span>
+
+    <span class="k">return</span> <span class="n">labels</span>
+
+
+<div class="viewcode-block" id="apply_labels">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.geolife.html#pyrregular.datasets.geolife.apply_labels">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_labels</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;start_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">],</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">no_label</span> <span class="o">=</span> <span class="p">(</span><span class="n">indices</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span>
+        <span class="n">points</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;end_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="p">)</span>
+    <span class="n">points</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">points</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">no_label</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_user</span><span class="p">(</span><span class="n">user_folder</span><span class="p">):</span>
+    <span class="n">plt_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_folder</span><span class="p">,</span> <span class="s2">&quot;Trajectory&quot;</span><span class="p">,</span> <span class="s2">&quot;*.plt&quot;</span><span class="p">))</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">_read_plt</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">plt_files</span><span class="p">])</span>
+
+    <span class="n">labels_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_folder</span><span class="p">,</span> <span class="s2">&quot;labels.txt&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">labels_file</span><span class="p">):</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">_read_labels</span><span class="p">(</span><span class="n">labels_file</span><span class="p">)</span>
+        <span class="n">apply_labels</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NAN</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_all_users</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+    <span class="n">subfolders</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+    <span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">subfolders</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bar</span><span class="p">):</span>
+        <span class="n">bar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span>
+            <span class="s2">&quot;[</span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2">] processing user </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">subfolders</span><span class="p">),</span> <span class="n">sf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">_read_user</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_geolife</span><span class="p">(</span><span class="n">filenames</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Read the CSV file into a Pandas DataFrame</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_read_all_users</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">df</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">mode_names</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span>
+    <span class="p">)</span>
+
+    <span class="n">prec_row</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">tid</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="n">tids</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">row</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">prec_row</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="ow">or</span> <span class="n">row</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="n">prec_row</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+            <span class="ow">or</span> <span class="n">row</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="n">prec_row</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="n">prec_row</span> <span class="o">=</span> <span class="n">row</span>
+            <span class="n">tid</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">tids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tids</span>
+    <span class="k">del</span> <span class="n">tids</span>
+
+    <span class="n">melted_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
+        <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">],</span>
+        <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;lat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;lon&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;alt&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">melted_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">row</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Geolife.save_unfixed(True)</span>
+    <span class="c1"># Geolife.save_fixed(True)</span>
+
+    <span class="c1"># print(Geolife.read(False))</span>
+    <span class="c1"># print(Geolife.load_unfixed())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">Geolife</span><span class="o">.</span><span class="n">load_final_version</span><span class="p">())</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Francesco Spinnato, Cristiano Landi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

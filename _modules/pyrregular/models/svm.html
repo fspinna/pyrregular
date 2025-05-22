@@ -1,0 +1,148 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrregular.models.svm &mdash; pyrregular  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyrregular
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/dataset_conversion.html">Convert your Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyrregular</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyrregular.models.svm</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrregular.models.svm</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;SVM Pipeline.</span>
+<span class="sd">Supports LCSS kernel and uses a custom TimeSeriesSVC class to handle the kernel.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sktime.classification.kernel_based</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeriesSVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sktime.datatypes</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_to</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sktime.dists_kernels.lcss</span><span class="w"> </span><span class="kn">import</span> <span class="n">LcssTslearn</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.models.nodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApplyFunc</span><span class="p">,</span> <span class="n">DropNATransformer</span><span class="p">,</span> <span class="n">_standardize</span>
+
+
+<div class="viewcode-block" id="TimeSeriesSVCFix">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.svm.html#pyrregular.models.svm.TimeSeriesSVCFix">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeSeriesSVCFix</span><span class="p">(</span><span class="n">TimeSeriesSVC</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TimeSeriesSVCFix.predict_proba">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.svm.html#pyrregular.models.svm.TimeSeriesSVCFix.predict_proba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">))[</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span></div>
+</div>
+
+
+
+<span class="n">svm_pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;standardize&quot;</span><span class="p">,</span> <span class="n">ApplyFunc</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">_standardize</span><span class="p">)),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;convert_to_nested&quot;</span><span class="p">,</span>
+            <span class="n">ApplyFunc</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">convert_to</span><span class="p">,</span> <span class="n">fn_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;to_type&quot;</span><span class="p">:</span> <span class="s2">&quot;nested_univ&quot;</span><span class="p">}),</span>
+        <span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;drop_na&quot;</span><span class="p">,</span> <span class="n">DropNATransformer</span><span class="p">()),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;svc&quot;</span><span class="p">,</span>
+            <span class="n">TimeSeriesSVCFix</span><span class="p">(</span>
+                <span class="n">kernel</span><span class="o">=</span><span class="n">LcssTslearn</span><span class="p">(</span>
+                    <span class="n">global_constraint</span><span class="o">=</span><span class="s2">&quot;sakoe_chiba&quot;</span><span class="p">,</span> <span class="n">sakoe_chiba_radius</span><span class="o">=</span><span class="mi">10</span>
+                <span class="p">),</span>
+                <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;This pipeline applies standardize → convert_to_nested → drop_na → TimeSeriesSVC with LCSS kernel.&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Francesco Spinnato, Cristiano Landi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrregular.datasets.ldfpa &mdash; pyrregular  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyrregular
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/dataset_conversion.html">Convert your Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyrregular</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyrregular.datasets.ldfpa</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrregular.datasets.ldfpa</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.data_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_final_folder</span><span class="p">,</span> <span class="n">data_original_folder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">load_from_file</span><span class="p">,</span>
+    <span class="n">load_yaml</span><span class="p">,</span>
+    <span class="n">read_csv</span><span class="p">,</span>
+    <span class="n">save_to_file</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.reader_interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReaderInterface</span>
+
+
+<div class="viewcode-block" id="Ldfpa">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.ldfpa.html#pyrregular.datasets.ldfpa.Ldfpa">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Ldfpa</span><span class="p">(</span><span class="n">ReaderInterface</span><span class="p">):</span>
+<div class="viewcode-block" id="Ldfpa.read_original_version">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.ldfpa.html#pyrregular.datasets.ldfpa.Ldfpa.read_original_version">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_original_version</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">read_ldfpa</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fix_intermediate_version</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">DataArray</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
+        <span class="c1"># the test set is a different user</span>
+        <span class="n">split</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;test&quot;</span> <span class="k">if</span> <span class="s2">&quot;E&quot;</span> <span class="ow">in</span> <span class="n">ts_id</span> <span class="k">else</span> <span class="s2">&quot;train&quot;</span> <span class="k">for</span> <span class="n">ts_id</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
+            <span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">split</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_dataset_ldfpa</span><span class="p">(</span><span class="n">filenames</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="n">filenames</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Read the CSV file into a Pandas DataFrame</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Rename the columns</span>
+    <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;Sequence_Name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Tag_ID&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Timestamp&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;x_coordinate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;y_coordinate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;z_coordinate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Activity&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">column_names</span>
+
+    <span class="c1"># Convert &#39;Date&#39; to datetime format</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M:%S:</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Convert &#39;Sequence_Name&#39; to categorical data type</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Sequence_Name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Sequence_Name&quot;</span><span class="p">],</span>
+        <span class="n">categories</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;A01&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;A02&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;A03&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;A04&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;A05&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;B01&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;B02&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;B03&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;B04&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;B05&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;C01&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;C02&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;C03&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;C04&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;C05&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;D01&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;D02&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;D03&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;D04&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;D05&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E01&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E02&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E03&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E04&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;E05&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Map Tag_ID to human-readable label</span>
+    <span class="n">tag_id_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;010-000-024-033&quot;</span><span class="p">:</span> <span class="s2">&quot;ANKLE_LEFT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;010-000-030-096&quot;</span><span class="p">:</span> <span class="s2">&quot;ANKLE_RIGHT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;020-000-033-111&quot;</span><span class="p">:</span> <span class="s2">&quot;CHEST&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;020-000-032-221&quot;</span><span class="p">:</span> <span class="s2">&quot;BELT&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Tag_ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Tag_ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">tag_id_map</span><span class="p">)</span>
+
+    <span class="c1"># Convert &#39;Activity&#39; to categorical data type</span>
+    <span class="n">activity_categories</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;walking&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;falling&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lying down&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lying&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sitting down&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sitting&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;standing up from lying&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;on all fours&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sitting on the ground&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;standing up from sitting&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;standing up from sitting on the ground&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Activity_Name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Activity&quot;</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="n">activity_categories</span><span class="p">)</span>
+
+    <span class="c1"># keep also the activity as a number</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Activity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Activity_Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
+
+    <span class="c1"># Pivot the DataFrame so that Tag_ID becomes a column</span>
+    <span class="c1"># This will keep the &#39;Sequence_Name&#39; and &#39;Activity&#39; as part of the index</span>
+    <span class="n">pivoted_df_full_date</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Sequence_Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Activity&quot;</span><span class="p">,</span> <span class="s2">&quot;Activity_Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Date&quot;</span><span class="p">],</span>
+        <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;Tag_ID&quot;</span><span class="p">,</span>
+        <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_coordinate&quot;</span><span class="p">,</span> <span class="s2">&quot;y_coordinate&quot;</span><span class="p">,</span> <span class="s2">&quot;z_coordinate&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Flatten the multi-level column index</span>
+    <span class="n">pivoted_df_full_date</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">coordinate</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">coordinate</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">pivoted_df_full_date</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Reset the DataFrame index so that &#39;Sequence_Name&#39; and &#39;Activity&#39; become regular columns</span>
+    <span class="n">pivoted_df_full_date</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">pivoted_df_full_date</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pivoted_df_full_date</span><span class="p">[</span><span class="s2">&quot;Sequence_Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
+        <span class="o">+</span> <span class="n">pivoted_df_full_date</span><span class="p">[</span><span class="s2">&quot;Activity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">pivoted_df_full_date</span> <span class="o">=</span> <span class="n">pivoted_df_full_date</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
+        <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Sequence_Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Activity&quot;</span><span class="p">,</span> <span class="s2">&quot;Activity_Name&quot;</span><span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">pivoted_df_full_date</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">row</span>
+
+
+<div class="viewcode-block" id="read_ldfpa">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.ldfpa.html#pyrregular.datasets.ldfpa.read_ldfpa">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_ldfpa</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">attrs</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;localization_data_for_person_activity/attrs.yml&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">filenames</span><span class="o">=</span><span class="n">data_original_folder</span><span class="p">()</span>
+        <span class="o">/</span> <span class="s2">&quot;localization_data_for_person_activity/ConfLongDemo_JSI.txt&quot;</span><span class="p">,</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span>
+        <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+        <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Sequence_Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Activity&quot;</span><span class="p">,</span> <span class="s2">&quot;Activity_Name&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="p">},</span>
+        <span class="n">reader_fun</span><span class="o">=</span><span class="n">_dataset_ldfpa</span><span class="p">,</span>
+        <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Ldfpa.save_fixed()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">Ldfpa</span><span class="o">.</span><span class="n">load_final_version</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Francesco Spinnato, Cristiano Landi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

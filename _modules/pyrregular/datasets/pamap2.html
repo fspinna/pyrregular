@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrregular.datasets.pamap2 &mdash; pyrregular  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyrregular
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/dataset_conversion.html">Convert your Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyrregular</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyrregular.datasets.pamap2</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrregular.datasets.pamap2</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.data_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_original_folder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_csv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.reader_interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReaderInterface</span>
+
+
+<div class="viewcode-block" id="Pamap2">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.pamap2.html#pyrregular.datasets.pamap2.Pamap2">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pamap2</span><span class="p">(</span><span class="n">ReaderInterface</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Pamap2.read_original_version">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.pamap2.html#pyrregular.datasets.pamap2.Pamap2.read_original_version">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_original_version</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">read_pamap</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fix_intermediate_version</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">DataArray</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
+        <span class="n">activity</span><span class="p">,</span> <span class="n">activity_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;activity_name&quot;</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">activity</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="n">activity_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">activity_name</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">activity</span><span class="p">),</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># as suggested by the authors, we discard all the 0s activities (transient activities)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">activity_name</span> <span class="o">!=</span> <span class="s2">&quot;transient&quot;</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;activity_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="n">ts_id_train</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+        <span class="p">)</span>
+        <span class="n">ts_id_train</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ts_id_train</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">train_or_test</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;train&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ts_id_train</span> <span class="k">else</span> <span class="s2">&quot;test&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
+            <span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">train_or_test</span><span class="p">),</span> <span class="n">class_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+
+<span class="n">activity_names</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;transient&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;lying&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;sitting&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;standing&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;walking&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="p">:</span> <span class="s2">&quot;cycling&quot;</span><span class="p">,</span>
+    <span class="mi">7</span><span class="p">:</span> <span class="s2">&quot;Nordic_walking&quot;</span><span class="p">,</span>
+    <span class="mi">9</span><span class="p">:</span> <span class="s2">&quot;watching_TV&quot;</span><span class="p">,</span>
+    <span class="mi">10</span><span class="p">:</span> <span class="s2">&quot;computer_work&quot;</span><span class="p">,</span>
+    <span class="mi">11</span><span class="p">:</span> <span class="s2">&quot;car driving&quot;</span><span class="p">,</span>
+    <span class="mi">12</span><span class="p">:</span> <span class="s2">&quot;ascending_stairs&quot;</span><span class="p">,</span>
+    <span class="mi">13</span><span class="p">:</span> <span class="s2">&quot;descending_stairs&quot;</span><span class="p">,</span>
+    <span class="mi">16</span><span class="p">:</span> <span class="s2">&quot;vacuum_cleaning&quot;</span><span class="p">,</span>
+    <span class="mi">17</span><span class="p">:</span> <span class="s2">&quot;ironing&quot;</span><span class="p">,</span>
+    <span class="mi">18</span><span class="p">:</span> <span class="s2">&quot;folding_laundry&quot;</span><span class="p">,</span>
+    <span class="mi">19</span><span class="p">:</span> <span class="s2">&quot;house_cleaning&quot;</span><span class="p">,</span>
+    <span class="mi">20</span><span class="p">:</span> <span class="s2">&quot;playing_soccer&quot;</span><span class="p">,</span>
+    <span class="mi">24</span><span class="p">:</span> <span class="s2">&quot;rope_jumping&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="get_column_names">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.pamap2.html#pyrregular.datasets.pamap2.get_column_names">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_column_names</span><span class="p">():</span>
+    <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;timestamp_s&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_id&quot;</span><span class="p">,</span> <span class="s2">&quot;heart_rate&quot;</span><span class="p">]</span>
+    <span class="n">IMU</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;temperature&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;acceleration_16g_0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;acceleration_16g_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;acceleration_16g_2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;acceleration_6g_0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;acceleration_6g_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;acceleration_6g_2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gyroscope_0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gyroscope_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gyroscope_2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;magnetometer_0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;magnetometer_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;magnetometer_2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;orientation_0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;orientation_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;orientation_2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;orientation_3&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">imu_position</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;hand&quot;</span><span class="p">,</span> <span class="s2">&quot;chest&quot;</span><span class="p">,</span> <span class="s2">&quot;ankle&quot;</span><span class="p">]:</span>
+        <span class="n">column_names</span> <span class="o">+=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">imu_position</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">signal_name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">signal_name</span> <span class="ow">in</span> <span class="n">IMU</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">column_names</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_pamap</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">last_values</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+        <span class="n">filenames</span><span class="p">,</span>
+        <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;reading PAMAP2 files&quot;</span><span class="p">,</span>
+        <span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">subject_id</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">file</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">df_subject</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span>
+            <span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">get_column_names</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">df_subject</span><span class="p">[</span><span class="s2">&quot;activity_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_subject</span><span class="o">.</span><span class="n">activity_id</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">activity_names</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">df_subject</span><span class="p">[</span><span class="s2">&quot;subject_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject_id</span>
+
+        <span class="n">ts_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+            <span class="n">df_subject</span><span class="p">[[</span><span class="s2">&quot;activity_id&quot;</span><span class="p">,</span> <span class="s2">&quot;subject_id&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">,</span>
+            <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">df_subject</span><span class="p">),</span>
+            <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;partitioning the data&quot;</span><span class="p">,</span>
+            <span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="n">row</span> <span class="o">!=</span> <span class="n">last_values</span><span class="p">:</span>
+                <span class="n">last_values</span> <span class="o">=</span> <span class="n">row</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">ts_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+        <span class="n">df_subject</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ts_ids</span>
+
+        <span class="n">melted_df_subject</span> <span class="o">=</span> <span class="n">df_subject</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
+            <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;ts_id&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;timestamp_s&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;activity_id&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;activity_name&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;subject_id&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">value_vars</span><span class="o">=</span><span class="n">get_column_names</span><span class="p">()[</span><span class="mi">1</span><span class="p">:],</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">melted_df_subject</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">row</span>
+
+
+<div class="viewcode-block" id="read_pamap">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.pamap2.html#pyrregular.datasets.pamap2.read_pamap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_pamap</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">filenames</span><span class="o">=</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_original_folder</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;/PAMAP2/*/*.dat&quot;</span><span class="p">),</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;timestamp_s&quot;</span><span class="p">,</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span>
+        <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+        <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;activity_id&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_name&quot;</span><span class="p">,</span> <span class="s2">&quot;subject_id&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;timestamp_s&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="n">reader_fun</span><span class="o">=</span><span class="n">_read_pamap</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Pamap2.save_unfixed(verbose=True)</span>
+
+    <span class="c1"># Pamap2.save_fixed(verbose=True)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">Pamap2</span><span class="o">.</span><span class="n">load_final_version</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+    <span class="c1"># print(PAMAP2.read(False))</span>
+    <span class="c1"># print(PAMAP2.load_unfixed())</span>
+    <span class="c1"># print(PAMAP2.load_fixed())</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Francesco Spinnato, Cristiano Landi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

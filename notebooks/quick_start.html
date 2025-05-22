@@ -1,44 +1,93 @@
+
+
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<html lang="en" data-content_root="../">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start &mdash; pyrregular  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
 
-    <title>Quick Start &#8212; pyrregular  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=686e5160" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
-    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Convert your Dataset" href="dataset_conversion.html" />
-    <link rel="prev" title="pyrregular documentation" href="../index.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
+    <link rel="prev" title="pyrregular documentation" href="../index.html" /> 
+</head>
 
-  
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
           
+          
+          <a href="../index.html" class="icon icon-home">
+            pyrregular
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#List-available-datasets">List available datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Loading-the-dataset-from-the-online-repository">Loading the dataset from the online repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Data-Handling-and-Plotting">Data Handling and Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Downstream-Tasks">Downstream Tasks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Train-test-split">Train-test split</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Classification">Classification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dataset_conversion.html">Convert your Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
 
-          <div class="body" role="main">
-            
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyrregular</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quick Start</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/notebooks/quick_start.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="Quick-Start">
-<h1>Quick Start<a class="headerlink" href="#Quick-Start" title="Link to this heading">¶</a></h1>
+<h1>Quick Start<a class="headerlink" href="#Quick-Start" title="Link to this heading"></a></h1>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -48,7 +97,7 @@
 </div>
 </div>
 <section id="List-available-datasets">
-<h2>List available datasets<a class="headerlink" href="#List-available-datasets" title="Link to this heading">¶</a></h2>
+<h2>List available datasets<a class="headerlink" href="#List-available-datasets" title="Link to this heading"></a></h2>
 <p>To view available datasets, you can use the <code class="docutils literal notranslate"><span class="pre">list_datasets</span></code> function.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -76,7 +125,7 @@
 </div>
 </section>
 <section id="Loading-the-dataset-from-the-online-repository">
-<h2>Loading the dataset from the online repository<a class="headerlink" href="#Loading-the-dataset-from-the-online-repository" title="Link to this heading">¶</a></h2>
+<h2>Loading the dataset from the online repository<a class="headerlink" href="#Loading-the-dataset-from-the-online-repository" title="Link to this heading"></a></h2>
 <p>Loading a dataset is as from the online repo (<a class="reference external" href="https://huggingface.co/datasets/splandi/pyrregular">https://huggingface.co/datasets/splandi/pyrregular</a>) is as simple as calling the <code class="docutils literal notranslate"><span class="pre">load_dataset</span></code> function with the dataset name.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -802,7 +851,7 @@ Coordinates:
 </div>
 </section>
 <section id="Data-Handling-and-Plotting">
-<h2>Data Handling and Plotting<a class="headerlink" href="#Data-Handling-and-Plotting" title="Link to this heading">¶</a></h2>
+<h2>Data Handling and Plotting<a class="headerlink" href="#Data-Handling-and-Plotting" title="Link to this heading"></a></h2>
 <p>Data can be accessed with standard xarray methods.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[77]:
@@ -1966,7 +2015,7 @@ array([ 8.,  8.,  8.,  8.,  8.,  8.,  8.,  8.,  8.,  8.,  2.,  8.,  8.,
 </div>
 </section>
 <section id="Downstream-Tasks">
-<h2>Downstream Tasks<a class="headerlink" href="#Downstream-Tasks" title="Link to this heading">¶</a></h2>
+<h2>Downstream Tasks<a class="headerlink" href="#Downstream-Tasks" title="Link to this heading"></a></h2>
 <p>The xarray is nice, but not supported by basically any downstream library. Thus, we can convert it into a numpy array.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[104]:
@@ -2117,7 +2166,7 @@ Wall time: 2.34 s
 </div>
 </div>
 <section id="Train-test-split">
-<h3>Train-test split<a class="headerlink" href="#Train-test-split" title="Link to this heading">¶</a></h3>
+<h3>Train-test split<a class="headerlink" href="#Train-test-split" title="Link to this heading"></a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[111]:
 </pre></div>
@@ -2139,7 +2188,7 @@ Wall time: 2.34 s
 </div>
 </section>
 <section id="Classification">
-<h3>Classification<a class="headerlink" href="#Classification" title="Link to this heading">¶</a></h3>
+<h3>Classification<a class="headerlink" href="#Classification" title="Link to this heading"></a></h3>
 <p>We have several ready-to-use classifiers in the <code class="docutils literal notranslate"><span class="pre">pyrregular</span></code> package. Be sure to install the required dependencies.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[118]:
@@ -2306,82 +2355,34 @@ Wall time: 98.3 ms
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="pyrregular documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dataset_conversion.html" class="btn btn-neutral float-right" title="Convert your Dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Francesco Spinnato, Cristiano Landi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">pyrregular</a></h1>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-
-
-
-
-
-
-
-
-<search id="searchbox" style="display: none" role="search">
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#List-available-datasets">List available datasets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Loading-the-dataset-from-the-online-repository">Loading the dataset from the online repository</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Data-Handling-and-Plotting">Data Handling and Plotting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Downstream-Tasks">Downstream Tasks</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Train-test-split">Train-test split</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Classification">Classification</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="dataset_conversion.html">Convert your Dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../index.html" title="previous chapter">pyrregular documentation</a></li>
-      <li>Next: <a href="dataset_conversion.html" title="next chapter">Convert your Dataset</a></li>
-  </ul></li>
-</ul>
-</div>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &#169;2025, Francesco Spinnato, Cristiano Landi.
-      
-      |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
-      
-      |
-      <a href="../_sources/notebooks/quick_start.ipynb.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

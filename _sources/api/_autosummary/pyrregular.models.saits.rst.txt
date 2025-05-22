@@ -1,8 +1,14 @@
-pyrregular.models.saits
+﻿pyrregular.models.saits
 =======================
 
 .. automodule:: pyrregular.models.saits
 
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      saits_pipeline
    
    .. rubric:: Classes
 

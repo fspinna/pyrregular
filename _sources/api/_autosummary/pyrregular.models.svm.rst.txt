@@ -1,8 +1,14 @@
-pyrregular.models.svm
+﻿pyrregular.models.svm
 =====================
 
 .. automodule:: pyrregular.models.svm
 
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      svm_pipeline
    
    .. rubric:: Classes
 

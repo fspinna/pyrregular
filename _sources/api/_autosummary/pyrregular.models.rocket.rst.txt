@@ -1,6 +1,12 @@
-pyrregular.models.rocket
+﻿pyrregular.models.rocket
 ========================
 
 .. automodule:: pyrregular.models.rocket
 
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      rocket_pipeline
    

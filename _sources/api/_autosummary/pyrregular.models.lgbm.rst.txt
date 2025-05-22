@@ -1,6 +1,12 @@
-pyrregular.models.lgbm
+﻿pyrregular.models.lgbm
 ======================
 
 .. automodule:: pyrregular.models.lgbm
 
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      lgbm_pipeline
    

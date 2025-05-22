@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrregular.models.ncde &mdash; pyrregular  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyrregular
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/dataset_conversion.html">Convert your Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyrregular</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyrregular.models.ncde</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrregular.models.ncde</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;NCDE.</span>
+<span class="sd">Neural CDE for time series classification.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">diffrax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">equinox</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">eqx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.random</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">optax</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.models.nodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">_standardize</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fill_time_index</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">nan_delta</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+    <span class="c1"># time delta</span>
+    <span class="n">a_diff</span> <span class="o">=</span> <span class="n">T</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">T</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># mean time delta</span>
+    <span class="n">delta_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">a_diff</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">nans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">delta_mean</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span>
+        <span class="n">nans</span>
+    <span class="p">):</span>  <span class="c1"># this can happen if there is only 1 valid value in the time series</span>
+        <span class="n">delta_mean</span><span class="p">[</span><span class="n">nans</span><span class="p">]</span> <span class="o">=</span> <span class="n">nan_delta</span>
+
+    <span class="c1"># last timestep</span>
+    <span class="n">last_valid_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># find where the nans are</span>
+    <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="c1"># where nans are there is an increasing value from 1 to the last nan</span>
+    <span class="n">nan_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">replacement</span> <span class="o">=</span> <span class="p">(</span><span class="n">last_valid_t</span> <span class="o">+</span> <span class="n">delta_mean</span> <span class="o">*</span> <span class="n">nan_indices</span><span class="p">)[</span><span class="n">nan_mask</span><span class="p">]</span>
+    <span class="n">T</span><span class="p">[</span><span class="n">nan_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">replacement</span>
+    <span class="k">return</span> <span class="n">T</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fill_all_nans_signals</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="n">X_</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">X_</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">X_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span>
+    <span class="n">X_</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">X_</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_Func</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">mlp</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MLP</span>
+    <span class="n">data_size</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">hidden_size</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">width_size</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        data_size: number of input channels (control channels).</span>
+<span class="sd">        hidden_size: dimension of the hidden state y(t).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_size</span> <span class="o">=</span> <span class="n">data_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MLP</span><span class="p">(</span>
+            <span class="n">in_size</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span>
+            <span class="n">out_size</span><span class="o">=</span><span class="n">hidden_size</span> <span class="o">*</span> <span class="n">data_size</span><span class="p">,</span>
+            <span class="n">width_size</span><span class="o">=</span><span class="n">width_size</span><span class="p">,</span>
+            <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">,</span>
+            <span class="n">activation</span><span class="o">=</span><span class="n">jnn</span><span class="o">.</span><span class="n">softplus</span><span class="p">,</span>
+            <span class="n">final_activation</span><span class="o">=</span><span class="n">jnn</span><span class="o">.</span><span class="n">tanh</span><span class="p">,</span>  <span class="c1"># helps control explosion</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="c1"># y.shape = (hidden_size,)</span>
+        <span class="c1"># We produce a matrix of shape (hidden_size, data_size).</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_size</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_NeuralCDE</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">initial</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MLP</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">_Func</span>
+    <span class="n">readout</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span>  <span class="c1"># maps hidden_size -&gt; n_classes</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">width_size</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        data_size: number of input channels (including time if you use it as a channel).</span>
+<span class="sd">        hidden_size: dimension of hidden state y(t).</span>
+<span class="sd">        n_classes: number of classes for multiclass classification.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">key1</span><span class="p">,</span> <span class="n">key2</span><span class="p">,</span> <span class="n">key3</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MLP</span><span class="p">(</span>
+            <span class="n">in_size</span><span class="o">=</span><span class="n">data_size</span><span class="p">,</span>
+            <span class="n">out_size</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span>
+            <span class="n">width_size</span><span class="o">=</span><span class="n">width_size</span><span class="p">,</span>
+            <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">,</span>
+            <span class="n">activation</span><span class="o">=</span><span class="n">jnn</span><span class="o">.</span><span class="n">softplus</span><span class="p">,</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">key1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">_Func</span><span class="p">(</span>
+            <span class="n">data_size</span><span class="o">=</span><span class="n">data_size</span><span class="p">,</span>
+            <span class="n">hidden_size</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span>
+            <span class="n">width_size</span><span class="o">=</span><span class="n">width_size</span><span class="p">,</span>
+            <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">,</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">key2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">readout</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span>
+            <span class="n">in_features</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key3</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ts</span><span class="p">,</span>
+        <span class="n">coeffs</span><span class="p">,</span>
+        <span class="n">dt0</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
+        <span class="n">evolving_out</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="n">diffrax</span><span class="o">.</span><span class="n">Euler</span><span class="p">(),</span>
+        <span class="n">max_steps</span><span class="o">=</span><span class="mi">4094</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># Create a continuous path from the cubic Hermite coefficients</span>
+        <span class="n">control</span> <span class="o">=</span> <span class="n">diffrax</span><span class="o">.</span><span class="n">CubicInterpolation</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">)</span>
+
+        <span class="c1"># Convert to ODE form</span>
+        <span class="n">term</span> <span class="o">=</span> <span class="n">diffrax</span><span class="o">.</span><span class="n">ControlTerm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">control</span><span class="p">)</span><span class="o">.</span><span class="n">to_ode</span><span class="p">()</span>
+
+        <span class="c1"># Initial hidden state</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial</span><span class="p">(</span><span class="n">control</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">ts</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="c1"># Decide how much to save</span>
+        <span class="k">if</span> <span class="n">evolving_out</span><span class="p">:</span>
+            <span class="n">saveat</span> <span class="o">=</span> <span class="n">diffrax</span><span class="o">.</span><span class="n">SaveAt</span><span class="p">(</span><span class="n">ts</span><span class="o">=</span><span class="n">ts</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">saveat</span> <span class="o">=</span> <span class="n">diffrax</span><span class="o">.</span><span class="n">SaveAt</span><span class="p">(</span><span class="n">t1</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Solve the CDE</span>
+        <span class="n">solution</span> <span class="o">=</span> <span class="n">diffrax</span><span class="o">.</span><span class="n">diffeqsolve</span><span class="p">(</span>
+            <span class="n">term</span><span class="p">,</span>
+            <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span>
+            <span class="n">t0</span><span class="o">=</span><span class="n">ts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">t1</span><span class="o">=</span><span class="n">ts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">dt0</span><span class="o">=</span><span class="n">dt0</span><span class="p">,</span>
+            <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span>
+            <span class="n">saveat</span><span class="o">=</span><span class="n">saveat</span><span class="p">,</span>
+            <span class="n">throw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">max_steps</span><span class="o">=</span><span class="n">max_steps</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">evolving_out</span><span class="p">:</span>
+            <span class="n">hidden_trajectories</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">ys</span>  <span class="c1"># shape (len(ts), hidden_size)</span>
+            <span class="n">logits</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">readout</span><span class="p">)(</span><span class="n">hidden_trajectories</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">logits</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">final_hidden</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">ys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># shape (hidden_size,)</span>
+            <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readout</span><span class="p">(</span><span class="n">final_hidden</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">logits</span>
+
+
+<div class="viewcode-block" id="NeuralCDEClassifier">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.ncde.html#pyrregular.models.ncde.NeuralCDEClassifier">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NeuralCDEClassifier</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A minimal scikit-learn API wrapper for a Neural CDE multiclass classifier.</span>
+
+<span class="sd">    X.shape = (n_instances, n_signals, n_timesteps)</span>
+<span class="sd">      - X[:, :-1, :] =&gt; data channels</span>
+<span class="sd">      - X[:, -1, :]  =&gt; the time array for each instance</span>
+
+<span class="sd">    y.shape = (n_instances,) with integer labels in {0, 1, ..., n_classes-1}.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hidden_size (int): Number of hidden units in the Neural CDE.</span>
+<span class="sd">        width_size (int): Width of the hidden layers.</span>
+<span class="sd">        depth (int): Number of layers in the Neural CDE.</span>
+<span class="sd">        max_iter (int): Maximum number of training iterations.</span>
+<span class="sd">        lr (float): Learning rate for the optimizer.</span>
+<span class="sd">        seed (int): Random seed for reproducibility.</span>
+<span class="sd">        print_step (int): Frequency of printing training progress.</span>
+<span class="sd">        validate (bool): Whether to use validation during training.</span>
+<span class="sd">        patience_lr (int): Number of iterations to wait before reducing the learning rate if no improvement.</span>
+<span class="sd">        patience_es (int): Number of iterations to wait before early stopping if no improvement.</span>
+<span class="sd">        lr_reduce_factor (float): Factor by which to reduce the learning rate.</span>
+<span class="sd">        solver (diffrax.AbstractSolver): Numerical solver for the ODE.</span>
+<span class="sd">        max_steps (int): Maximum number of steps for the ODE solver.</span>
+<span class="sd">        reset_loss_after_lr_reduction (bool): Whether to reset loss tracking after learning rate reduction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">width_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+        <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">print_step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">patience_lr</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">patience_es</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">lr_reduce_factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="n">diffrax</span><span class="o">.</span><span class="n">Euler</span><span class="p">(),</span>
+        <span class="n">max_steps</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span>
+        <span class="n">reset_loss_after_lr_reduction</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width_size</span> <span class="o">=</span> <span class="n">width_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">lr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_step</span> <span class="o">=</span> <span class="n">print_step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="n">validate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patience_lr</span> <span class="o">=</span> <span class="n">patience_lr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patience_es</span> <span class="o">=</span> <span class="n">patience_es</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr_reduce_factor</span> <span class="o">=</span> <span class="n">lr_reduce_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">solver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="o">=</span> <span class="n">max_steps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_loss_after_lr_reduction</span> <span class="o">=</span> <span class="n">reset_loss_after_lr_reduction</span>
+
+        <span class="c1"># These will be set after fit:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="NeuralCDEClassifier.fit">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.ncde.html#pyrregular.models.ncde.NeuralCDEClassifier.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="c1"># 1) Split into train/val</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+                    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="c1"># Fallback if y can&#39;t be stratified</span>
+                <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+                    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span>
+            <span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># 2) Basic shape checks (on training data)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">n_signals_train</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c1"># 3) Separate time from data channels (train)</span>
+        <span class="n">data_channels_train</span> <span class="o">=</span> <span class="n">_fill_all_nans_signals</span><span class="p">(</span><span class="n">_standardize</span><span class="p">(</span><span class="n">X_train</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]))</span>
+        <span class="n">times_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">times_train</span> <span class="o">=</span> <span class="n">_fill_time_index</span><span class="p">(</span><span class="n">times_train</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">nan_delta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt0</span><span class="p">)[</span>
+            <span class="p">:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:</span>
+        <span class="p">]</span>
+        <span class="n">data_size</span> <span class="o">=</span> <span class="n">n_signals_train</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># 4) Build cubic Hermite coefficients for each instance</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_make_coeff</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">ti</span><span class="p">):</span>
+            <span class="c1"># xi: shape (data_size, n_timesteps)</span>
+            <span class="c1"># we need (n_timesteps, data_size) for diffrax</span>
+            <span class="k">return</span> <span class="n">diffrax</span><span class="o">.</span><span class="n">backward_hermite_coefficients</span><span class="p">(</span>
+                <span class="n">ti</span><span class="p">,</span> <span class="n">xi</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">fill_forward_nans_at_end</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">replace_nans_at_start</span><span class="o">=</span><span class="mi">0</span>
+            <span class="p">)</span>
+
+        <span class="n">coeffs_train</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">_make_coeff</span><span class="p">)(</span><span class="n">data_channels_train</span><span class="p">,</span> <span class="n">times_train</span><span class="p">)</span>
+
+        <span class="c1"># Now do the same for validation data</span>
+        <span class="n">data_channels_val</span> <span class="o">=</span> <span class="n">_fill_all_nans_signals</span><span class="p">(</span><span class="n">_standardize</span><span class="p">(</span><span class="n">X_val</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]))</span>
+        <span class="n">times_val</span> <span class="o">=</span> <span class="n">X_val</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">times_val</span> <span class="o">=</span> <span class="n">_fill_time_index</span><span class="p">(</span><span class="n">times_val</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">nan_delta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt0</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">coeffs_val</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">_make_coeff</span><span class="p">)(</span><span class="n">data_channels_val</span><span class="p">,</span> <span class="n">times_val</span><span class="p">)</span>
+
+        <span class="c1"># 5) Instantiate the NeuralCDE model</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="n">_NeuralCDE</span><span class="p">(</span>
+            <span class="n">data_size</span><span class="o">=</span><span class="n">data_size</span><span class="p">,</span>
+            <span class="n">hidden_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span>
+            <span class="n">width_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width_size</span><span class="p">,</span>
+            <span class="n">depth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
+            <span class="n">n_classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span><span class="p">,</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 6) Set up optimizer</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optax</span><span class="o">.</span><span class="n">adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+        <span class="n">opt_state</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">,</span> <span class="n">eqx</span><span class="o">.</span><span class="n">is_array</span><span class="p">))</span>
+
+        <span class="c1"># 7) Define the multiclass cross-entropy for training</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_train_loss_fn</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_single_loss</span><span class="p">(</span><span class="n">coeff_i</span><span class="p">,</span> <span class="n">ti</span><span class="p">,</span> <span class="n">yi</span><span class="p">):</span>
+                <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span>
+                    <span class="n">ti</span><span class="p">,</span>
+                    <span class="n">coeff_i</span><span class="p">,</span>
+                    <span class="n">evolving_out</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">dt0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt0</span><span class="p">,</span>
+                    <span class="n">solver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span>
+                    <span class="n">max_steps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">logprobs</span> <span class="o">=</span> <span class="n">jnn</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">return</span> <span class="o">-</span><span class="n">logprobs</span><span class="p">[</span><span class="n">yi</span><span class="p">]</span>
+
+            <span class="n">losses</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">_single_loss</span><span class="p">)(</span><span class="n">coeffs_train</span><span class="p">,</span> <span class="n">times_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span>
+
+        <span class="c1"># Validation loss</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_val_loss_fn</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_single_loss</span><span class="p">(</span><span class="n">coeff_i</span><span class="p">,</span> <span class="n">ti</span><span class="p">,</span> <span class="n">yi</span><span class="p">):</span>
+                <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span>
+                    <span class="n">ti</span><span class="p">,</span>
+                    <span class="n">coeff_i</span><span class="p">,</span>
+                    <span class="n">evolving_out</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">dt0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt0</span><span class="p">,</span>
+                    <span class="n">solver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span>
+                    <span class="n">max_steps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">logprobs</span> <span class="o">=</span> <span class="n">jnn</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">return</span> <span class="o">-</span><span class="n">logprobs</span><span class="p">[</span><span class="n">yi</span><span class="p">]</span>
+
+            <span class="n">losses</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">_single_loss</span><span class="p">)(</span><span class="n">coeffs_val</span><span class="p">,</span> <span class="n">times_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span>
+
+        <span class="c1"># Single gradient step</span>
+        <span class="nd">@eqx</span><span class="o">.</span><span class="n">filter_jit</span>
+        <span class="nd">@eqx</span><span class="o">.</span><span class="n">filter_value_and_grad</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_step</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">_train_loss_fn</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="c1"># 8) Early stopping setup</span>
+        <span class="n">best_val_loss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="n">stagnation_counter_lr</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Counter for learning rate reduction</span>
+        <span class="n">stagnation_counter_es</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Counter for early stopping</span>
+        <span class="n">best_model_path</span> <span class="o">=</span> <span class="s2">&quot;best_model.eqx&quot;</span>  <span class="c1"># File path to store the best model</span>
+
+        <span class="n">current_lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span>  <span class="c1"># Initial learning rate</span>
+
+        <span class="c1"># Training loop</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">):</span>
+            <span class="c1"># Compute training loss and gradients</span>
+            <span class="n">train_loss</span><span class="p">,</span> <span class="n">grads</span> <span class="o">=</span> <span class="n">_step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">)</span>
+            <span class="n">updates</span><span class="p">,</span> <span class="n">opt_state</span> <span class="o">=</span> <span class="n">optax</span><span class="o">.</span><span class="n">adam</span><span class="p">(</span><span class="n">current_lr</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">grads</span><span class="p">,</span> <span class="n">opt_state</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">apply_updates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">,</span> <span class="n">updates</span><span class="p">)</span>
+
+            <span class="c1"># Compute validation loss</span>
+            <span class="n">val_loss</span> <span class="o">=</span> <span class="n">_val_loss_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">)</span>
+
+            <span class="c1"># Check for improvement in validation loss</span>
+            <span class="k">if</span> <span class="n">val_loss</span> <span class="o">&lt;</span> <span class="n">best_val_loss</span><span class="p">:</span>
+                <span class="n">best_val_loss</span> <span class="o">=</span> <span class="n">val_loss</span>
+                <span class="n">stagnation_counter_lr</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Reset learning rate counter</span>
+                <span class="n">stagnation_counter_es</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Reset early stopping counter</span>
+                <span class="n">eqx</span><span class="o">.</span><span class="n">tree_serialise_leaves</span><span class="p">(</span>
+                    <span class="n">best_model_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_</span>
+                <span class="p">)</span>  <span class="c1"># Save best model</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stagnation_counter_lr</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">stagnation_counter_es</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Learning rate reduction</span>
+            <span class="k">if</span> <span class="n">stagnation_counter_lr</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">patience_lr</span><span class="p">:</span>
+                <span class="n">current_lr</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr_reduce_factor</span>  <span class="c1"># Reduce learning rate</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reducing learning rate to </span><span class="si">{</span><span class="n">current_lr</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">stagnation_counter_lr</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Reset counter for learning rate</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_loss_after_lr_reduction</span><span class="p">:</span>
+                    <span class="n">best_val_loss</span> <span class="o">=</span> <span class="n">val_loss</span>
+
+            <span class="c1"># Early stopping</span>
+            <span class="k">if</span> <span class="n">stagnation_counter_es</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">patience_es</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Early stopping triggered!&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
+
+            <span class="c1"># Display progress</span>
+            <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_step</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">step</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2"> | Train Loss: </span><span class="si">{</span><span class="n">train_loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Val Loss: </span><span class="si">{</span><span class="n">val_loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Reload the best model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">tree_deserialise_leaves</span><span class="p">(</span><span class="n">best_model_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="NeuralCDEClassifier.predict_proba">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.ncde.html#pyrregular.models.ncde.NeuralCDEClassifier.predict_proba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict class probabilities for each instance in X.</span>
+<span class="sd">        Return shape: (n_instances, n_classes).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;NeuralCDEClassifier is not fitted yet.&quot;</span><span class="p">)</span>
+
+        <span class="n">data_channels</span> <span class="o">=</span> <span class="n">_fill_all_nans_signals</span><span class="p">(</span><span class="n">_standardize</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]))</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="n">_fill_time_index</span><span class="p">(</span><span class="n">times</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">nan_delta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt0</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_make_coeff</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">ti</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">diffrax</span><span class="o">.</span><span class="n">backward_hermite_coefficients</span><span class="p">(</span>
+                <span class="n">ti</span><span class="p">,</span> <span class="n">xi</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">fill_forward_nans_at_end</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">replace_nans_at_start</span><span class="o">=</span><span class="mi">0</span>
+            <span class="p">)</span>
+
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">_make_coeff</span><span class="p">)(</span><span class="n">data_channels</span><span class="p">,</span> <span class="n">times</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_single_forward</span><span class="p">(</span><span class="n">coeff_i</span><span class="p">,</span> <span class="n">ti</span><span class="p">):</span>
+            <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">(</span>
+                <span class="n">ti</span><span class="p">,</span>
+                <span class="n">coeff_i</span><span class="p">,</span>
+                <span class="n">evolving_out</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">dt0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt0</span><span class="p">,</span>
+                <span class="n">solver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span>
+                <span class="n">max_steps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">jnn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">_single_forward</span><span class="p">)(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">times</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="NeuralCDEClassifier.predict">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.ncde.html#pyrregular.models.ncde.NeuralCDEClassifier.predict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict the most likely class for each instance in X.</span>
+<span class="sd">        Return shape: (n_instances,).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NeuralCDEClassifier.score">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.ncde.html#pyrregular.models.ncde.NeuralCDEClassifier.score">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the mean accuracy on the given test data and labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">preds</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span></div>
+</div>
+
+
+
+<span class="n">ncde_pipeline</span> <span class="o">=</span> <span class="n">NeuralCDEClassifier</span><span class="p">(</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">width_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">print_step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">patience_lr</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">patience_es</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">lr_reduce_factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">solver</span><span class="o">=</span><span class="n">diffrax</span><span class="o">.</span><span class="n">Euler</span><span class="p">(),</span>
+    <span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;This pipeline applies NeuralCDE.&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Francesco Spinnato, Cristiano Landi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

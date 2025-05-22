@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrregular.conversion_utils &mdash; pyrregular  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyrregular
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/dataset_conversion.html">Convert your Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyrregular</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyrregular.conversion_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrregular.conversion_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">awkward</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ak</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sparse</span>
+
+
+<span class="nd">@nb</span><span class="o">.</span><span class="n">njit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_dense_rank</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="n">unique_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">ranks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">unique_values</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ranks</span>
+
+
+<span class="nd">@nb</span><span class="o">.</span><span class="n">njit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_breakpoints</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">a</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)]))</span>
+    <span class="p">)</span>
+
+
+<span class="nd">@nb</span><span class="o">.</span><span class="n">njit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_2d_breakpoints</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">b</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)]),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="remove_fill_values_from_time_idx">
+<a class="viewcode-back" href="../../api/_autosummary/pyrregular.conversion_utils.html#pyrregular.conversion_utils.remove_fill_values_from_time_idx">[docs]</a>
+<span class="nd">@nb</span><span class="o">.</span><span class="n">njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_fill_values_from_time_idx</span><span class="p">(</span>
+    <span class="n">coords</span><span class="p">,</span> <span class="n">ts_level</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ts_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">signal_idx</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_idx</span><span class="o">=-</span><span class="mi">1</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">ts_level</span><span class="p">:</span>
+        <span class="n">breakpoints</span> <span class="o">=</span> <span class="n">_find_breakpoints</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">ts_idx</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">breakpoints</span> <span class="o">=</span> <span class="n">_find_2d_breakpoints</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">ts_idx</span><span class="p">,</span> <span class="p">:],</span> <span class="n">coords</span><span class="p">[</span><span class="n">signal_idx</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nb</span><span class="o">.</span><span class="n">prange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">breakpoints</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">breakpoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">breakpoints</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">dense_time</span> <span class="o">=</span> <span class="n">_dense_rank</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">time_idx</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">])</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">time_idx</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">dense_time</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_reset_time_index</span><span class="p">(</span>
+    <span class="n">arr</span><span class="p">:</span> <span class="n">sparse</span><span class="o">.</span><span class="n">COO</span><span class="p">,</span>
+    <span class="n">time_id</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">ts_level</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">ts_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">signal_idx</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">time_idx</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">index_scale</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">,</span>
+    <span class="n">absolute_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">concatenate_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">normalize_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">new_coords</span> <span class="o">=</span> <span class="n">remove_fill_values_from_time_idx</span><span class="p">(</span>
+        <span class="n">arr</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span>
+        <span class="n">ts_level</span><span class="o">=</span><span class="n">ts_level</span><span class="p">,</span>
+        <span class="n">ts_idx</span><span class="o">=</span><span class="n">ts_idx</span><span class="p">,</span>
+        <span class="n">signal_idx</span><span class="o">=</span><span class="n">signal_idx</span><span class="p">,</span>
+        <span class="n">time_idx</span><span class="o">=</span><span class="n">time_idx</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">new_time_idx</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">COO</span><span class="p">(</span>
+        <span class="n">coords</span><span class="o">=</span><span class="n">new_coords</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">time_id</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">arr</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">time_idx</span><span class="p">]]</span> <span class="o">*</span> <span class="n">index_scale</span><span class="p">,</span>
+        <span class="n">fill_value</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">fill_value</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">ts_level</span><span class="p">:</span>
+        <span class="n">new_time_idx</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">new_time_idx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">signal_idx</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">absolute_time</span><span class="p">:</span>
+        <span class="n">new_time_idx</span> <span class="o">=</span> <span class="n">new_time_idx</span> <span class="o">-</span> <span class="n">new_time_idx</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">normalize_time</span><span class="p">:</span>
+        <span class="n">abs_mean</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">new_time_idx</span><span class="p">)</span>
+        <span class="n">new_time_idx</span> <span class="o">=</span> <span class="n">new_time_idx</span> <span class="o">-</span> <span class="n">sparse</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">new_time_idx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">new_time_idx</span> <span class="o">=</span> <span class="n">new_time_idx</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="n">sparse</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">new_time_idx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">abs_mean</span> <span class="o">*</span> <span class="mf">1e-8</span><span class="p">)</span>
+        <span class="p">)</span>  <span class="c1"># avoids divisions by 0 when there is only 1 timestamp</span>
+    <span class="k">if</span> <span class="n">concatenate_time</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">sparse</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">sparse</span><span class="o">.</span><span class="n">COO</span><span class="p">(</span>
+                        <span class="n">coords</span><span class="o">=</span><span class="n">new_coords</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">fill_value</span>
+                    <span class="p">),</span>
+                    <span class="n">new_time_idx</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">new_time_idx</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">sparse</span><span class="o">.</span><span class="n">COO</span><span class="p">(</span><span class="n">coords</span><span class="o">=</span><span class="n">new_coords</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">fill_value</span><span class="p">),</span>
+            <span class="n">new_time_idx</span><span class="p">,</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_ak_dropnan</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ak</span><span class="o">.</span><span class="n">drop_none</span><span class="p">(</span><span class="n">ak</span><span class="o">.</span><span class="n">nan_to_none</span><span class="p">(</span><span class="n">arr</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_to_pypots</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_to_tslearn</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fill_time_index</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+    <span class="c1"># time delta</span>
+    <span class="n">a_diff</span> <span class="o">=</span> <span class="n">T</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">T</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># mean time delta</span>
+    <span class="n">delta_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">a_diff</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># last timestep</span>
+    <span class="n">last_valid_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># find where the nans are</span>
+    <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="c1"># where nans are there is an increasing value from 1 to the last nan</span>
+    <span class="n">nan_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">replacement</span> <span class="o">=</span> <span class="p">(</span><span class="n">last_valid_t</span> <span class="o">+</span> <span class="n">delta_mean</span> <span class="o">*</span> <span class="n">nan_indices</span><span class="p">)[</span><span class="n">nan_mask</span><span class="p">]</span>
+    <span class="n">T</span><span class="p">[</span><span class="n">nan_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">replacement</span>
+    <span class="k">return</span> <span class="n">T</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Francesco Spinnato, Cristiano Landi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

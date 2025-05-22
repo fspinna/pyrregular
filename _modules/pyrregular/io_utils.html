@@ -1,0 +1,392 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrregular.io_utils &mdash; pyrregular  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyrregular
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/dataset_conversion.html">Convert your Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyrregular</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyrregular.io_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrregular.io_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="n">PathLike</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
+
+
+<div class="viewcode-block" id="save_to_file">
+<a class="viewcode-back" href="../../api/_autosummary/pyrregular.io_utils.html#pyrregular.io_utils.save_to_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_to_file</span><span class="p">(</span>
+    <span class="n">data_array</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;gzip&quot;</span><span class="p">,</span> <span class="n">compression_opts</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">):</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="c1"># Save sparse data and coordinates</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data_array</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="n">compression</span><span class="p">,</span>
+            <span class="n">compression_opts</span><span class="o">=</span><span class="n">compression_opts</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+            <span class="s2">&quot;coords&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data_array</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="n">compression</span><span class="p">,</span>
+            <span class="n">compression_opts</span><span class="o">=</span><span class="n">compression_opts</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;__shape&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_array</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># Save xarray dimensions</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;dims&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data_array</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;S&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Save xarray coordinates</span>
+        <span class="k">for</span> <span class="n">coord</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">data_array</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">dims</span> <span class="o">=</span> <span class="n">data_array</span><span class="p">[</span><span class="n">coord</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">data_array</span><span class="p">[</span><span class="n">coord</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span><span class="p">:</span>  <span class="c1"># Check for datetime dtype</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int64&quot;</span><span class="p">)</span>  <span class="c1"># Convert to Unix timestamp</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;__</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">/type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;M&quot;</span>
+            <span class="k">elif</span> <span class="n">values</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;U&quot;</span><span class="p">:</span>  <span class="c1"># Check for Unicode dtype</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;S&quot;</span><span class="p">)</span>  <span class="c1"># Convert to byte string</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;__</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">/type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;U&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;__</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">/type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;coords_xarray/</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;coords_xarray_dims/</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;S&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Save metadata</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data_array</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="load_from_file">
+<a class="viewcode-back" href="../../api/_autosummary/pyrregular.io_utils.html#pyrregular.io_utils.load_from_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="c1"># Load sparse data and coordinates</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][:]</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">][:]</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;__shape&quot;</span><span class="p">])</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">COO</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="n">dims</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;dims&quot;</span><span class="p">][:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Load metadata (except for development metadata)</span>
+        <span class="c1"># TODO: remove the eval function and use a safer way to deserialize the metadata</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;__&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>  <span class="c1"># Skip special attributes</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">deserialized_value</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span>
+                    <span class="n">value</span>
+                <span class="p">)</span>  <span class="c1"># Try to interpret the string as a Python literal</span>
+                <span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">deserialized_value</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">SyntaxError</span><span class="p">,</span> <span class="ne">NameError</span><span class="p">):</span>
+                <span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>  <span class="c1"># If eval fails, use the original string</span>
+
+        <span class="c1"># Load xarray dimension coordinates</span>
+        <span class="n">coords_xarray</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;coords_xarray&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;coords_xarray/</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][:]</span>
+            <span class="n">kind</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;__</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">/type&quot;</span><span class="p">]</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">kind</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+                    <span class="s2">&quot;datetime64[ns]&quot;</span>
+                <span class="p">)</span>  <span class="c1"># TODO: we need to make sure this works also for other kinds of datetime</span>
+            <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;O&quot;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">kind</span><span class="p">)</span>
+            <span class="n">coords_xarray</span><span class="p">[</span><span class="n">coord</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="nb">tuple</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;coords_xarray_dims/</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">)),</span>
+                <span class="n">values</span><span class="p">,</span>
+            <span class="p">)</span>
+    <span class="n">da</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="n">dims</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">coords_xarray</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">da</span></div>
+
+
+
+<div class="viewcode-block" id="load_yaml">
+<a class="viewcode-back" href="../../api/_autosummary/pyrregular.io_utils.html#pyrregular.io_utils.load_yaml">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_yaml</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_csvs</span><span class="p">(</span><span class="n">filenames</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">reader_fun</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="n">chunksize</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">reader_fun</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">row</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">reader_fun</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_filenames</span><span class="p">(</span><span class="n">filenames</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">filenames</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="n">PathLike</span><span class="p">):</span>
+        <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">filenames</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">filenames</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_metadata</span><span class="p">(</span>
+    <span class="n">filenames</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">ts_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">time_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">signal_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">reader_fun</span><span class="o">=</span><span class="n">_read_csvs</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">dates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">signals</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">n_records</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+        <span class="n">reader_fun</span><span class="p">(</span><span class="n">filenames</span><span class="o">=</span><span class="n">_parse_filenames</span><span class="p">(</span><span class="n">filenames</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+        <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Getting dataset metadata&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">dates</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="n">time_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">time_id</span> <span class="ow">in</span> <span class="n">time_ids</span><span class="p">]))</span>
+        <span class="n">ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="n">ts_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">ts_id</span> <span class="ow">in</span> <span class="n">ts_ids</span><span class="p">]))</span>
+        <span class="n">signals</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="n">signal_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">signal_id</span> <span class="ow">in</span> <span class="n">signal_ids</span><span class="p">]))</span>
+        <span class="n">n_records</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">dates</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">signals</span><span class="p">,</span> <span class="n">n_records</span>
+
+
+<div class="viewcode-block" id="read_csv">
+<a class="viewcode-back" href="../../api/_autosummary/pyrregular.io_utils.html#pyrregular.io_utils.read_csv">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_csv</span><span class="p">(</span>
+    <span class="n">filenames</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">ts_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ts_id&quot;</span><span class="p">,</span>
+    <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;signal_id&quot;</span><span class="p">,</span>
+    <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;time_id&quot;</span><span class="p">,</span>
+    <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value_id&quot;</span><span class="p">,</span>
+    <span class="n">dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># {dim1: [coords...], dim2: [coords...], ...}</span>
+    <span class="n">reader_fun</span><span class="o">=</span><span class="n">_read_csvs</span><span class="p">,</span>
+    <span class="n">time_index_as_datetime</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># get metadata</span>
+    <span class="n">dates</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">signals</span><span class="p">,</span> <span class="n">n_records</span> <span class="o">=</span> <span class="n">_get_metadata</span><span class="p">(</span>
+        <span class="n">filenames</span><span class="o">=</span><span class="n">_parse_filenames</span><span class="p">(</span><span class="n">filenames</span><span class="p">),</span>
+        <span class="n">ts_ids</span><span class="o">=</span><span class="p">[</span><span class="n">ts_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">],</span>
+        <span class="n">signal_ids</span><span class="o">=</span><span class="p">[</span><span class="n">signal_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">&quot;signal_id&quot;</span><span class="p">],</span>
+        <span class="n">time_ids</span><span class="o">=</span><span class="p">[</span><span class="n">time_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">&quot;time_id&quot;</span><span class="p">],</span>
+        <span class="n">reader_fun</span><span class="o">=</span><span class="n">reader_fun</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># create mapping from idx to id for each dimension</span>
+    <span class="n">dims_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="nb">dict</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dates</span><span class="p">))]),</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="nb">dict</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">ids</span><span class="p">))]),</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="nb">dict</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">signals</span><span class="p">))]),</span>
+    <span class="p">)</span>
+
+    <span class="n">sparse_matrix</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">DOK</span><span class="p">(</span>
+        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">signals</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)),</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+        <span class="n">reader_fun</span><span class="p">(</span><span class="n">filenames</span><span class="o">=</span><span class="n">_parse_filenames</span><span class="p">(</span><span class="n">filenames</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+        <span class="n">total</span><span class="o">=</span><span class="n">n_records</span><span class="p">,</span>
+        <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Reading dataset&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">time_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">&quot;time_id&quot;</span><span class="p">]])</span>
+        <span class="n">signal</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">signal_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">&quot;signal_id&quot;</span><span class="p">]])</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ts_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]])</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">value_id</span><span class="p">]</span>
+
+        <span class="c1"># these should not happen because a nan value should be omitted in the long format but just in case</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="k">elif</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="n">sparse_matrix</span><span class="p">[</span>
+            <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">][</span><span class="nb">id</span><span class="p">],</span>
+            <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">&quot;signal_id&quot;</span><span class="p">][</span><span class="n">signal</span><span class="p">],</span>
+            <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">&quot;time_id&quot;</span><span class="p">][</span><span class="n">date</span><span class="p">],</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">if</span> <span class="n">time_index_as_datetime</span><span class="p">:</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">&quot;time_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">&quot;time_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+
+    <span class="n">xarr</span> <span class="o">=</span> <span class="n">DataArray</span><span class="p">(</span>
+        <span class="n">sparse_matrix</span><span class="o">.</span><span class="n">to_coo</span><span class="p">(),</span>
+        <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="s2">&quot;signal_id&quot;</span><span class="p">,</span> <span class="s2">&quot;time_id&quot;</span><span class="p">),</span>
+        <span class="n">coords</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nb">id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]]),</span>
+                <span class="p">(</span><span class="s2">&quot;signal_id&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nb">id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">&quot;signal_id&quot;</span><span class="p">]]),</span>
+                <span class="p">(</span><span class="s2">&quot;time_id&quot;</span><span class="p">,</span> <span class="n">date</span><span class="p">),</span>
+            <span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">ts_some</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]]))</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ts_some</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">])</span>
+            <span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span>
+                <span class="p">(</span>
+                    <span class="n">signal_some</span><span class="p">,</span>
+                    <span class="p">(</span><span class="s2">&quot;signal_id&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">&quot;signal_id&quot;</span><span class="p">]]),</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">signal_some</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="s2">&quot;signal_id&quot;</span><span class="p">])</span>
+            <span class="p">]</span>
+            <span class="o">+</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">time_some</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;time_id&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">&quot;time_id&quot;</span><span class="p">]]))</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">time_some</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="s2">&quot;time_id&quot;</span><span class="p">])</span>
+            <span class="p">]</span>
+        <span class="p">),</span>
+        <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">xarr</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarr</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span>
+    <span class="n">xarr</span><span class="p">[</span><span class="s2">&quot;signal_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarr</span><span class="p">[</span><span class="s2">&quot;signal_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Replace None with np.nan</span>
+    <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">xarr</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">coord</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="s2">&quot;signal_id&quot;</span><span class="p">,</span> <span class="s2">&quot;time_id&quot;</span><span class="p">]:</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">xarr</span><span class="p">[</span><span class="n">coord</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">xarr</span><span class="p">[</span><span class="n">coord</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">xarr</span></div>
+
+
+
+<div class="viewcode-block" id="get_current_aoe_time">
+<a class="viewcode-back" href="../../api/_autosummary/pyrregular.io_utils.html#pyrregular.io_utils.get_current_aoe_time">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_current_aoe_time</span><span class="p">():</span>
+    <span class="n">aoe_tz</span> <span class="o">=</span> <span class="n">timezone</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=-</span><span class="mi">12</span><span class="p">))</span>
+    <span class="n">current_time_utc</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+    <span class="n">current_time_aoe</span> <span class="o">=</span> <span class="n">current_time_utc</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">aoe_tz</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">current_time_aoe</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Francesco Spinnato, Cristiano Landi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

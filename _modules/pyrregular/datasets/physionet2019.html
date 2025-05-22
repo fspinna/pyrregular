@@ -1,0 +1,220 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrregular.datasets.physionet2019 &mdash; pyrregular  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyrregular
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/dataset_conversion.html">Convert your Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyrregular</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyrregular.datasets.physionet2019</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrregular.datasets.physionet2019</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.data_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_final_folder</span><span class="p">,</span> <span class="n">data_original_folder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">load_from_file</span><span class="p">,</span>
+    <span class="n">load_yaml</span><span class="p">,</span>
+    <span class="n">read_csv</span><span class="p">,</span>
+    <span class="n">save_to_file</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.reader_interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReaderInterface</span>
+
+
+<div class="viewcode-block" id="Physionet2019">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.physionet2019.html#pyrregular.datasets.physionet2019.Physionet2019">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Physionet2019</span><span class="p">(</span><span class="n">ReaderInterface</span><span class="p">):</span>
+<div class="viewcode-block" id="Physionet2019.read_original_version">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.physionet2019.html#pyrregular.datasets.physionet2019.Physionet2019.read_original_version">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_original_version</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">read_physionet2019</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fix_intermediate_version</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">DataArray</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
+        <span class="c1"># Each patient has a time series of sepsis label, given that the problem is early classification</span>
+        <span class="c1"># we label a patient as septic if at least one of the time points is septic (label=1)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">sel</span><span class="p">({</span><span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="s2">&quot;SepsisLabel&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">todense</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">}</span>
+        <span class="n">split</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;set&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">split</span> <span class="o">=</span> <span class="p">[</span><span class="n">mapping</span><span class="p">[</span><span class="n">split</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">split</span><span class="p">))]</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop_sel</span><span class="p">(</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;SepsisLabel&quot;</span><span class="p">)</span>
+        <span class="p">)</span>  <span class="c1"># the sepis label is not a signal</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
+            <span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">split</span><span class="p">),</span> <span class="n">class_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># there are 2 nan instances generated by dropping the sepsis label</span>
+        <span class="n">to_drop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sparse</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sparse</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">todense</span><span class="p">())[</span>
+            <span class="mi">0</span>
+        <span class="p">]</span>
+        <span class="n">to_drop_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="n">to_drop</span><span class="p">][</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]}</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop_sel</span><span class="p">(</span><span class="n">to_drop_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_dataset_physionet2019</span><span class="p">(</span><span class="n">filenames</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="n">static_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Age&quot;</span><span class="p">,</span> <span class="s2">&quot;Gender&quot;</span><span class="p">,</span> <span class="s2">&quot;Unit1&quot;</span><span class="p">,</span> <span class="s2">&quot;Unit2&quot;</span><span class="p">,</span> <span class="s2">&quot;HospAdmTime&quot;</span><span class="p">]</span>
+
+    <span class="n">set_a_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">[</span><span class="s2">&quot;set-a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.psv&quot;</span><span class="p">)])</span>
+    <span class="n">set_b_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">[</span><span class="s2">&quot;set-b&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.psv&quot;</span><span class="p">)])</span>
+
+    <span class="n">dfs_a</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">set_a_files</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">stem</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;set&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span>
+        <span class="n">dfs_a</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dfs_a</span><span class="p">,</span> <span class="n">df</span><span class="p">])</span>
+        <span class="c1"># break</span>
+
+    <span class="n">dfs_b</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">set_b_files</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">stem</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;set&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span>
+        <span class="n">dfs_b</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dfs_b</span><span class="p">,</span> <span class="n">df</span><span class="p">])</span>
+        <span class="c1"># break</span>
+
+    <span class="n">dfs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dfs_a</span><span class="p">,</span> <span class="n">dfs_b</span><span class="p">])</span>
+    <span class="n">dfs_melted</span> <span class="o">=</span> <span class="n">dfs</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="n">static_columns</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span> <span class="s2">&quot;ICULOS&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;set&quot;</span><span class="p">])</span>
+
+    <span class="n">dfs_melted</span> <span class="o">=</span> <span class="n">dfs_melted</span><span class="p">[</span><span class="n">dfs_melted</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">dfs_melted</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dfs_melted</span><span class="p">)):</span>
+        <span class="k">yield</span> <span class="n">dfs_melted</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="read_physionet2019">
+<a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.physionet2019.html#pyrregular.datasets.physionet2019.read_physionet2019">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_physionet2019</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">attrs</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;physionet2019/attrs.yml&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">filenames</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;set-a&quot;</span><span class="p">:</span> <span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;physionet2019/training/training_setA&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;set-b&quot;</span><span class="p">:</span> <span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;physionet2019/training/training_setB&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;ICULOS&quot;</span><span class="p">,</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span>
+        <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+        <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Age&quot;</span><span class="p">,</span> <span class="s2">&quot;Gender&quot;</span><span class="p">,</span> <span class="s2">&quot;Unit1&quot;</span><span class="p">,</span> <span class="s2">&quot;Unit2&quot;</span><span class="p">,</span> <span class="s2">&quot;HospAdmTime&quot;</span><span class="p">,</span> <span class="s2">&quot;set&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="p">},</span>
+        <span class="n">reader_fun</span><span class="o">=</span><span class="n">_dataset_physionet2019</span><span class="p">,</span>
+        <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="n">time_index_as_datetime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">Physionet2019</span><span class="o">.</span><span class="n">save_final_version</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">Physionet2019</span><span class="o">.</span><span class="n">load_final_version</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Francesco Spinnato, Cristiano Landi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

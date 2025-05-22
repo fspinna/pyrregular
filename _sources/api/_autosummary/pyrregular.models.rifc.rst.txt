@@ -1,15 +1,14 @@
-pyrregular.models.rifc
+﻿pyrregular.models.rifc
 ======================
 
 .. automodule:: pyrregular.models.rifc
 
    
-   .. rubric:: Functions
+   .. rubric:: Module Attributes
 
    .. autosummary::
    
-      nankurtosis
-      nanskew
+      rifc_pipeline
    
    .. rubric:: Classes
 

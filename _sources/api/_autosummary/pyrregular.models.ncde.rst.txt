@@ -1,21 +1,18 @@
-pyrregular.models.ncde
+﻿pyrregular.models.ncde
 ======================
 
 .. automodule:: pyrregular.models.ncde
 
    
-   .. rubric:: Functions
+   .. rubric:: Module Attributes
 
    .. autosummary::
    
-      fill_all_nans_signals
-      fill_time_index
+      ncde_pipeline
    
    .. rubric:: Classes
 
    .. autosummary::
    
-      Func
-      NeuralCDE
       NeuralCDEClassifier
    

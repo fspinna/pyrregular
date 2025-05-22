@@ -1,8 +1,14 @@
-pyrregular.models.timesnet
+﻿pyrregular.models.timesnet
 ==========================
 
 .. automodule:: pyrregular.models.timesnet
 
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      timesnet_pipeline
    
    .. rubric:: Classes
 

@@ -1,6 +1,12 @@
-pyrregular.models.knn
+﻿pyrregular.models.knn
 =====================
 
 .. automodule:: pyrregular.models.knn
 
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      knn_dtw
    

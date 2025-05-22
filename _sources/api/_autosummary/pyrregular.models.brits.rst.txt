@@ -1,8 +1,14 @@
-pyrregular.models.brits
+﻿pyrregular.models.brits
 =======================
 
 .. automodule:: pyrregular.models.brits
 
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      brits_pipeline
    
    .. rubric:: Classes
 

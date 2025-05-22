@@ -1,8 +1,14 @@
-pyrregular.models.raindrop
+﻿pyrregular.models.raindrop
 ==========================
 
 .. automodule:: pyrregular.models.raindrop
 
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      raindrop_pipeline
    
    .. rubric:: Classes
 
