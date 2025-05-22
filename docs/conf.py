@@ -27,6 +27,8 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.mathjax",
 ]
 
 autosummary_generate = True
@@ -39,10 +41,17 @@ source_suffix = {
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": False,
+    "inherited-members": False,
+    "show-inheritance": False,
+}
+
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "alabaster"
+html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 html_search_language = "en"
