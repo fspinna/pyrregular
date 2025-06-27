@@ -77,6 +77,24 @@ model.fit(X_train, y_train)
 model.score(X_test, y_test)
 ```
 
+There are several pipelines available in `pyrregular.models`:
+
+| 💾 **Library** | 📖 Source              | 🔗 **Pipeline** | ℹ️ **Type**                                      |
+|----------------|------------------------|-----------------|--------------------------------------------------|
+| `aeon`         | Spinnato et al. (2024) | **borf**        | dictionary-based transform + **lgbm** classifier |
+| `aeon`         |                        | **rifc**        | interval-based transform + **lgbm** classifier   |
+| `diffrax`      | Kidger et al. (2020)   | **ncde**        | neural controlled differential equations         |
+| `pypots`       | Cao et al. (2018)      | **brits**       | bidirectional recurrent imputation network       |
+| `pypots`       | Che et al. (2018)      | **grud**        | gated recurrent unit with decay                  |
+| `pypots`       | Zhang et al. (2021)    | **raindrop**    | graph neural network                             |
+| `pypots`       | Du et al. (2023)       | **saits**       | self-attention-based imputation transformer      |
+| `pypots`       | Wu et al. (2022)       | **timesnet**    | temporal 2d-variation transformer                |
+| `sktime`       | Ke et al. (2017)       | **lgbm**        | gradient boosted tree                            |
+| `sktime`       | Dempster et al. (2021) | **rocket**      | kernel-based transform + **lgbm** classifier     |
+| `sktime`       | Bagheri et al. (2016)  | **svm**         | support vector machine with distance kernel      |
+| `tslearn`      | Sakoe & Chiba (1978)   | **knn**         | distance-based with dynamic time warping         |
+
+
 # Available Datasets
 
 | 📈 Dataset                                   | 📖 Source                                                             |
