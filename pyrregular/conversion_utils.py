@@ -6,21 +6,21 @@ import numpy as np
 import sparse
 
 
-@nb.njit
+@nb.njit(cache=True)
 def _dense_rank(a):
     unique_values = np.unique(a)
     ranks = np.searchsorted(unique_values, a)
     return ranks
 
 
-@nb.njit
+@nb.njit(cache=True)
 def _find_breakpoints(a):
     return np.hstack(
         (np.array([0]), np.argwhere(np.diff(a)).ravel() + 1, np.array([len(a)]))
     )
 
 
-@nb.njit
+@nb.njit(cache=True)
 def _find_2d_breakpoints(a, b):
     return np.hstack(
         (
@@ -31,7 +31,7 @@ def _find_2d_breakpoints(a, b):
     )
 
 
-@nb.njit(parallel=True)
+@nb.njit(parallel=True, cache=True)
 def remove_fill_values_from_time_idx(
     coords, ts_level=True, ts_idx=0, signal_idx=1, time_idx=-1
 ):
