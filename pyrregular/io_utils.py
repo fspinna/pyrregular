@@ -173,6 +173,13 @@ def read_csv(
     if attrs is None:
         attrs = {}
 
+    if dims is None:  # there are no static variables
+        dims = {
+            "ts_id": [],
+            "signal_id": [],
+            "time_id": [],
+        }
+
     # get metadata
     dates, ids, signals, n_records = _get_metadata(
         filenames=_parse_filenames(filenames),
