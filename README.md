@@ -94,6 +94,31 @@ There are several pipelines available in `pyrregular.models`:
 | `sktime`       | Bagheri et al. (2016)  | **svm**         | support vector machine with distance kernel      |
 | `tslearn`      | Sakoe & Chiba (1978)   | **knn**         | distance-based with dynamic time warping         |
 
+### Regression
+Regression is still work in progress, but is available for some datasets:
+
+```python
+from pyrregular import load_dataset
+from sklearn.pipeline import make_pipeline
+from aeon.transformations.collection.dictionary_based import BORF
+from sklearn.linear_model import LassoCV
+
+df = load_dataset("Garment.h5")
+X, _ = df.irr.to_dense()
+y, split = df.irr.get_task_target_and_split("regression")
+
+X_train, X_test = X[split != "test"], X[split == "test"]
+y_train, y_test = y[split != "test"], y[split == "test"]
+
+borf_pipeline = make_pipeline(
+    BORF(),
+    LassoCV(),
+)
+model = borf_pipeline
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
+```
+
 
 # Available Datasets
 
