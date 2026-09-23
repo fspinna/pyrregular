@@ -1,4 +1,3 @@
-import awkward as ak
 import numpy as np
 import sparse
 import xarray as xr
@@ -135,6 +134,8 @@ class IrregularAccessor:
         concatenate_time=False,
         dropna=True,
     ):
+        import awkward as ak
+
         X, T = self.to_dense(
             reset_time_index=reset_time_index,
             ts_level=ts_level,
