@@ -190,9 +190,18 @@ def read_csv(
         **kwargs,
     )
 
+    # date strings are parsed before sorting, so the time axis follows real time
+    parsed_dates = None
+    if time_index_as_datetime and all(isinstance(d[0], str) for d in dates):
+        dates = list(dates)
+        parsed_dates = dict(zip(dates, pd.to_datetime([d[0] for d in dates])))
+        sorted_dates = sorted(dates, key=lambda d: (parsed_dates[d], d[1:]))
+    else:
+        sorted_dates = sorted(dates)
+
     # create mapping from idx to id for each dimension
     dims_mapping = dict(
-        time_id=dict([(k, v) for v, k in enumerate(sorted(dates))]),
+        time_id=dict([(k, v) for v, k in enumerate(sorted_dates)]),
         ts_id=dict([(k, v) for v, k in enumerate(sorted(ids))]),
         signal_id=dict([(k, v) for v, k in enumerate(sorted(signals))]),
     )
@@ -224,7 +233,9 @@ def read_csv(
             dims_mapping["time_id"][date],
         ] = value
 
-    if time_index_as_datetime:
+    if parsed_dates is not None:
+        date = [parsed_dates[d] for d in dims_mapping["time_id"].keys()]
+    elif time_index_as_datetime:
         date = [
             datetime.fromtimestamp(float(d[0])) for d in dims_mapping["time_id"].keys()
         ]
