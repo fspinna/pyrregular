@@ -111,7 +111,10 @@ def load_yaml(filename: str):
 
 def _read_csvs(filenames: list, chunksize=1000, reader_fun=None, **kwargs):
     for filename in filenames:
-        for df in pd.read_csv(filename, chunksize=chunksize):
+        # round_trip: correctly rounded floats, identical on every platform
+        for df in pd.read_csv(
+            filename, chunksize=chunksize, float_precision="round_trip"
+        ):
             if reader_fun is None:
                 for row in df.to_dict(orient="records"):
                     yield row
