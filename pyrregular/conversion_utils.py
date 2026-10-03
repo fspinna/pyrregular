@@ -60,7 +60,7 @@ def _reset_time_index(
     normalize_time=False,
 ):
     new_coords = remove_fill_values_from_time_idx(
-        arr.coords,
+        np.ascontiguousarray(arr.coords),
         ts_level=ts_level,
         ts_idx=ts_idx,
         signal_idx=signal_idx,
