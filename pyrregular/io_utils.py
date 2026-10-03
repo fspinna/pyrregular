@@ -1,3 +1,4 @@
+import ast
 from datetime import datetime, timedelta, timezone
 from os import PathLike
 from pathlib import Path
@@ -66,19 +67,18 @@ def load_from_file(filename: str) -> xr.DataArray:
         dims = f["dims"][:].astype("U")
 
         # Load metadata (except for development metadata)
-        # TODO: remove the eval function and use a safer way to deserialize the metadata
         attrs = {}
         for key in f.attrs.keys():
             if key[:2] == "__":
                 continue  # Skip special attributes
             value = f.attrs[key]
             try:
-                deserialized_value = eval(
+                deserialized_value = ast.literal_eval(
                     value
                 )  # Try to interpret the string as a Python literal
                 attrs[key] = deserialized_value
-            except (SyntaxError, NameError):
-                attrs[key] = value  # If eval fails, use the original string
+            except (ValueError, SyntaxError, TypeError, MemoryError, RecursionError):
+                attrs[key] = value  # not a literal: keep the original string
 
         # Load xarray dimension coordinates
         coords_xarray = {}
