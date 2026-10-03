@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import xarray as xr
 
 from pyrregular.conversion_utils import _ak_dropnan, _fill_time_index, _reset_time_index
@@ -167,26 +168,49 @@ class IrregularAccessor:
         return X.to_list(), T.to_list()
 
     def to_long(
-        self, reset_time_index=True, ts_level=True, index_scale=1e-9, absolute_time=True
+        self,
+        reset_time_index=True,
+        ts_level=True,
+        index_scale=None,
+        absolute_time=True,
+        static=False,
     ):
-        if reset_time_index:
-            X, _ = self.reset_time_index(
-                ts_level=ts_level,
-                index_scale=index_scale,
-                absolute_time=absolute_time,
-                concatenate_time=False,
-            )
-            return np.concatenate([X.coords, X.data[np.newaxis, :]], axis=0).T
-        else:
-            T = (
-                self._da["time_id"].data.astype(np.float64)[
-                    self._da.data.coords[self.dims["time_id"]]
-                ]
-                * index_scale
-            )
-            if not absolute_time:
-                T = T - T[0]
-            return np.concatenate([self._da.data.coords, T[np.newaxis, :]], axis=0).T
+        """Return the data in long format: one row per observation.
+
+        Columns are ts_id, signal_id, time_id and value_id, as read by read_csv.
+        Ids are categoricals with the original labels. Times are the original
+        values unless index_scale is given (then float, scaled like to_dense).
+        absolute_time=False makes times relative to the first one of each series
+        (or of each series/signal pair if ts_level=False). static=True adds every
+        other coordinate as a column, repeated on each row.
+        reset_time_index has no effect and is kept for backward compatibility.
+        """
+        arr = self._da.data
+        idx = {dim: arr.coords[i] for dim, i in self.dims.items()}
+
+        time = self._da["time_id"].values
+        if index_scale is not None:
+            time = time.astype(np.float64) * index_scale
+        time = time[idx["time_id"]]
+        if not absolute_time:
+            group = [idx["ts_id"]] if ts_level else [idx["ts_id"], idx["signal_id"]]
+            time = time - pd.Series(time).groupby(group).transform("min").to_numpy()
+
+        columns = {
+            "ts_id": _repeat(self._da["ts_id"].values, idx["ts_id"]),
+            "signal_id": _repeat(self._da["signal_id"].values, idx["signal_id"]),
+            "time_id": time,
+            "value_id": arr.data,
+        }
+        if static:
+            for name, coord in self._da.coords.items():
+                if name in self.dims:
+                    continue
+                if coord.ndim == 0:
+                    columns[name] = np.repeat(coord.values, arr.nnz)
+                else:
+                    columns[name] = _repeat(coord.values, idx[coord.dims[0]])
+        return pd.DataFrame(columns)
 
     def to_hdf5(self, filename, compression="gzip", compression_opts=None):
         save_to_file(
@@ -195,3 +219,11 @@ class IrregularAccessor:
             compression=compression,
             compression_opts=compression_opts,
         )
+
+
+def _repeat(values, codes):
+    """values[codes], as a categorical when values are strings or objects."""
+    if values.dtype.kind in "OUS":
+        cat = pd.Categorical(values)
+        return pd.Categorical.from_codes(cat.codes[codes], cat.categories)
+    return values[codes]
