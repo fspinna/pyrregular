@@ -41,7 +41,60 @@ def list_metadata_files():
 
 
 def list_registry_datasets():
-    return sorted(list(pd.read_csv(get_project_root() / "registry.txt", sep=" ", index_col=0).index))
+    return sorted(
+        list(
+            pd.read_csv(
+                get_project_root() / "registry.txt", sep=" ", header=None, index_col=0
+            ).index
+        )
+    )
+
+
+# the 34 datasets used in the pyrregular paper
+PAPER_DATASETS = [
+    # introduced in the paper
+    "Abf",
+    "Animals",
+    "Garment",
+    "GeolifeSupervised",
+    "Ldfpa",
+    "Mimic3",
+    "Pamap2",
+    "Physionet2012",
+    "Physionet2019",
+    "Seabirds",
+    "Taxi",
+    "Vehicles",
+    # UEA/UCR: variable-length univariate
+    "AllGestureWiimoteX",
+    "AllGestureWiimoteY",
+    "AllGestureWiimoteZ",
+    "GestureMidAirD1",
+    "GestureMidAirD2",
+    "GestureMidAirD3",
+    "GesturePebbleZ1",
+    "GesturePebbleZ2",
+    "PickupGestureWiimoteZ",
+    "ShakeGestureWiimoteZ",
+    "PLAID",
+    # UEA/UCR: fixed-length univariate with missing values
+    "DodgerLoopDay",
+    "DodgerLoopGame",
+    "DodgerLoopWeekend",
+    "MelbournePedestrian",
+    # UEA/UCR: variable-length multivariate
+    "AsphaltObstaclesCoordinates",
+    "AsphaltPavementTypeCoordinates",
+    "AsphaltRegularityCoordinates",
+    "CharacterTrajectories",
+    "InsectWingbeat",
+    "JapaneseVowels",
+    "SpokenArabicDigits",
+]
+
+
+def list_paper_datasets():
+    return sorted(f"{name}.h5" for name in PAPER_DATASETS)
 
 
 def infer_static_columns(df, id_column, dropna=False):

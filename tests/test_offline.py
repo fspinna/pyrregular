@@ -30,6 +30,7 @@ import pandas as pd
 import pytest
 
 import pyrregular.accessor  # noqa: F401 (registers the .irr accessor)
+from pyrregular import list_datasets, list_paper_datasets
 from pyrregular.io_utils import load_from_file, read_csv, save_to_file
 
 nan = np.nan
@@ -326,3 +327,25 @@ def test_docs_to_long_static_roundtrip(tmp_path):
     assert_equal_nan(back.data.todense(), ref.data.todense())
     for coord in ref.coords:
         assert_equal_nan(back[coord].values, ref[coord].values)
+
+
+# --- dataset lists ------------------------------------------------------------
+
+
+def test_list_datasets_includes_first_registry_line():
+    registry = DOCS.parent.parent / "pyrregular" / "registry.txt"
+    names = [line.split()[0] for line in registry.read_text().splitlines() if line]
+    assert list_datasets() == sorted(names)
+    assert "InsectWingbeat.h5" in list_datasets()
+
+
+def test_list_paper_datasets():
+    paper = list_paper_datasets()
+    assert len(paper) == 34
+    assert set(paper) <= set(list_datasets())
+    assert set(list_datasets()) - set(paper) == {
+        "Ais.h5",
+        "CombinedTrajectories.h5",
+        "Geolife.h5",
+        "TDrive.h5",
+    }
