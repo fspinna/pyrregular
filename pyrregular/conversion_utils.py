@@ -66,9 +66,15 @@ def _reset_time_index(
         signal_idx=signal_idx,
         time_idx=time_idx,
     )
+    # time is now the position within each series: its length is the longest
+    # series, not the number of global timestamps
+    shape = list(arr.shape)
+    shape[time_idx] = new_coords[time_idx].max() + 1 if arr.nnz else 0
+    shape = tuple(shape)
     new_time_idx = sparse.COO(
         coords=new_coords,
         data=time_id.astype(np.float64)[arr.coords[time_idx]] * index_scale,
+        shape=shape,
         fill_value=arr.fill_value,
     )
     if ts_level:
@@ -86,7 +92,10 @@ def _reset_time_index(
             sparse.concatenate(
                 [
                     sparse.COO(
-                        coords=new_coords, data=arr.data, fill_value=arr.fill_value
+                        coords=new_coords,
+                        data=arr.data,
+                        shape=shape,
+                        fill_value=arr.fill_value,
                     ),
                     new_time_idx,
                 ],
@@ -96,7 +105,9 @@ def _reset_time_index(
         )
     else:
         return (
-            sparse.COO(coords=new_coords, data=arr.data, fill_value=arr.fill_value),
+            sparse.COO(
+                coords=new_coords, data=arr.data, shape=shape, fill_value=arr.fill_value
+            ),
             new_time_idx,
         )
 
