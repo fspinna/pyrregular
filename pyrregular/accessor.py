@@ -12,14 +12,12 @@ class IrregularAccessor:
         self.dims = {dim: i for i, dim in enumerate(da.dims)}
 
     def __getitem__(self, key):
-        import numpy as np
-
         out = self._da.__getitem__(key)
         if out["time_id"].size == 1:
             return out
-        dims = {dim: i for i, dim in enumerate(out.dims)}
-        return out[..., np.sort(out.data.coords[dims["time_id"]])]
-        # return out[..., np.sort(out.data.coords[-1])]
+        # keep only the timestamps where the selection has at least one value
+        time_idx = out.dims.index("time_id")
+        return out.isel(time_id=np.unique(out.data.coords[time_idx]))
 
     def get_task(self, task="default"):
         return self._da.attrs["configs"][task]
