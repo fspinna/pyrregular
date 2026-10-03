@@ -40,6 +40,7 @@ def save_to_file(
             dims = data_array[coord].dims
             values = data_array[coord].values
             if values.dtype.kind == "M":  # Check for datetime dtype
+                f.attrs[f"__{coord}/unit"] = np.datetime_data(values.dtype)[0]
                 values = values.astype("int64")  # Convert to Unix timestamp
                 f.attrs[f"__{coord}/type"] = "M"
             elif values.dtype.kind == "U":  # Check for Unicode dtype
@@ -85,18 +86,16 @@ def load_from_file(filename: str) -> xr.DataArray:
         for coord in f["coords_xarray"].keys():
             values = f[f"coords_xarray/{coord}"][:]
             kind = f.attrs[f"__{coord}/type"]
-            values = values.astype(kind)
             if kind == "M":
-                values = values.astype(
-                    "datetime64[ns]"
-                )  # TODO: we need to make sure this works also for other kinds of datetime
-            elif kind == "O":
+                # files saved before the unit was stored are always in ns
+                unit = f.attrs.get(f"__{coord}/unit", "ns")
+                values = values.astype(f"datetime64[{unit}]").astype("datetime64[ns]")
+            elif kind in ("U", "O"):
                 try:
                     values = values.astype("U")
                 except ValueError:
                     pass
-            else:
-                values = values.astype(kind)
+            # numeric coords: h5py already returns the dtype they were saved with
             coords_xarray[coord] = (
                 tuple(f[f"coords_xarray_dims/{coord}"][:].astype("U")),
                 values,
