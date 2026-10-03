@@ -1,5 +1,4 @@
 import numpy as np
-import sparse
 import xarray as xr
 
 from pyrregular.conversion_utils import _ak_dropnan, _fill_time_index, _reset_time_index
@@ -68,10 +67,10 @@ class IrregularAccessor:
                 normalize_time=normalize_time,
             )
         else:
-            X = self._da.data
-            T = self._da["time_id"].data.reshape(1, 1, -1)
+            # the global time axis is shared by all series: T is returned as is
             if concatenate_time:
-                X = sparse.concatenate([X, T], axis=1)
+                raise ValueError("concatenate_time=True requires reset_time_index=True")
+            return self._da.data.todense(), self._da["time_id"].data.reshape(1, 1, -1)
         return X.todense(), T.todense()
 
     def to_tslearn(
