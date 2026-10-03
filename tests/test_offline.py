@@ -349,3 +349,9 @@ def test_list_paper_datasets():
         "Geolife.h5",
         "TDrive.h5",
     }
+
+
+def test_version():
+    import pyrregular
+
+    assert isinstance(pyrregular.__version__, str) and pyrregular.__version__
