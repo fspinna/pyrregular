@@ -420,3 +420,17 @@ def test_list_paper_models():
         module, pipeline = path.split(":")
         source = (DOCS.parent.parent / f"pyrregular/models/{module}.py").read_text()
         assert f"\n{pipeline} = " in source
+
+
+def test_downloads_are_pinned_to_a_data_version():
+    import pooch
+
+    from pyrregular import repository
+
+    # a fixed commit of the Hugging Face repo, never the moving main branch
+    assert f"/resolve/{repository.DATA_REVISION}/" in repository.REPOSITORY.base_url
+    assert "/resolve/main/" not in repository.REPOSITORY.base_url
+    assert len(repository.DATA_REVISION) == 40
+    # data-v1 keeps the original cache folder (no re-download for existing users)
+    if repository.DATA_VERSION == "data-v1":
+        assert str(repository.REPOSITORY.path) == str(pooch.os_cache("pyrregular"))

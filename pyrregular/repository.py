@@ -7,9 +7,25 @@ import xarray as xr
 from pyrregular.data_utils import get_project_root
 from pyrregular.io_utils import load_from_file
 
+# Each data version is a fixed commit of the Hugging Face repo, tagged data-vN,
+# so that a pyrregular release always downloads the files it was made for.
+DATA_VERSION = "data-v1"
+DATA_REVISION = "f416b1b432f248a73323222f2378d0e8433ca6d2"  # commit of data-v1
+
+
+def _cache_path():
+    # data-v1 keeps the original cache folder; later versions get their own
+    # subfolder, so that different versions never overwrite each other
+    path = pooch.os_cache("pyrregular")
+    return path if DATA_VERSION == "data-v1" else path / DATA_VERSION
+
+
 REPOSITORY = pooch.create(
-    path=pooch.os_cache("pyrregular"),
-    base_url="https://huggingface.co/datasets/splandi/pyrregular/resolve/main/data_final/",
+    path=_cache_path(),
+    base_url=(
+        "https://huggingface.co/datasets/splandi/pyrregular/resolve/"
+        f"{DATA_REVISION}/data_final/"
+    ),
     registry=None,
 )
 
