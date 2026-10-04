@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import sparse
 import xarray as xr
 
 from pyrregular.conversion_utils import _reset_time_index
@@ -16,9 +17,28 @@ class IrregularAccessor:
         out = self._da.__getitem__(key)
         if out["time_id"].size == 1:
             return out
-        # keep only the timestamps where the selection has at least one value
+        # keep only the timestamps where the selection has at least one value,
+        # renumbering the time coordinates (sparse fancy indexing is slow)
         time_idx = out.dims.index("time_id")
-        return out.isel(time_id=np.unique(out.data.coords[time_idx]))
+        coords = out.data.coords
+        times, new_time = np.unique(coords[time_idx], return_inverse=True)
+        if times.size == out.sizes["time_id"]:
+            return out
+        coords = coords.copy()
+        coords[time_idx] = new_time
+        shape = list(out.shape)
+        shape[time_idx] = times.size
+        data = sparse.COO(
+            coords, out.data.data, shape=tuple(shape), fill_value=out.data.fill_value
+        )
+        res = out.isel(time_id=slice(0, times.size)).copy(data=data)
+        return res.assign_coords(
+            {
+                name: c.isel(time_id=times)
+                for name, c in out.coords.items()
+                if "time_id" in c.dims
+            }
+        )
 
     def get_task(self, task="default"):
         return self._da.attrs["configs"][task]
