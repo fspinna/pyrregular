@@ -30,7 +30,7 @@ import pandas as pd
 import pytest
 
 import pyrregular.accessor  # noqa: F401 (registers the .irr accessor)
-from pyrregular import list_datasets, list_paper_datasets
+from pyrregular import list_datasets, list_paper_datasets, list_paper_models
 from pyrregular.io_utils import load_from_file, read_csv, save_to_file
 
 nan = np.nan
@@ -407,3 +407,16 @@ def test_fill_time_index():
     )
     assert_equal_nan(_fill_time_index(T)[:, 0, :], [[0, 1, 3, 4.5, 6], [5, 6, 7, 8, 9]])
     assert_equal_nan(_fill_time_index(T, nan_delta=2)[1, 0], [5, 7, 9, 11, 13])
+
+
+def test_list_paper_models():
+    # same names as the columns of the paper's result tables
+    header = (DOCS.parent.parent / "assets/results/accuracy_mean.csv").read_text()
+    assert list_paper_models() == header.splitlines()[0].split(",")[2:]
+    # every entry points to an existing pipeline, checked without importing it
+    from pyrregular.models import PAPER_MODELS
+
+    for path in PAPER_MODELS.values():
+        module, pipeline = path.split(":")
+        source = (DOCS.parent.parent / f"pyrregular/models/{module}.py").read_text()
+        assert f"\n{pipeline} = " in source

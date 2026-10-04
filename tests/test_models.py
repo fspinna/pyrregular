@@ -112,3 +112,14 @@ def test_ncde_writes_no_files(data, tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     _short(clone(ncde)).fit(X_time[train], y[train])
     assert list(tmp_path.iterdir()) == []
+
+
+def test_get_paper_model():
+    pytest.importorskip("sktime")
+    pytest.importorskip("lightgbm")
+    from pyrregular.models import get_paper_model
+    from pyrregular.models.lgbm import lgbm_pipeline
+
+    model = get_paper_model("LGBM")
+    assert model is not lgbm_pipeline  # a copy, not the shared module object
+    assert type(model) is type(lgbm_pipeline)

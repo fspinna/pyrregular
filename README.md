@@ -24,7 +24,7 @@ For the third-party models, install all of them:
 pip install "pyrregular[models]"
 ```
 
-or only the family you need: `borf`, `aeon`, `sktime`, `tslearn`, `pypots`, `jax`
+or only the family you need: `borf`, `sktime`, `tslearn`, `pypots`, `jax`
 (e.g. `pip install "pyrregular[sktime]"`). The extra for each pipeline is listed in the table below.
 
 
@@ -86,7 +86,6 @@ There are several pipelines available in `pyrregular.models`:
 |----------------|----------------------------------------------------------|-----------------|---------------------------------------------------------------|--------------|
 | `fast-borf`    | Spinnato et al. (2024)                                   | **borf**        | dictionary-based transform + **lgbm** classifier              | `borf`       |
 | `fast-borf`    | [Spinnato (2026)](https://arxiv.org/abs/2609.39268)      | **iborf**       | time-aware dictionary-based transform + **ridge** classifier  | `borf`       |
-| `aeon`         | Spinnato et al. (2024)                                   | **aeon_borf**   | BORF as used in the pyrregular paper                          | `aeon`       |
 | `sktime`       |                                                          | **rifc**        | interval-based transform + **lgbm** classifier                | `sktime`     |
 | `diffrax`      | Kidger et al. (2020)                                     | **ncde**        | neural controlled differential equations                      | `jax`        |
 | `pypots`       | Cao et al. (2018)                                        | **brits**       | bidirectional recurrent imputation network                    | `pypots`     |
@@ -104,6 +103,9 @@ There are several pipelines available in `pyrregular.models`:
   timestamps: give it `X, _ = df.irr.to_dense(concatenate_time=True, normalize_time=True)`.
 - `raindrop` also needs `torch-scatter`, built for your torch/CUDA version
   (see the [PyG install instructions](https://github.com/rusty1s/pytorch_scatter#installation)).
+- To reproduce the paper, `list_paper_models()` lists its 12 models and
+  `pyrregular.models.get_paper_model(name)` returns a fresh copy of each pipeline. The paper's BORF
+  is the aeon implementation (`pip install "pyrregular[aeon]"`).
 - These pipelines wrap fast-moving third-party libraries. They are tested weekly against the latest
   versions, but an upstream release can break one between pyrregular releases; to reproduce the paper
   results exactly, pin the library versions.
