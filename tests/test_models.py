@@ -123,3 +123,15 @@ def test_get_paper_model():
     model = get_paper_model("LGBM")
     assert model is not lgbm_pipeline  # a copy, not the shared module object
     assert type(model) is type(lgbm_pipeline)
+
+
+def test_svm_predict_proba_any_labels(data):
+    # the one-hot used to index with the labels themselves (only 0..k-1 worked)
+    X, _, y, train = data
+    svm = _pipeline("svm", "svm_pipeline", ["sktime", "tslearn"])
+    labels = np.array(["run", "walk"])[y]
+    model = clone(svm).fit(X[train], labels[train])
+    proba = model.predict_proba(X[~train])
+    assert np.array_equal(
+        model.classes_[proba.argmax(axis=1)], model.predict(X[~train])
+    )

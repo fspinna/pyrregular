@@ -15,7 +15,9 @@ from pyrregular.models.nodes import ApplyFunc, DropNATransformer, _standardize
 class TimeSeriesSVCFix(TimeSeriesSVC):
 
     def predict_proba(self, X):
-        return np.eye(len(self.classes_))[self.predict(X)]
+        # one-hot of the predicted class, at the position of its label in classes_
+        positions = np.searchsorted(self.classes_, self.predict(X))
+        return np.eye(len(self.classes_))[positions]
 
 
 class _SktimeClassifier(ClassifierMixin, BaseEstimator):
