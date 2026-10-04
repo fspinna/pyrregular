@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 
 from pyrregular.conversion_utils import _to_pypots
 
@@ -16,22 +17,28 @@ class PyPOTSWrapper(BaseEstimator, ClassifierMixin):
         self.n_features_ = None
 
     def fit(self, X, y):
-        self.n_classes_ = len(np.unique(y))
+        # pypots needs labels 0..k-1: encode here, decode in predict
+        self.label_encoder_ = LabelEncoder().fit(y)
+        self.classes_ = self.label_encoder_.classes_
+        y = self.label_encoder_.transform(y)
+        self.n_classes_ = len(self.classes_)
         self.n_steps_ = X.shape[2]
         self.n_features_ = X.shape[1]
         self._fit(X, y)
         return self
 
     def _fit(self, X, y):
-        self.model = self.model(**self.model_params)
-        self.model.fit(_to_pypots(X, y))
+        # the fitted model goes in model_, so that `model` stays the class and
+        # fit can be called again
+        self.model_ = self.model(**self.model_params)
+        self.model_.fit(_to_pypots(X, y))
 
     def predict_proba(self, X):
-        out = self.model.predict(_to_pypots(X))["classification_proba"]
+        out = self.model_.predict(_to_pypots(X))["classification_proba"]
         return out
 
     def predict(self, X):
-        return self.predict_proba(X).argmax(axis=1)
+        return self.classes_[self.predict_proba(X).argmax(axis=1)]
 
     def _split(self, X, y):
         try:

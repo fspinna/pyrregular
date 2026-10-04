@@ -12,7 +12,7 @@ class RaindropWrapper(PyPOTSWrapper):
         super().__init__(model, model_params, random_state)
 
     def _fit(self, X, y):
-        self.model = self.model(
+        self.model_ = self.model(
             n_steps=self.n_steps_,
             n_features=self.n_features_,
             n_classes=self.n_classes_,
@@ -20,7 +20,7 @@ class RaindropWrapper(PyPOTSWrapper):
             **self.model_params
         )
         X_train, X_val = self._split(X, y)
-        self.model.fit(train_set=X_train, val_set=X_val)
+        self.model_.fit(train_set=X_train, val_set=X_val)
 
 
 raindrop_pipeline = RaindropWrapper(
