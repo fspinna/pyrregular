@@ -86,7 +86,7 @@ def dataset_card():
     header = ["---", "pretty_name: pyrregular", "license:"]
     header += [f"- {license}" for license in sorted(licenses)]
     if "other" in licenses:
-        header.append("license_name: dataset-specific, see the Licenses table")
+        header.append("license_name: dataset-specific")
     header.append("---")
     return "\n".join(header) + "\n" + BODY.format(repo=REPO, table="\n".join(rows))
 
