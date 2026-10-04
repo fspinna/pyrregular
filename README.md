@@ -58,6 +58,10 @@ print(pooch.os_cache("pyrregular"))
 
 The repository is hosted at: https://huggingface.co/datasets/splandi/pyrregular/
 
+The datasets are versioned: each pyrregular release downloads a fixed version of the files,
+tagged on Hugging Face (currently [`data-v1`](https://huggingface.co/datasets/splandi/pyrregular/tree/data-v1)).
+To use the data of an older release, install that release (e.g. `pip install "pyrregular==0.3.1"`).
+
 ## Downstream tasks
 ### Classification
 To use the dataset for classification, you can just "densify" it:
