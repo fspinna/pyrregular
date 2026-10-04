@@ -301,7 +301,7 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
         best_val_loss = float("inf")
         stagnation_counter_lr = 0  # Counter for learning rate reduction
         stagnation_counter_es = 0  # Counter for early stopping
-        best_model_path = "best_model.eqx"  # File path to store the best model
+        best_model = self.model_  # equinox models are immutable: keep a reference
 
         current_lr = self.lr  # Initial learning rate
 
@@ -320,9 +320,7 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
                 best_val_loss = val_loss
                 stagnation_counter_lr = 0  # Reset learning rate counter
                 stagnation_counter_es = 0  # Reset early stopping counter
-                eqx.tree_serialise_leaves(
-                    best_model_path, self.model_
-                )  # Save best model
+                best_model = self.model_  # Save best model
             else:
                 stagnation_counter_lr += 1
                 stagnation_counter_es += 1
@@ -347,7 +345,7 @@ class NeuralCDEClassifier(BaseEstimator, ClassifierMixin):
                 )
 
         # Reload the best model
-        self.model_ = eqx.tree_deserialise_leaves(best_model_path, self.model_)
+        self.model_ = best_model
 
         self.is_fitted_ = True
         return self

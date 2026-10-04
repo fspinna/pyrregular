@@ -101,3 +101,12 @@ def test_rifc_supports_sklearn_tools(data):
     assert "randomintervalfeatureclassifier__n_intervals" in rifc.get_params()
     scores = cross_val_score(clone(rifc), X, y, cv=2)
     assert scores.shape == (2,)
+
+
+def test_ncde_writes_no_files(data, tmp_path, monkeypatch):
+    # NCDE used to save best_model.eqx in the current directory during fit
+    X, X_time, y, train = data
+    ncde = _pipeline("ncde", "ncde_pipeline", ["jax", "equinox", "optax", "diffrax"])
+    monkeypatch.chdir(tmp_path)
+    _short(clone(ncde)).fit(X_time[train], y[train])
+    assert list(tmp_path.iterdir()) == []
