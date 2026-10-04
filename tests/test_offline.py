@@ -355,3 +355,23 @@ def test_version():
     import pyrregular
 
     assert isinstance(pyrregular.__version__, str) and pyrregular.__version__
+
+
+def test_read_csv_rejects_non_static_columns(tmp_path):
+    # label changes inside series a: it is not static, so read_csv must not split a
+    rows = [
+        ("a", "s", 1, 1.0, "x"),
+        ("a", "s", 2, 2.0, "x"),
+        ("a", "s", 3, 3.0, "y"),
+        ("b", "s", 1, 5.0, "z"),
+    ]
+    path = tmp_path / "static.csv"
+    pd.DataFrame(
+        rows, columns=["ts_id", "signal_id", "time_id", "value_id", "label"]
+    ).to_csv(path, index=False)
+    with pytest.raises(ValueError, match="'label' is not static for ts_id 'a'"):
+        read_csv(
+            path,
+            dims={"ts_id": ["label"], "signal_id": [], "time_id": []},
+            time_index_as_datetime=False,
+        )

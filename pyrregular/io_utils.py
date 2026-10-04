@@ -159,6 +159,30 @@ def _get_metadata(
     return dates, ids, signals, n_records
 
 
+def _check_static(keys, id_name, static_names, hint):
+    """Raise if an id has more than one value for a static column.
+
+    read_csv identifies an id by the tuple (id, *static values), so a column that
+    is not really static would silently split the id into several ones.
+    """
+    first = {}
+    for key in keys:
+        other = first.setdefault(key[0], key)
+        if other != key:
+            columns = [
+                n
+                for n, a, b in zip(static_names, other[1:], key[1:])
+                if a is not b and a != b
+            ]
+            names = ", ".join(repr(c) for c in columns)
+            verb = "is" if len(columns) == 1 else "are"
+            raise ValueError(
+                f"{names} {verb} not static for {id_name} {key[0]!r} (values "
+                f"{other[1:]} and {key[1:]}). A static column must have one value "
+                f"per id. {hint}"
+            )
+
+
 def read_csv(
     filenames: str | list | dict,
     ts_id: str = "ts_id",
@@ -191,6 +215,27 @@ def read_csv(
         reader_fun=reader_fun,
         verbose=verbose,
         **kwargs,
+    )
+
+    # a static column must have one value per id, otherwise the id would be split
+    _check_static(
+        ids,
+        ts_id,
+        dims["ts_id"],
+        hint='If it changes over time, move it to dims["time_id"] or use it as a '
+        "signal; if each value should be its own series, include it in the series id.",
+    )
+    _check_static(
+        signals,
+        signal_id,
+        dims["signal_id"],
+        hint="If it differs between series, move it to dims['ts_id'].",
+    )
+    _check_static(
+        dates,
+        time_id,
+        dims["time_id"],
+        hint="If it differs between series, move it to dims['ts_id'] or use it as a signal.",
     )
 
     # date strings are parsed before sorting, so the time axis follows real time
