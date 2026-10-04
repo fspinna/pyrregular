@@ -1,0 +1,32 @@
+name: models
+
+# Smoke tests for the model pipelines against the latest library versions.
+# Not part of the release workflow: a broken model library never blocks a release.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"  # Mondays, 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  models:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          # CPU-only torch: much smaller than the default CUDA build
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install ".[test,models]"
+
+      - name: Model smoke tests
+        run: |
+          pytest -m models
