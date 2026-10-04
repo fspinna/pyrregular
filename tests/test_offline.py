@@ -375,3 +375,22 @@ def test_read_csv_rejects_non_static_columns(tmp_path):
             dims={"ts_id": ["label"], "signal_id": [], "time_id": []},
             time_index_as_datetime=False,
         )
+
+
+def test_api_token_is_sent(monkeypatch):
+    # capture the downloader instead of downloading
+    from pyrregular import repository
+
+    seen = {}
+
+    def fake_fetch(name, downloader):
+        seen["name"], seen["downloader"] = name, downloader
+        return "fake/path.h5"
+
+    monkeypatch.delenv("HF_TOKEN", raising=False)
+    monkeypatch.setattr(repository.REPOSITORY, "fetch", fake_fetch)
+    assert (
+        repository.load_dataset_from_file("Garment", api_token="hf_x") == "fake/path.h5"
+    )
+    assert seen["name"] == "Garment.h5"
+    assert seen["downloader"].kwargs["headers"] == {"Authorization": "Bearer hf_x"}

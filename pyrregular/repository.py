@@ -25,7 +25,8 @@ def download_dataset_from_huggingface(
         if api_token is None:
             raise ValueError("You need to provide an API token to download the dataset")
         downloader = pooch.HTTPDownloader(
-            **dict(headers={"Authorization": f"Bearer {api_token}"})
+            progressbar=progressbar,
+            headers={"Authorization": f"Bearer {api_token}"},
         )
     else:
         downloader = pooch.HTTPDownloader(progressbar=progressbar)
@@ -35,7 +36,9 @@ def download_dataset_from_huggingface(
 def load_dataset_from_file(name, api_token=None):
     if ".h5" not in name:
         name += ".h5"
-    file = download_dataset_from_huggingface(name, api_token)
+    file = download_dataset_from_huggingface(
+        name, use_api_token=api_token is not None, api_token=api_token
+    )
     return file
 
 
