@@ -2,7 +2,9 @@ title: "Productivity Prediction of Garment Employees"
 author:
     - NA
 source: https://archive.ics.uci.edu/dataset/597/productivity+prediction+of+garment+employees
-license: CC BY 4.0
+license: CC-BY-4.0
+license_source: https://archive.ics.uci.edu/dataset/597/productivity+prediction+of+garment+employees
+citation: https://doi.org/10.24432/C51S6D
 configs:
   default:
     task: classification # classification, regression

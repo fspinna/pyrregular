@@ -1,8 +1,10 @@
 title: "Taxi"
 author:
  - "ECML/PKDD 15: Taxi Trip Time Prediction (II) Competition"
-source: https://www.kaggle.com/datasets/crailtap/taxi-trajectory
-license: NA
+source: https://archive.ics.uci.edu/dataset/339/taxi+service+trajectory+prediction+challenge+ecml+pkdd+2015
+license: CC-BY-4.0
+license_source: https://archive.ics.uci.edu/dataset/339/taxi+service+trajectory+prediction+challenge+ecml+pkdd+2015
+citation: https://doi.org/10.24432/C55W25
 configs:
   default:
     task: classification

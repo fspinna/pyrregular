@@ -10,7 +10,9 @@ author:
     - Shamim Nemati
     - Gari D. Clifford 
 source: https://physionet.org/content/challenge-2019/1.0.0/
-license: CC BY 4.0
+license: CC-BY-4.0
+license_source: https://physionet.org/content/challenge-2019/1.0.0/
+citation: https://doi.org/10.13026/v64v-d857
 configs:
   default:
     task: classification

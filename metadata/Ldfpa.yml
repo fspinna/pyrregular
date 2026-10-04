@@ -6,7 +6,9 @@ author:
     - Rok Piltaver
     - Jana Krivec
 source: https://archive.ics.uci.edu/dataset/196/localization+data+for+person+activity
-license: CC BY 4.0
+license: CC-BY-4.0
+license_source: https://archive.ics.uci.edu/dataset/196/localization+data+for+person+activity
+citation: https://doi.org/10.24432/C57G8X
 configs:
   default:
     task: classification

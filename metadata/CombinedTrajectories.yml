@@ -2,7 +2,9 @@ title: "Combined Trajectories"
 author:
  - NA
 source: https://www.kaggle.com/datasets/donotmess/combined-trajectories
-license: CC BY-NC-SA 4.0
+license: CC-BY-NC-SA-4.0
+license_source: https://www.kaggle.com/datasets/donotmess/combined-trajectories
+citation: https://www.kaggle.com/datasets/donotmess/combined-trajectories
 configs:
   default:
     task: classification

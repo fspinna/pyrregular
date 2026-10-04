@@ -5,7 +5,9 @@ author:
     - Roger Mark
     - Leo Anthony Celi
 source: https://physionet.org/content/challenge-2012/1.0.0/
-license: ODC-By
+license: ODC-By-1.0
+license_source: https://physionet.org/content/challenge-2012/1.0.0/
+citation: https://physionet.org/content/challenge-2012/1.0.0/
 configs:
   default:
     task: classification

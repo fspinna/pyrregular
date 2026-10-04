@@ -1,11 +1,13 @@
 _fixed_at: '2025-01-09T23:08:01.632202-12:00'
 _is_fixed: true
 authors: TODO
+citation: https://doi.org/10.24432/C51P50
 configs:
   default:
     split: split_default
     target: class_default
     task: classification
-license: TODO
+license: CC-BY-4.0
+license_source: https://archive.ics.uci.edu/dataset/157/dodgers+loop+sensor
 source: https://timeseriesclassification.com/
 title: DodgerLoopWeekend

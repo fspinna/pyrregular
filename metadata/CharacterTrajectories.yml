@@ -1,11 +1,13 @@
 _fixed_at: '2025-01-09T23:08:02.938804-12:00'
 _is_fixed: true
 authors: TODO
+citation: https://doi.org/10.24432/C58G7V
 configs:
   default:
     split: split_default
     target: class_default
     task: classification
-license: TODO
+license: CC-BY-4.0
+license_source: https://archive.ics.uci.edu/dataset/175/character+trajectories
 source: https://timeseriesclassification.com/
 title: CharacterTrajectories

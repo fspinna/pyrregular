@@ -5,8 +5,10 @@ author:
  - Xing Xie
  - Wei-Ying Ma
  - Quannan Li
-source: https://www.microsoft.com/en-us/research/publication/geolife-gps-trajectory-dataset-user-guide/
-license: "CC0: Public Domain"
+source: https://www.microsoft.com/en-us/download/details.aspx?id=52367
+license: unknown
+license_source: https://www.microsoft.com/en-us/download/details.aspx?id=52367
+citation: https://www.microsoft.com/en-us/research/publication/geolife-gps-trajectory-dataset-user-guide/
 configs:
   default:
     task: classification

@@ -1,11 +1,13 @@
 _fixed_at: '2025-01-09T23:08:05.802326-12:00'
 _is_fixed: true
 authors: TODO
+citation: https://timeseriesclassification.com/description.php?Dataset=InsectWingbeat
 configs:
   default:
     split: split_default
     target: class_default
     task: classification
-license: TODO
+license: unknown
+license_source: NA
 source: https://timeseriesclassification.com/
 title: InsectWingbeat

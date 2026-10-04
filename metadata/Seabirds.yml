@@ -6,8 +6,10 @@ author:
  - Shoji, Akiko
  - Guilford, Tim
  - Freeman, Robin
-source: https://www.kaggle.com/datasets/saurabhshahane/predicting-animal-behavior-using-gps
-license: "https://doi.org/10.5061/dryad.t7ck5"
+source: https://doi.org/10.5061/dryad.t7ck5
+license: CC0-1.0
+license_source: https://datadryad.org/dataset/doi:10.5061/dryad.t7ck5
+citation: https://doi.org/10.5061/dryad.t7ck5
 configs:
   default:
     task: classification

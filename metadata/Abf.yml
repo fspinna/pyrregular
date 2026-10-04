@@ -3,7 +3,9 @@ author:
     - Francesco Spinnato
     - Cristiano Landi
 source: tbd
-license: CC BY 4.0
+license: CC-BY-4.0
+license_source: NA
+citation: https://arxiv.org/abs/2505.06047
 configs:
   default:
     task: classification

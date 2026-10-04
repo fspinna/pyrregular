@@ -2,7 +2,9 @@ title: "Vehicles"
 author:
  - NA
 source: https://dl.acm.org/doi/pdf/10.1145/3167132.3167225
-license: NA
+license: unknown
+license_source: NA
+citation: https://doi.org/10.1145/3167132.3167225
 configs:
   default:
     task: classification

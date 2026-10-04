@@ -2,7 +2,9 @@ title: "Animals"
 author:
  - NA
 source: https://dl.acm.org/doi/pdf/10.1145/3167132.3167225
-license: NA
+license: other
+license_source: https://research.fs.usda.gov/pnw/projects/starkeyproject
+citation: https://doi.org/10.1145/3167132.3167225
 configs:
   default:
     task: classification

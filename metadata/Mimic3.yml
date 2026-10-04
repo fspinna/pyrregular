@@ -4,7 +4,9 @@ author:
     - Tom Pollard
     - Roger Mark
 source: https://physionet.org/content/mimiciii-demo/1.4/
-license: ODbL v1.0
+license: ODbL-1.0
+license_source: https://physionet.org/content/mimiciii-demo/1.4/
+citation: https://doi.org/10.13026/C2HM2Q
 configs:
   default:
     task: classification

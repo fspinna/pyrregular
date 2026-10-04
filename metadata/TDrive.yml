@@ -1,4 +1,4 @@
-title: "Localization Data for Person Activity"
+title: "T-Drive"
 author:
     - Jing Yuan
     - Yu Zheng
@@ -7,8 +7,10 @@ author:
     - Chengyang Zhang
     - Wenlei Xie
     - Yan Huang
-source: https://www.kaggle.com/datasets/arashnic/tdriver
-license: to cite
+source: https://www.microsoft.com/en-us/research/publication/t-drive-trajectory-data-sample/
+license: unknown
+license_source: https://www.microsoft.com/en-us/research/publication/t-drive-trajectory-data-sample/
+citation: https://doi.org/10.1145/2020408.2020462
 configs:
   default:
     task: other # classification, regression
