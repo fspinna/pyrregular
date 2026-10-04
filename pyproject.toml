@@ -9,3 +9,4 @@ write_to = "pyrregular/_version.py"
 addopts = "-ra -q"
 testpaths = ["tests"]
 norecursedirs = ["tests/_deprecated"]
+markers = ["network: downloads datasets from Hugging Face"]

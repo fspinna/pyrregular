@@ -3,6 +3,8 @@ import pytest
 from pyrregular import load_dataset
 from tests.constants import TEST_CASES_FAST as TEST_CASES
 
+pytestmark = pytest.mark.network
+
 
 @pytest.fixture(params=TEST_CASES)
 def loaded_dataset(request):
