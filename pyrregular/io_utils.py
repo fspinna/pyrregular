@@ -334,6 +334,5 @@ def read_csv(
 
 def get_current_aoe_time():
     aoe_tz = timezone(timedelta(hours=-12))
-    current_time_utc = datetime.utcnow()
-    current_time_aoe = current_time_utc.replace(tzinfo=timezone.utc).astimezone(aoe_tz)
+    current_time_aoe = datetime.now(timezone.utc).astimezone(aoe_tz)
     return current_time_aoe.isoformat()
