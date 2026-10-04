@@ -434,3 +434,13 @@ def test_downloads_are_pinned_to_a_data_version():
     # data-v1 keeps the original cache folder (no re-download for existing users)
     if repository.DATA_VERSION == "data-v1":
         assert str(repository.REPOSITORY.path) == str(pooch.os_cache("pyrregular"))
+
+
+def test_dataset_card_lists_every_metadata_file():
+    from pyrregular.data_utils import list_metadata_files
+    from pyrregular.dataset_card import dataset_card
+
+    # fails when a metadata file lacks a license field or uses an unmapped license
+    card = dataset_card()
+    for file in list_metadata_files():
+        assert f"| {file.stem} |" in card
