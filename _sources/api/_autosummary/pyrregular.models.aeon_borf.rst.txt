@@ -1,0 +1,12 @@
+pyrregular.models.aeon\_borf
+============================
+
+.. automodule:: pyrregular.models.aeon_borf
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      aeon_borf_pipeline
+   

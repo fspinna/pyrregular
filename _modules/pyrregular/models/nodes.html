@@ -61,6 +61,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../models.html">pyrregular.models</a></li>
       <li class="breadcrumb-item active">pyrregular.models.nodes</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -89,7 +90,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_to_float</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_standardize</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
@@ -177,7 +178,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Transformed DataFrame with `_dropna` applied to each element.</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="n">_dropna</span><span class="p">)</span></div>
+        <span class="c1"># DataFrame.applymap was renamed to map in pandas 2.1 and removed in 3.0</span>
+        <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_dropna</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="s2">"map"</span><span class="p">)</span> <span class="k">else</span> <span class="n">X</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="n">_dropna</span><span class="p">)</span></div>
 </div>
 
 

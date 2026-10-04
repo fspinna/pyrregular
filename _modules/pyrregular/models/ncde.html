@@ -61,6 +61,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../models.html">pyrregular.models</a></li>
       <li class="breadcrumb-item active">pyrregular.models.ncde</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -378,7 +379,7 @@
         <span class="n">best_val_loss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span>
         <span class="n">stagnation_counter_lr</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Counter for learning rate reduction</span>
         <span class="n">stagnation_counter_es</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Counter for early stopping</span>
-        <span class="n">best_model_path</span> <span class="o">=</span> <span class="s2">"best_model.eqx"</span>  <span class="c1"># File path to store the best model</span>
+        <span class="n">best_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_</span>  <span class="c1"># equinox models are immutable: keep a reference</span>
 
         <span class="n">current_lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span>  <span class="c1"># Initial learning rate</span>
 
@@ -397,9 +398,7 @@
                 <span class="n">best_val_loss</span> <span class="o">=</span> <span class="n">val_loss</span>
                 <span class="n">stagnation_counter_lr</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Reset learning rate counter</span>
                 <span class="n">stagnation_counter_es</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Reset early stopping counter</span>
-                <span class="n">eqx</span><span class="o">.</span><span class="n">tree_serialise_leaves</span><span class="p">(</span>
-                    <span class="n">best_model_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_</span>
-                <span class="p">)</span>  <span class="c1"># Save best model</span>
+                <span class="n">best_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_</span>  <span class="c1"># Save best model</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">stagnation_counter_lr</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">stagnation_counter_es</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -424,7 +423,7 @@
                 <span class="p">)</span>
 
         <span class="c1"># Reload the best model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">tree_deserialise_leaves</span><span class="p">(</span><span class="n">best_model_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="n">best_model</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="bp">self</span></div>

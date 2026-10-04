@@ -104,10 +104,12 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pyrregular
 </pre></div>
 </div>
-<p>For third party models use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pyrregular<span class="o">[</span>models<span class="o">]</span>
+<p>For the third-party models, install all of them:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"pyrregular[models]"</span>
 </pre></div>
 </div>
+<p>or only the family you need: <code class="docutils literal notranslate"><span class="pre">borf</span></code>, <code class="docutils literal notranslate"><span class="pre">sktime</span></code>, <code class="docutils literal notranslate"><span class="pre">tslearn</span></code>, <code class="docutils literal notranslate"><span class="pre">pypots</span></code>, <code class="docutils literal notranslate"><span class="pre">jax</span></code>
+(e.g. <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;pyrregular[sktime]&quot;</span></code>). The extra for each pipeline is listed in the table below.</p>
 </section>
 <section id="quick-guide">
 <h2>Quick Guide<a class="headerlink" href="#quick-guide" title="Link to this heading"></a></h2>
@@ -165,71 +167,103 @@
 <th class="head"><p>📖 Source</p></th>
 <th class="head"><p>🔗 <strong>Pipeline</strong></p></th>
 <th class="head"><p>ℹ️ <strong>Type</strong></p></th>
+<th class="head"><p>📦 <strong>Extra</strong></p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">aeon</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fast-borf</span></code></p></td>
 <td><p>Spinnato et al. (2024)</p></td>
 <td><p><strong>borf</strong></p></td>
 <td><p>dictionary-based transform + <strong>lgbm</strong> classifier</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">borf</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">aeon</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fast-borf</span></code></p></td>
+<td><p><a class="reference external" href="https://arxiv.org/abs/2609.39268">Spinnato (2026)</a></p></td>
+<td><p><strong>iborf</strong></p></td>
+<td><p>time-aware dictionary-based transform + <strong>ridge</strong> classifier</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">borf</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
 <td><p></p></td>
 <td><p><strong>rifc</strong></p></td>
 <td><p>interval-based transform + <strong>lgbm</strong> classifier</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">diffrax</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">diffrax</span></code></p></td>
 <td><p>Kidger et al. (2020)</p></td>
 <td><p><strong>ncde</strong></p></td>
 <td><p>neural controlled differential equations</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">jax</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
 <td><p>Cao et al. (2018)</p></td>
 <td><p><strong>brits</strong></p></td>
 <td><p>bidirectional recurrent imputation network</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
 <td><p>Che et al. (2018)</p></td>
 <td><p><strong>grud</strong></p></td>
 <td><p>gated recurrent unit with decay</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
 <td><p>Zhang et al. (2021)</p></td>
 <td><p><strong>raindrop</strong></p></td>
 <td><p>graph neural network</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
 <td><p>Du et al. (2023)</p></td>
 <td><p><strong>saits</strong></p></td>
 <td><p>self-attention-based imputation transformer</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
 <td><p>Wu et al. (2022)</p></td>
 <td><p><strong>timesnet</strong></p></td>
 <td><p>temporal 2d-variation transformer</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
 <td><p>Ke et al. (2017)</p></td>
 <td><p><strong>lgbm</strong></p></td>
 <td><p>gradient boosted tree</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
 <td><p>Dempster et al. (2021)</p></td>
 <td><p><strong>rocket</strong></p></td>
 <td><p>kernel-based transform + <strong>lgbm</strong> classifier</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
 <td><p>Bagheri et al. (2016)</p></td>
 <td><p><strong>svm</strong></p></td>
 <td><p>support vector machine with distance kernel</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tslearn</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tslearn</span></code></p></td>
 <td><p>Sakoe &amp; Chiba (1978)</p></td>
 <td><p><strong>knn</strong></p></td>
 <td><p>distance-based with dynamic time warping</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tslearn</span></code></p></td>
 </tr>
 </tbody>
 </table>
+<p><strong>Notes</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">iborf</span></code> is in <code class="docutils literal notranslate"><span class="pre">pyrregular.models.borf</span></code> (<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">pyrregular.models.borf</span> <span class="pre">import</span> <span class="pre">iborf_pipeline</span></code>) and uses the
+timestamps: give it <code class="docutils literal notranslate"><span class="pre">X,</span> <span class="pre">_</span> <span class="pre">=</span> <span class="pre">df.irr.to_dense(concatenate_time=True,</span> <span class="pre">normalize_time=True)</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">raindrop</span></code> also needs <code class="docutils literal notranslate"><span class="pre">torch-scatter</span></code>, built for your torch/CUDA version
+(see the <a class="reference external" href="https://github.com/rusty1s/pytorch_scatter#installation">PyG install instructions</a>).</p></li>
+<li><p>To reproduce the paper, <code class="docutils literal notranslate"><span class="pre">list_paper_models()</span></code> lists its 12 models and
+<code class="docutils literal notranslate"><span class="pre">pyrregular.models.get_paper_model(name)</span></code> returns a fresh copy of each pipeline. The paper’s BORF
+is the aeon implementation (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;pyrregular[aeon]&quot;</span></code>).</p></li>
+<li><p>These pipelines wrap fast-moving third-party libraries. They are tested weekly against the latest
+versions, but an upstream release can break one between pyrregular releases; to reproduce the paper
+results exactly, pin the library versions.</p></li>
+</ul>
 </section>
 <section id="regression">
 <h4>Regression<a class="headerlink" href="#regression" title="Link to this heading"></a></h4>

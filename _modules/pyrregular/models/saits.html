@@ -61,6 +61,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../models.html">pyrregular.models</a></li>
       <li class="breadcrumb-item active">pyrregular.models.saits</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -87,14 +88,14 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">model_params</span><span class="p">,</span> <span class="n">random_state</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
             <span class="n">n_steps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_steps_</span><span class="p">,</span>
             <span class="n">n_features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span><span class="p">,</span>
             <span class="n">n_classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span><span class="p">,</span>
             <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">model_params</span>
         <span class="p">)</span>
         <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_set</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">val_set</span><span class="o">=</span><span class="n">X_val</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_set</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">val_set</span><span class="o">=</span><span class="n">X_val</span><span class="p">)</span></div>
 
 
 

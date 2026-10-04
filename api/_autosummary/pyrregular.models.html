@@ -20,7 +20,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="pyrregular.models.borf" href="pyrregular.models.borf.html" />
+    <link rel="next" title="pyrregular.models.aeon_borf" href="pyrregular.models.aeon_borf.html" />
     <link rel="prev" title="pyrregular.io_utils" href="pyrregular.io_utils.html" /> 
 </head>
 
@@ -57,6 +57,9 @@
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.dev.html">pyrregular.dev</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.io_utils.html">pyrregular.io_utils</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">pyrregular.models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyrregular.models.get_paper_model"><code class="docutils literal notranslate"><span class="pre">get_paper_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyrregular.models.list_paper_models"><code class="docutils literal notranslate"><span class="pre">list_paper_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.aeon_borf.html">pyrregular.models.aeon_borf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.borf.html">pyrregular.models.borf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.brits.html">pyrregular.models.brits</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.grud.html">pyrregular.models.grud</a></li>
@@ -112,52 +115,79 @@
              
   <section id="module-pyrregular.models">
 <span id="pyrregular-models"></span><h1>pyrregular.models<a class="headerlink" href="#module-pyrregular.models" title="Link to this heading"></a></h1>
+<p>Model pipelines. Each module needs its own extra (see the README).</p>
+<p>Importing this package does not import any model library.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.models.get_paper_model" title="pyrregular.models.get_paper_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_paper_model</span></code></a>(name)</p></td>
+<td><p>Return an unfitted copy of a paper model's pipeline (imports its library).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrregular.models.list_paper_models" title="pyrregular.models.list_paper_models"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_paper_models</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrregular.models.get_paper_model">
+<span class="sig-prename descclassname"><span class="pre">pyrregular.models.</span></span><span class="sig-name descname"><span class="pre">get_paper_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/models.html#get_paper_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.models.get_paper_model" title="Link to this definition"></a></dt>
+<dd><p>Return an unfitted copy of a paper model’s pipeline (imports its library).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrregular.models.list_paper_models">
+<span class="sig-prename descclassname"><span class="pre">pyrregular.models.</span></span><span class="sig-name descname"><span class="pre">list_paper_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/models.html#list_paper_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.models.list_paper_models" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <p class="rubric">Modules</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.borf.html#module-pyrregular.models.borf" title="pyrregular.models.borf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">borf</span></code></a></p></td>
-<td><p>BORF pipeline.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.aeon_borf.html#module-pyrregular.models.aeon_borf" title="pyrregular.models.aeon_borf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aeon_borf</span></code></a></p></td>
+<td><p>BORF pipeline (aeon implementation, as used in the pyrregular paper).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.brits.html#module-pyrregular.models.brits" title="pyrregular.models.brits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">brits</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.borf.html#module-pyrregular.models.borf" title="pyrregular.models.borf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">borf</span></code></a></p></td>
+<td><p>BORF pipelines.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.brits.html#module-pyrregular.models.brits" title="pyrregular.models.brits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">brits</span></code></a></p></td>
 <td><p>BRITS.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.grud.html#module-pyrregular.models.grud" title="pyrregular.models.grud"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grud</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.grud.html#module-pyrregular.models.grud" title="pyrregular.models.grud"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grud</span></code></a></p></td>
 <td><p>GRUD.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.knn.html#module-pyrregular.models.knn" title="pyrregular.models.knn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">knn</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.knn.html#module-pyrregular.models.knn" title="pyrregular.models.knn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">knn</span></code></a></p></td>
 <td><p>KNN.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.lgbm.html#module-pyrregular.models.lgbm" title="pyrregular.models.lgbm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lgbm</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.lgbm.html#module-pyrregular.models.lgbm" title="pyrregular.models.lgbm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lgbm</span></code></a></p></td>
 <td><p>LGBM Pipeline.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.ncde.html#module-pyrregular.models.ncde" title="pyrregular.models.ncde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ncde</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.ncde.html#module-pyrregular.models.ncde" title="pyrregular.models.ncde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ncde</span></code></a></p></td>
 <td><p>NCDE.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.nodes.html#module-pyrregular.models.nodes" title="pyrregular.models.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.nodes.html#module-pyrregular.models.nodes" title="pyrregular.models.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a></p></td>
 <td><p>Nodes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.raindrop.html#module-pyrregular.models.raindrop" title="pyrregular.models.raindrop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">raindrop</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.raindrop.html#module-pyrregular.models.raindrop" title="pyrregular.models.raindrop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">raindrop</span></code></a></p></td>
 <td><p>Raindrop.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.ridge_cv.html#module-pyrregular.models.ridge_cv" title="pyrregular.models.ridge_cv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ridge_cv</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.ridge_cv.html#module-pyrregular.models.ridge_cv" title="pyrregular.models.ridge_cv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ridge_cv</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.rifc.html#module-pyrregular.models.rifc" title="pyrregular.models.rifc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rifc</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.rifc.html#module-pyrregular.models.rifc" title="pyrregular.models.rifc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rifc</span></code></a></p></td>
 <td><p>RIFC Pipeline.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.rocket.html#module-pyrregular.models.rocket" title="pyrregular.models.rocket"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocket</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.rocket.html#module-pyrregular.models.rocket" title="pyrregular.models.rocket"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocket</span></code></a></p></td>
 <td><p>Rocket Pipeline.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.saits.html#module-pyrregular.models.saits" title="pyrregular.models.saits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">saits</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.saits.html#module-pyrregular.models.saits" title="pyrregular.models.saits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">saits</span></code></a></p></td>
 <td><p>SAITS.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.svm.html#module-pyrregular.models.svm" title="pyrregular.models.svm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">svm</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.svm.html#module-pyrregular.models.svm" title="pyrregular.models.svm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">svm</span></code></a></p></td>
 <td><p>SVM Pipeline.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.timesnet.html#module-pyrregular.models.timesnet" title="pyrregular.models.timesnet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timesnet</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.timesnet.html#module-pyrregular.models.timesnet" title="pyrregular.models.timesnet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timesnet</span></code></a></p></td>
 <td><p>TimesNet.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.models.torch_dataloader.html#module-pyrregular.models.torch_dataloader" title="pyrregular.models.torch_dataloader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch_dataloader</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.models.torch_dataloader.html#module-pyrregular.models.torch_dataloader" title="pyrregular.models.torch_dataloader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch_dataloader</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -169,7 +199,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="pyrregular.io_utils.html" class="btn btn-neutral float-left" title="pyrregular.io_utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="pyrregular.models.borf.html" class="btn btn-neutral float-right" title="pyrregular.models.borf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pyrregular.models.aeon_borf.html" class="btn btn-neutral float-right" title="pyrregular.models.aeon_borf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

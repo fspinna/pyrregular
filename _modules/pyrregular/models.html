@@ -1,0 +1,144 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrregular.models &mdash; pyrregular  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyrregular
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/dataset_conversion.html">Convert your Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyrregular</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyrregular.models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrregular.models</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Model pipelines. Each module needs its own extra (see the README).</span>
+
+<span class="sd">Importing this package does not import any model library.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">import_module</span>
+
+<span class="c1"># the 12 models of the pyrregular paper (the columns of its result tables), as</span>
+<span class="c1"># "module:pipeline" so that listing them imports nothing</span>
+<span class="n">PAPER_MODELS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"BORF"</span><span class="p">:</span> <span class="s2">"aeon_borf:aeon_borf_pipeline"</span><span class="p">,</span>
+    <span class="s2">"BRITS"</span><span class="p">:</span> <span class="s2">"brits:brits_pipeline"</span><span class="p">,</span>
+    <span class="s2">"GRU-D"</span><span class="p">:</span> <span class="s2">"grud:grud_pipeline"</span><span class="p">,</span>
+    <span class="s2">"KNN"</span><span class="p">:</span> <span class="s2">"knn:knn_dtw"</span><span class="p">,</span>
+    <span class="s2">"LGBM"</span><span class="p">:</span> <span class="s2">"lgbm:lgbm_pipeline"</span><span class="p">,</span>
+    <span class="s2">"NCDE"</span><span class="p">:</span> <span class="s2">"ncde:ncde_pipeline"</span><span class="p">,</span>
+    <span class="s2">"RAINDROP"</span><span class="p">:</span> <span class="s2">"raindrop:raindrop_pipeline"</span><span class="p">,</span>
+    <span class="s2">"RIFC"</span><span class="p">:</span> <span class="s2">"rifc:rifc_pipeline"</span><span class="p">,</span>
+    <span class="s2">"ROCKET"</span><span class="p">:</span> <span class="s2">"rocket:rocket_pipeline"</span><span class="p">,</span>
+    <span class="s2">"SAITS"</span><span class="p">:</span> <span class="s2">"saits:saits_pipeline"</span><span class="p">,</span>
+    <span class="s2">"SVM"</span><span class="p">:</span> <span class="s2">"svm:svm_pipeline"</span><span class="p">,</span>
+    <span class="s2">"TIMESNET"</span><span class="p">:</span> <span class="s2">"timesnet:timesnet_pipeline"</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="list_paper_models">
+<a class="viewcode-back" href="../../api/_autosummary/pyrregular.models.html#pyrregular.models.list_paper_models">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_paper_models</span><span class="p">():</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">PAPER_MODELS</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_paper_model">
+<a class="viewcode-back" href="../../api/_autosummary/pyrregular.models.html#pyrregular.models.get_paper_model">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_paper_model</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return an unfitted copy of a paper model's pipeline (imports its library)."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">clone</span>
+
+    <span class="n">module</span><span class="p">,</span> <span class="n">pipeline</span> <span class="o">=</span> <span class="n">PAPER_MODELS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">clone</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s2">"pyrregular.models.</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">"</span><span class="p">),</span> <span class="n">pipeline</span><span class="p">))</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Francesco Spinnato, Cristiano Landi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

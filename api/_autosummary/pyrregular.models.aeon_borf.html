@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyrregular.models.lgbm &mdash; pyrregular  documentation</title>
+  <title>pyrregular.models.aeon_borf &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
@@ -20,8 +20,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="pyrregular.models.ncde" href="pyrregular.models.ncde.html" />
-    <link rel="prev" title="pyrregular.models.knn" href="pyrregular.models.knn.html" /> 
+    <link rel="next" title="pyrregular.models.borf" href="pyrregular.models.borf.html" />
+    <link rel="prev" title="pyrregular.models" href="pyrregular.models.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -59,12 +59,12 @@
 <li class="toctree-l3 current"><a class="reference internal" href="pyrregular.models.html">pyrregular.models</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.html#pyrregular.models.get_paper_model"><code class="docutils literal notranslate"><span class="pre">get_paper_model()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.html#pyrregular.models.list_paper_models"><code class="docutils literal notranslate"><span class="pre">list_paper_models()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.aeon_borf.html">pyrregular.models.aeon_borf</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">pyrregular.models.aeon_borf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.borf.html">pyrregular.models.borf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.brits.html">pyrregular.models.brits</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.grud.html">pyrregular.models.grud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.knn.html">pyrregular.models.knn</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">pyrregular.models.lgbm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.lgbm.html">pyrregular.models.lgbm</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.ncde.html">pyrregular.models.ncde</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.nodes.html">pyrregular.models.nodes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.raindrop.html">pyrregular.models.raindrop</a></li>
@@ -104,9 +104,9 @@
           <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
           <li class="breadcrumb-item"><a href="pyrregular.html">pyrregular</a></li>
           <li class="breadcrumb-item"><a href="pyrregular.models.html">pyrregular.models</a></li>
-      <li class="breadcrumb-item active">pyrregular.models.lgbm</li>
+      <li class="breadcrumb-item active">pyrregular.models.aeon_borf</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/api/_autosummary/pyrregular.models.lgbm.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/api/_autosummary/pyrregular.models.aeon_borf.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -114,22 +114,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-pyrregular.models.lgbm">
-<span id="pyrregular-models-lgbm"></span><h1>pyrregular.models.lgbm<a class="headerlink" href="#module-pyrregular.models.lgbm" title="Link to this heading"></a></h1>
-<p>LGBM Pipeline.
-Simple LightGBM classifier that treats time series as tabular data.</p>
+  <section id="module-pyrregular.models.aeon_borf">
+<span id="pyrregular-models-aeon-borf"></span><h1>pyrregular.models.aeon_borf<a class="headerlink" href="#module-pyrregular.models.aeon_borf" title="Link to this heading"></a></h1>
+<p>BORF pipeline (aeon implementation, as used in the pyrregular paper).
+multivariate dictionary based transformer based on Bag-Of-Receptive-Fields transform.</p>
 <p class="rubric">Module Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.models.lgbm.lgbm_pipeline" title="pyrregular.models.lgbm.lgbm_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lgbm_pipeline</span></code></a></p></td>
-<td><p>This pipeline applies Tabularizer → LGBMClassifier.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.models.aeon_borf.aeon_borf_pipeline" title="pyrregular.models.aeon_borf.aeon_borf_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aeon_borf_pipeline</span></code></a></p></td>
+<td><p>This pipeline applies BORF → to_float → LGBMClassifier.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py data">
-<dt class="sig sig-object py" id="pyrregular.models.lgbm.lgbm_pipeline">
-<span class="sig-prename descclassname"><span class="pre">pyrregular.models.lgbm.</span></span><span class="sig-name descname"><span class="pre">lgbm_pipeline</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SklearnClassifierPipeline(classifier=LGBMClassifier(n_jobs=1),</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">transformers=[Tabularizer()])</span></em><a class="headerlink" href="#pyrregular.models.lgbm.lgbm_pipeline" title="Link to this definition"></a></dt>
-<dd><p>This pipeline applies Tabularizer → LGBMClassifier.</p>
+<dt class="sig sig-object py" id="pyrregular.models.aeon_borf.aeon_borf_pipeline">
+<span class="sig-prename descclassname"><span class="pre">pyrregular.models.aeon_borf.</span></span><span class="sig-name descname"><span class="pre">aeon_borf_pipeline</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Pipeline(steps=[('borf',</span> <span class="pre">BORF()),</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">('functiontransformer',</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">FunctionTransformer(func=&lt;function</span> <span class="pre">_to_float&gt;)),</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">('lgbmclassifier',</span> <span class="pre">LGBMClassifier(n_jobs=1,</span> <span class="pre">random_state=0))])</span></em><a class="headerlink" href="#pyrregular.models.aeon_borf.aeon_borf_pipeline" title="Link to this definition"></a></dt>
+<dd><p>This pipeline applies BORF → to_float → LGBMClassifier.</p>
 </dd></dl>
 
 </section>
@@ -138,8 +138,8 @@ Simple LightGBM classifier that treats time series as tabular data.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="pyrregular.models.knn.html" class="btn btn-neutral float-left" title="pyrregular.models.knn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="pyrregular.models.ncde.html" class="btn btn-neutral float-right" title="pyrregular.models.ncde" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pyrregular.models.html" class="btn btn-neutral float-left" title="pyrregular.models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyrregular.models.borf.html" class="btn btn-neutral float-right" title="pyrregular.models.borf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

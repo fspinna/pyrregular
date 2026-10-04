@@ -4,12 +4,20 @@ pyrregular.models
 .. automodule:: pyrregular.models
 
    
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_paper_model
+      list_paper_models
+   
 .. rubric:: Modules
 
 .. autosummary::
    :toctree:
    :recursive:
 
+   aeon_borf
    borf
    brits
    grud

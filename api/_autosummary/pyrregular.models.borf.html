@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="pyrregular.models.brits" href="pyrregular.models.brits.html" />
-    <link rel="prev" title="pyrregular.models" href="pyrregular.models.html" /> 
+    <link rel="prev" title="pyrregular.models.aeon_borf" href="pyrregular.models.aeon_borf.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,6 +57,9 @@
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.dev.html">pyrregular.dev</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.io_utils.html">pyrregular.io_utils</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="pyrregular.models.html">pyrregular.models</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.html#pyrregular.models.get_paper_model"><code class="docutils literal notranslate"><span class="pre">get_paper_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.html#pyrregular.models.list_paper_models"><code class="docutils literal notranslate"><span class="pre">list_paper_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.aeon_borf.html">pyrregular.models.aeon_borf</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">pyrregular.models.borf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.brits.html">pyrregular.models.brits</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyrregular.models.grud.html">pyrregular.models.grud</a></li>
@@ -113,20 +116,38 @@
              
   <section id="module-pyrregular.models.borf">
 <span id="pyrregular-models-borf"></span><h1>pyrregular.models.borf<a class="headerlink" href="#module-pyrregular.models.borf" title="Link to this heading"></a></h1>
-<p>BORF pipeline.
-multivariate dictionary based transformer based on Bag-Of-Receptive-Fields transform.</p>
+<p>BORF pipelines.
+Bag-Of-Receptive-Fields features (fast_borf) with a LightGBM classifier.
+<code class="docutils literal notranslate"><span class="pre">iborf_pipeline</span></code> is the time-aware variant for irregular series (ridge head).</p>
 <p class="rubric">Module Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.models.borf.borf_pipeline" title="pyrregular.models.borf.borf_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">borf_pipeline</span></code></a></p></td>
-<td><p>This pipeline applies BORF → to_float → LGBMClassifier.</p></td>
+<td><p>X from to_dense().</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrregular.models.borf.iborf_pipeline" title="pyrregular.models.borf.iborf_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iborf_pipeline</span></code></a></p></td>
+<td><p>This pipeline applies time-aware BORF (I-BORF) → arcsinh → RidgeClassifierCV, as in Spinnato, &quot;A Time-Aware Bag-of-Receptive-Fields for Interpretable Irregular Time Series Classification&quot;.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py data">
 <dt class="sig sig-object py" id="pyrregular.models.borf.borf_pipeline">
 <span class="sig-prename descclassname"><span class="pre">pyrregular.models.borf.</span></span><span class="sig-name descname"><span class="pre">borf_pipeline</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Pipeline(steps=[('borf',</span> <span class="pre">BORF()),</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">('functiontransformer',</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">FunctionTransformer(func=&lt;function</span> <span class="pre">_to_float&gt;)),</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">('lgbmclassifier',</span> <span class="pre">LGBMClassifier(n_jobs=1))])</span></em><a class="headerlink" href="#pyrregular.models.borf.borf_pipeline" title="Link to this definition"></a></dt>
-<dd><p>This pipeline applies BORF → to_float → LGBMClassifier.</p>
+<dd><p>X from to_dense().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>This pipeline applies BORF → to_float → LGBMClassifier. Input</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyrregular.models.borf.iborf_pipeline">
+<span class="sig-prename descclassname"><span class="pre">pyrregular.models.borf.</span></span><span class="sig-name descname"><span class="pre">iborf_pipeline</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Pipeline(steps=[('borf',</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">BORF(min_window_to_signal_std_ratio=0.15,</span> <span class="pre">time_channel=True)),</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">('functiontransformer',</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">FunctionTransformer(func=&lt;ufunc</span> <span class="pre">'arcsinh'&gt;)),</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">('_ridgeclassifiercvfix',</span> <span class="pre">_RidgeClassifierCVFix())])</span></em><a class="headerlink" href="#pyrregular.models.borf.iborf_pipeline" title="Link to this definition"></a></dt>
+<dd><p>This pipeline applies time-aware BORF (I-BORF) → arcsinh → RidgeClassifierCV, as in
+Spinnato, “A Time-Aware Bag-of-Receptive-Fields for Interpretable Irregular Time
+Series Classification”. Input: X from to_dense(concatenate_time=True,
+normalize_time=True), where the last channel holds the timestamps.</p>
 </dd></dl>
 
 </section>
@@ -135,7 +156,7 @@ multivariate dictionary based transformer based on Bag-Of-Receptive-Fields trans
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="pyrregular.models.html" class="btn btn-neutral float-left" title="pyrregular.models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyrregular.models.aeon_borf.html" class="btn btn-neutral float-left" title="pyrregular.models.aeon_borf" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="pyrregular.models.brits.html" class="btn btn-neutral float-right" title="pyrregular.models.brits" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

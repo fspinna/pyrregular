@@ -9,4 +9,5 @@ pyrregular.models.borf
    .. autosummary::
    
       borf_pipeline
+      iborf_pipeline
    
