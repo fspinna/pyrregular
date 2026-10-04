@@ -4,8 +4,7 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
-  release:
-    types: [ published ]
+  workflow_call:
 
 jobs:
   build:
