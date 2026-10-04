@@ -80,9 +80,25 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.data_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_project_root</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_from_file</span>
 
+<span class="c1"># Each data version is a fixed commit of the Hugging Face repo, tagged data-vN,</span>
+<span class="c1"># so that a pyrregular release always downloads the files it was made for.</span>
+<span class="n">DATA_VERSION</span> <span class="o">=</span> <span class="s2">"data-v1"</span>
+<span class="n">DATA_REVISION</span> <span class="o">=</span> <span class="s2">"f416b1b432f248a73323222f2378d0e8433ca6d2"</span>  <span class="c1"># commit of data-v1</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_cache_path</span><span class="p">():</span>
+    <span class="c1"># data-v1 keeps the original cache folder; later versions get their own</span>
+    <span class="c1"># subfolder, so that different versions never overwrite each other</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">os_cache</span><span class="p">(</span><span class="s2">"pyrregular"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">path</span> <span class="k">if</span> <span class="n">DATA_VERSION</span> <span class="o">==</span> <span class="s2">"data-v1"</span> <span class="k">else</span> <span class="n">path</span> <span class="o">/</span> <span class="n">DATA_VERSION</span>
+
+
 <span class="n">REPOSITORY</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-    <span class="n">path</span><span class="o">=</span><span class="n">pooch</span><span class="o">.</span><span class="n">os_cache</span><span class="p">(</span><span class="s2">"pyrregular"</span><span class="p">),</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">"https://huggingface.co/datasets/splandi/pyrregular/resolve/main/data_final/"</span><span class="p">,</span>
+    <span class="n">path</span><span class="o">=</span><span class="n">_cache_path</span><span class="p">(),</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">"https://huggingface.co/datasets/splandi/pyrregular/resolve/"</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">DATA_REVISION</span><span class="si">}</span><span class="s2">/data_final/"</span>
+    <span class="p">),</span>
     <span class="n">registry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
 
