@@ -16,7 +16,7 @@ def _dropna(x):
 
 
 def _to_float(x):
-    return x.astype(np.float_)
+    return x.astype(np.float64)
 
 
 def _standardize(X):
@@ -88,7 +88,8 @@ class DropNATransformer(BaseEstimator, TransformerMixin):
         Returns:
             Transformed DataFrame with `_dropna` applied to each element.
         """
-        return X.applymap(_dropna)
+        # DataFrame.applymap was renamed to map in pandas 2.1 and removed in 3.0
+        return X.map(_dropna) if hasattr(X, "map") else X.applymap(_dropna)
 
 
 class ApplyFunc(BaseEstimator, TransformerMixin):

@@ -93,7 +93,7 @@ def apply_labels(points, labels):
         points["time"].values >= labels["end_time"].iloc[indices].values
     )
     points["label"] = labels["label"].iloc[indices].values
-    points.loc[no_label, "label"] = np.NaN
+    points.loc[no_label, "label"] = np.nan
 
 
 def _read_user(user_folder):
