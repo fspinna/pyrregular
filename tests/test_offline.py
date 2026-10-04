@@ -444,3 +444,54 @@ def test_dataset_card_lists_every_metadata_file():
     card = dataset_card()
     for file in list_metadata_files():
         assert f"| {file.stem} |" in card
+
+
+def test_to_list_aligns_values_with_timestamps(da):
+    # ts_level=True: one timeline per series, NaN where a signal has no value
+    X, T = da.irr.to_list(index_scale=1)
+    assert T == [[[1.0, 2.0, 3.0]], [[10.0, 20.0]]]
+    assert_equal_nan(np.array(X[0]), [[1.0, 2.0, 3.0], [nan, 20.0, 30.0]])
+    assert_equal_nan(np.array(X[1]), [[100.0, nan], [1000.0, 2000.0]])
+    # ts_level=False: one timeline per signal, no NaN
+    X, T = da.irr.to_list(index_scale=1, ts_level=False)
+    assert X == [[[1.0, 2.0, 3.0], [20.0, 30.0]], [[100.0], [1000.0, 2000.0]]]
+    assert T == [[[1.0, 2.0, 3.0], [2.0, 3.0]], [[10.0], [10.0, 20.0]]]
+
+
+@pytest.mark.parametrize(
+    "times_a, times_b, irregular",
+    [
+        # the minimal examples of the paper's appendix: each shows one irregularity
+        ([0, 1, 3], [0, 1, 3], "uneven sampling"),
+        ([0, 1], [0, 1, 2], "ragged length"),
+        ([0, 1], [1, 2], "shift"),
+        ([0, 1], [0, 2], "ragged sampling"),
+    ],
+)
+def test_regularity_checks_follow_the_paper_definitions(
+    tmp_path, times_a, times_b, irregular
+):
+    from pyrregular import describe
+
+    rows = [("x", "a", t, 1.0) for t in times_a] + [("x", "b", t, 1.0) for t in times_b]
+    da = read_csv(_write_csv(tmp_path / "t.csv", rows), time_index_as_datetime=False)
+    checks = {
+        "uneven sampling": describe.are_all_signals_sampled_at_constant_intervals,
+        "ragged length": describe.are_all_signals_equal_length,
+        "shift": describe.are_all_signals_not_strongly_offset,
+        "ragged sampling": describe.do_all_signals_have_equal_sampling,
+    }
+    for name, check in checks.items():
+        regular = describe.check_regularity(check, da, ts_level=False)
+        assert regular == (name != irregular), name
+
+
+def test_regularity_checks_are_exact_for_subsecond_datetimes(tmp_path):
+    from pyrregular import describe
+
+    times = pd.date_range("2020-03-01 12:00", periods=50, freq="100ms")
+    rows = [("x", "a", t.strftime("%Y-%m-%d %H:%M:%S.%f"), 1.0) for t in times]
+    da = read_csv(_write_csv(tmp_path / "t.csv", rows))
+    check = describe.are_all_signals_sampled_at_constant_intervals
+    assert describe.check_regularity(check, da, ts_level=False) == 1.0
+    assert describe.check_regularity(check, da, ts_level=True) == 1.0

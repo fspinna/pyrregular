@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-from pyrregular.conversion_utils import _ak_dropnan, _reset_time_index
+from pyrregular.conversion_utils import _reset_time_index
 from pyrregular.io_utils import save_to_file
 
 
@@ -132,21 +132,21 @@ class IrregularAccessor:
         concatenate_time=False,
         dropna=True,
     ):
-        import awkward as ak
+        """Return ``to_list`` as awkward arrays (needs ``pip install awkward``)."""
+        try:
+            import awkward as ak
+        except ImportError as e:
+            raise ImportError("to_awkward needs awkward: pip install awkward") from e
 
-        X, T = self.to_dense(
+        X, T = self.to_list(
             reset_time_index=reset_time_index,
             ts_level=ts_level,
             index_scale=index_scale,
             absolute_time=absolute_time,
             concatenate_time=concatenate_time,
+            dropna=dropna,
         )
-        X = ak.Array(X)
-        T = ak.Array(T)
-        if dropna:
-            X = _ak_dropnan(X)
-            T = _ak_dropnan(T)
-        return X, T
+        return ak.Array(X), ak.Array(T)
 
     def to_list(
         self,
@@ -157,15 +157,38 @@ class IrregularAccessor:
         concatenate_time=False,
         dropna=True,
     ):
-        X, T = self.to_awkward(
+        """Return X and T as nested lists, X[i][j] being signal j of series i.
+
+        dropna=True removes the padding. With ts_level=True each series has one
+        timeline, T[i][0]: the timestamps where at least one signal has a value;
+        X[i][j] keeps a NaN where signal j has no value at one of them, so
+        X[i][j][k] is observed at T[i][0][k]. With ts_level=False each signal
+        has its own timeline, T[i][j], and X[i][j] has no NaNs.
+        """
+        X, T = self.to_dense(
             reset_time_index=reset_time_index,
             ts_level=ts_level,
             index_scale=index_scale,
             absolute_time=absolute_time,
             concatenate_time=concatenate_time,
-            dropna=dropna,
         )
-        return X.to_list(), T.to_list()
+        if not dropna:
+            return X.tolist(), T.tolist()
+        if len(T) != len(X):  # reset_time_index=False: one time axis for all series
+            T = np.broadcast_to(T, (len(X),) + T.shape[1:])
+        X_out, T_out = [], []
+        for x, t in zip(X, T):
+            if ts_level:
+                keep = ~pd.isna(t[0]) & ~np.isnan(x).all(axis=0)
+                X_out.append(x[:, keep].tolist())
+                T_out.append(t[:, keep].tolist())
+            else:
+                X_out.append([row[~np.isnan(row)].tolist() for row in x])
+                if len(t) == 1:  # one time axis shared by the signals
+                    T_out.append([t[0][~np.isnan(row)].tolist() for row in x])
+                else:
+                    T_out.append([row[~pd.isna(row)].tolist() for row in t])
+        return X_out, T_out
 
     def to_long(
         self,

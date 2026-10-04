@@ -112,12 +112,6 @@ def _reset_time_index(
         )
 
 
-def _ak_dropnan(arr, axis=None):
-    import awkward as ak
-
-    return ak.drop_none(ak.nan_to_none(arr), axis=axis)
-
-
 def _to_pypots(X, y=None):
     if y is None:
         return dict(
