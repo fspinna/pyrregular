@@ -18,11 +18,14 @@ You can install via pip with:
 pip install pyrregular
 ```
 
-For third party models use:
+For the third-party models, install all of them:
 
 ```bash
-pip install pyrregular[models]
+pip install "pyrregular[models]"
 ```
+
+or only the family you need: `borf`, `aeon`, `sktime`, `tslearn`, `pypots`, `jax`
+(e.g. `pip install "pyrregular[sktime]"`). The extra for each pipeline is listed in the table below.
 
 
 # Quick Guide
@@ -79,20 +82,31 @@ model.score(X_test, y_test)
 
 There are several pipelines available in `pyrregular.models`:
 
-| 💾 **Library** | 📖 Source              | 🔗 **Pipeline** | ℹ️ **Type**                                      |
-|----------------|------------------------|-----------------|--------------------------------------------------|
-| `aeon`         | Spinnato et al. (2024) | **borf**        | dictionary-based transform + **lgbm** classifier |
-| `aeon`         |                        | **rifc**        | interval-based transform + **lgbm** classifier   |
-| `diffrax`      | Kidger et al. (2020)   | **ncde**        | neural controlled differential equations         |
-| `pypots`       | Cao et al. (2018)      | **brits**       | bidirectional recurrent imputation network       |
-| `pypots`       | Che et al. (2018)      | **grud**        | gated recurrent unit with decay                  |
-| `pypots`       | Zhang et al. (2021)    | **raindrop**    | graph neural network                             |
-| `pypots`       | Du et al. (2023)       | **saits**       | self-attention-based imputation transformer      |
-| `pypots`       | Wu et al. (2022)       | **timesnet**    | temporal 2d-variation transformer                |
-| `sktime`       | Ke et al. (2017)       | **lgbm**        | gradient boosted tree                            |
-| `sktime`       | Dempster et al. (2021) | **rocket**      | kernel-based transform + **lgbm** classifier     |
-| `sktime`       | Bagheri et al. (2016)  | **svm**         | support vector machine with distance kernel      |
-| `tslearn`      | Sakoe & Chiba (1978)   | **knn**         | distance-based with dynamic time warping         |
+| 💾 **Library** | 📖 Source                                                | 🔗 **Pipeline** | ℹ️ **Type**                                                   | 📦 **Extra** |
+|----------------|----------------------------------------------------------|-----------------|---------------------------------------------------------------|--------------|
+| `fast-borf`    | Spinnato et al. (2024)                                   | **borf**        | dictionary-based transform + **lgbm** classifier              | `borf`       |
+| `fast-borf`    | [Spinnato (2026)](https://arxiv.org/abs/2609.39268)      | **iborf**       | time-aware dictionary-based transform + **ridge** classifier  | `borf`       |
+| `aeon`         | Spinnato et al. (2024)                                   | **aeon_borf**   | BORF as used in the pyrregular paper                          | `aeon`       |
+| `sktime`       |                                                          | **rifc**        | interval-based transform + **lgbm** classifier                | `sktime`     |
+| `diffrax`      | Kidger et al. (2020)                                     | **ncde**        | neural controlled differential equations                      | `jax`        |
+| `pypots`       | Cao et al. (2018)                                        | **brits**       | bidirectional recurrent imputation network                    | `pypots`     |
+| `pypots`       | Che et al. (2018)                                        | **grud**        | gated recurrent unit with decay                               | `pypots`     |
+| `pypots`       | Zhang et al. (2021)                                      | **raindrop**    | graph neural network                                          | `pypots`     |
+| `pypots`       | Du et al. (2023)                                         | **saits**       | self-attention-based imputation transformer                   | `pypots`     |
+| `pypots`       | Wu et al. (2022)                                         | **timesnet**    | temporal 2d-variation transformer                             | `pypots`     |
+| `sktime`       | Ke et al. (2017)                                         | **lgbm**        | gradient boosted tree                                         | `sktime`     |
+| `sktime`       | Dempster et al. (2021)                                   | **rocket**      | kernel-based transform + **lgbm** classifier                  | `sktime`     |
+| `sktime`       | Bagheri et al. (2016)                                    | **svm**         | support vector machine with distance kernel                   | `sktime`     |
+| `tslearn`      | Sakoe & Chiba (1978)                                     | **knn**         | distance-based with dynamic time warping                      | `tslearn`    |
+
+**Notes**
+- `iborf` is in `pyrregular.models.borf` (`from pyrregular.models.borf import iborf_pipeline`) and uses the
+  timestamps: give it `X, _ = df.irr.to_dense(concatenate_time=True, normalize_time=True)`.
+- `raindrop` also needs `torch-scatter`, built for your torch/CUDA version
+  (see the [PyG install instructions](https://github.com/rusty1s/pytorch_scatter#installation)).
+- These pipelines wrap fast-moving third-party libraries. They are tested weekly against the latest
+  versions, but an upstream release can break one between pyrregular releases; to reproduce the paper
+  results exactly, pin the library versions.
 
 ### Regression
 Regression is still work in progress, but is available for some datasets:
