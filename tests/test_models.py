@@ -38,7 +38,9 @@ def data():
 
 # module, pipeline name, libraries it needs, whether it needs the time channel
 PIPELINES = [
-    ("borf", "borf_pipeline", ["aeon", "lightgbm"], False),
+    ("aeon_borf", "aeon_borf_pipeline", ["aeon", "lightgbm"], False),
+    ("borf", "borf_pipeline", ["fast_borf", "lightgbm"], False),
+    ("borf", "iborf_pipeline", ["fast_borf", "lightgbm"], True),
     ("brits", "brits_pipeline", ["pypots"], False),
     ("grud", "grud_pipeline", ["pypots"], False),
     ("knn", "knn_dtw", ["tslearn"], False),
@@ -69,7 +71,7 @@ def _pipeline(module, name, libs):
 
 
 @pytest.mark.parametrize(
-    "module, name, libs, needs_time", PIPELINES, ids=[p[0] for p in PIPELINES]
+    "module, name, libs, needs_time", PIPELINES, ids=[p[1] for p in PIPELINES]
 )
 def test_pipeline_fit_predict(data, module, name, libs, needs_time):
     X, X_time, y, train = data
