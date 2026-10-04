@@ -212,7 +212,7 @@ class IrregularAccessor:
                     columns[name] = _repeat(coord.values, idx[coord.dims[0]])
         return pd.DataFrame(columns)
 
-    def to_hdf5(self, filename, compression="gzip", compression_opts=None):
+    def to_hdf5(self, filename, compression="gzip", compression_opts=1):
         save_to_file(
             data_array=self._da,
             filename=filename,
