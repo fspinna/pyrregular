@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.datasets.t_drive &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -95,15 +95,15 @@
         <span class="n">attrs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">TDrive</span><span class="p">,</span> <span class="n">TDrive</span><span class="p">)</span><span class="o">.</span><span class="n">_get_metadata</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
-            <span class="n">filenames</span><span class="o">=</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;t-drive/*.txt&quot;</span><span class="p">,</span>
-            <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span>
-            <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
-            <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span>
-            <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+            <span class="n">filenames</span><span class="o">=</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"t-drive/*.txt"</span><span class="p">,</span>
+            <span class="n">ts_id</span><span class="o">=</span><span class="s2">"tid"</span><span class="p">,</span>
+            <span class="n">time_id</span><span class="o">=</span><span class="s2">"timestamp"</span><span class="p">,</span>
+            <span class="n">signal_id</span><span class="o">=</span><span class="s2">"variable"</span><span class="p">,</span>
+            <span class="n">value_id</span><span class="o">=</span><span class="s2">"value"</span><span class="p">,</span>
             <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
-                <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
-                <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s2">"ts_id"</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s2">"signal_id"</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s2">"time_id"</span><span class="p">:</span> <span class="p">[],</span>
             <span class="p">},</span>
             <span class="n">reader_fun</span><span class="o">=</span><span class="n">_read_t_drive</span><span class="p">,</span>
             <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
@@ -121,26 +121,26 @@
     <span class="n">filename</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;longitude&quot;</span><span class="p">,</span> <span class="s2">&quot;latitude&quot;</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">"tid"</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">"tid"</span><span class="p">,</span> <span class="s2">"timestamp"</span><span class="p">,</span> <span class="s2">"longitude"</span><span class="p">,</span> <span class="s2">"latitude"</span><span class="p">])</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
     <span class="n">dfs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfs</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+    <span class="n">dfs</span><span class="p">[</span><span class="s2">"timestamp"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfs</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S"</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
     <span class="p">)</span>
 
     <span class="n">melted_df</span> <span class="o">=</span> <span class="n">dfs</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
-        <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">],</span> <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">,</span> <span class="s2">&quot;latitude&quot;</span><span class="p">]</span>
+        <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">"tid"</span><span class="p">,</span> <span class="s2">"timestamp"</span><span class="p">],</span> <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">"longitude"</span><span class="p">,</span> <span class="s2">"latitude"</span><span class="p">]</span>
     <span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">melted_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">melted_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">):</span>
         <span class="k">yield</span> <span class="n">row</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">TDrive</span><span class="o">.</span><span class="n">save_intermediate_version</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">TDrive</span><span class="o">.</span><span class="n">save_final_version</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 

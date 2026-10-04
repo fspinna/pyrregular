@@ -1,4 +1,4 @@
-﻿pyrregular.data\_utils
+pyrregular.data\_utils
 ======================
 
 .. automodule:: pyrregular.data_utils
@@ -15,6 +15,7 @@
       infer_static_columns
       list_final_datasets
       list_metadata_files
+      list_paper_datasets
       list_registry_datasets
       metadata_folder
    

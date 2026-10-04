@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.datasets.abf &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -84,7 +84,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_yaml</span><span class="p">,</span> <span class="n">read_csv</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.reader_interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReaderInterface</span>
 
-<span class="n">LABEL_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;bowl&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;alembic&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;flask&quot;</span><span class="p">}</span>
+<span class="n">LABEL_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">"bowl"</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">"alembic"</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">"flask"</span><span class="p">}</span>
 
 <span class="n">RANDOM_STATE</span> <span class="o">=</span> <span class="mi">42</span>
 
@@ -103,14 +103,14 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_fix_intermediate_version</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">DataArray</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
-        <span class="n">split_default</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;train&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;test&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;split&quot;</span><span class="p">]]</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span><span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">split_default</span><span class="p">))</span>
+        <span class="n">split_default</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"train"</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">"test"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"split"</span><span class="p">]]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span><span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">split_default</span><span class="p">))</span>
         <span class="c1"># the following is necessary to make the data compatible with some model benchmarks</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
-            <span class="n">time_id</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;time_id&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;time_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100_000_000</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+            <span class="n">time_id</span><span class="o">=</span><span class="p">(</span><span class="s2">"time_id"</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100_000_000</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
         <span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;class_default&quot;</span><span class="p">:</span> <span class="s2">&quot;class_labels&quot;</span><span class="p">})</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;class_default&quot;</span><span class="p">})</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">"class_default"</span><span class="p">:</span> <span class="s2">"class_labels"</span><span class="p">})</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">"y"</span><span class="p">:</span> <span class="s2">"class_default"</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
 
@@ -202,7 +202,7 @@
         <span class="n">instances_per_class</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">skewness</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span> <span class="n">noise</span><span class="p">,</span> <span class="n">noise_level</span>
     <span class="p">)</span>
     <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-        <span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;alembics_bowls_flasks&quot;</span> <span class="o">/</span> <span class="s2">&quot;abf_long.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
+        <span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"alembics_bowls_flasks"</span> <span class="o">/</span> <span class="s2">"abf_long.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span>
     <span class="k">return</span>
 
@@ -216,14 +216,14 @@
                     <span class="n">df</span><span class="p">,</span>
                     <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
                         <span class="p">{</span>
-                            <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span>
-                            <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
-                            <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span>
-                            <span class="s2">&quot;class_default&quot;</span><span class="p">:</span> <span class="n">LABEL_MAP</span><span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
-                            <span class="s2">&quot;skewness&quot;</span><span class="p">:</span> <span class="n">skewness</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                            <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
-                            <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
-                            <span class="s2">&quot;split&quot;</span><span class="p">:</span> <span class="n">split_vector</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                            <span class="s2">"time_id"</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span>
+                            <span class="s2">"y"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                            <span class="s2">"value"</span><span class="p">:</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span>
+                            <span class="s2">"class_default"</span><span class="p">:</span> <span class="n">LABEL_MAP</span><span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
+                            <span class="s2">"skewness"</span><span class="p">:</span> <span class="n">skewness</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                            <span class="s2">"ts_id"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+                            <span class="s2">"signal_id"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                            <span class="s2">"split"</span><span class="p">:</span> <span class="n">split_vector</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                         <span class="p">},</span>
                         <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                     <span class="p">),</span>
@@ -244,15 +244,15 @@
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.abf.html#pyrregular.datasets.abf.read_abf">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">read_abf</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
-        <span class="n">filenames</span><span class="o">=</span><span class="p">[</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;alembics_bowls_flasks/abf_long.csv&quot;</span><span class="p">],</span>
-        <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span>
-        <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;time_id&quot;</span><span class="p">,</span>
-        <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;signal_id&quot;</span><span class="p">,</span>
-        <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+        <span class="n">filenames</span><span class="o">=</span><span class="p">[</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"alembics_bowls_flasks/abf_long.csv"</span><span class="p">],</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">"ts_id"</span><span class="p">,</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="s2">"time_id"</span><span class="p">,</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="s2">"signal_id"</span><span class="p">,</span>
+        <span class="n">value_id</span><span class="o">=</span><span class="s2">"value"</span><span class="p">,</span>
         <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;class_default&quot;</span><span class="p">,</span> <span class="s2">&quot;split&quot;</span><span class="p">,</span> <span class="s2">&quot;skewness&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"ts_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"class_default"</span><span class="p">,</span> <span class="s2">"split"</span><span class="p">,</span> <span class="s2">"skewness"</span><span class="p">],</span>
+            <span class="s2">"signal_id"</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"time_id"</span><span class="p">:</span> <span class="p">[],</span>
         <span class="p">},</span>
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
         <span class="n">time_index_as_datetime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -260,7 +260,7 @@
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="c1"># Abf.save_fixed()</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">Abf</span><span class="o">.</span><span class="n">load_final_version</span><span class="p">()</span>
 </pre></div>

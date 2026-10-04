@@ -1,4 +1,4 @@
-﻿pyrregular.models.nodes
+pyrregular.models.nodes
 =======================
 
 .. automodule:: pyrregular.models.nodes

@@ -1,0 +1,12 @@
+pyrregular.models.torch\_dataloader
+===================================
+
+.. automodule:: pyrregular.models.torch_dataloader
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      IrregularDataset
+   

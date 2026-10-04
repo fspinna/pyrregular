@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.models.svm &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -71,9 +71,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyrregular.models.svm</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;SVM Pipeline.</span>
+<span></span><span class="sd">"""SVM Pipeline.</span>
 <span class="sd">Supports LCSS kernel and uses a custom TimeSeriesSVC class to handle the kernel.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
@@ -98,24 +98,24 @@
 
 <span class="n">svm_pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
     <span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;standardize&quot;</span><span class="p">,</span> <span class="n">ApplyFunc</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">_standardize</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">"standardize"</span><span class="p">,</span> <span class="n">ApplyFunc</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">_standardize</span><span class="p">)),</span>
         <span class="p">(</span>
-            <span class="s2">&quot;convert_to_nested&quot;</span><span class="p">,</span>
-            <span class="n">ApplyFunc</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">convert_to</span><span class="p">,</span> <span class="n">fn_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;to_type&quot;</span><span class="p">:</span> <span class="s2">&quot;nested_univ&quot;</span><span class="p">}),</span>
+            <span class="s2">"convert_to_nested"</span><span class="p">,</span>
+            <span class="n">ApplyFunc</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">convert_to</span><span class="p">,</span> <span class="n">fn_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">"to_type"</span><span class="p">:</span> <span class="s2">"nested_univ"</span><span class="p">}),</span>
         <span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;drop_na&quot;</span><span class="p">,</span> <span class="n">DropNATransformer</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">"drop_na"</span><span class="p">,</span> <span class="n">DropNATransformer</span><span class="p">()),</span>
         <span class="p">(</span>
-            <span class="s2">&quot;svc&quot;</span><span class="p">,</span>
+            <span class="s2">"svc"</span><span class="p">,</span>
             <span class="n">TimeSeriesSVCFix</span><span class="p">(</span>
                 <span class="n">kernel</span><span class="o">=</span><span class="n">LcssTslearn</span><span class="p">(</span>
-                    <span class="n">global_constraint</span><span class="o">=</span><span class="s2">&quot;sakoe_chiba&quot;</span><span class="p">,</span> <span class="n">sakoe_chiba_radius</span><span class="o">=</span><span class="mi">10</span>
+                    <span class="n">global_constraint</span><span class="o">=</span><span class="s2">"sakoe_chiba"</span><span class="p">,</span> <span class="n">sakoe_chiba_radius</span><span class="o">=</span><span class="mi">10</span>
                 <span class="p">),</span>
                 <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
             <span class="p">),</span>
         <span class="p">),</span>
     <span class="p">]</span>
 <span class="p">)</span>
-<span class="sd">&quot;&quot;&quot;This pipeline applies standardize → convert_to_nested → drop_na → TimeSeriesSVC with LCSS kernel.&quot;&quot;&quot;</span>
+<span class="sd">"""This pipeline applies standardize → convert_to_nested → drop_na → TimeSeriesSVC with LCSS kernel."""</span>
 </pre></div>
 
            </div>

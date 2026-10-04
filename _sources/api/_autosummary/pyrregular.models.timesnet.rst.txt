@@ -1,4 +1,4 @@
-﻿pyrregular.models.timesnet
+pyrregular.models.timesnet
 ==========================
 
 .. automodule:: pyrregular.models.timesnet

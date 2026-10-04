@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.models.nodes &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -71,9 +71,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyrregular.models.nodes</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Nodes.</span>
+<span></span><span class="sd">"""Nodes.</span>
 <span class="sd">This module contains various pipeline transformer classes for data preprocessing and transformation.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -101,16 +101,16 @@
 <div class="viewcode-block" id="PassthroughTransformer">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.nodes.html#pyrregular.models.nodes.PassthroughTransformer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PassthroughTransformer</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A transformer that returns the input data unchanged.</span>
 
 <span class="sd">    This transformer is useful as a placeholder or when no transformation is needed.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="PassthroughTransformer.fit">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.nodes.html#pyrregular.models.nodes.PassthroughTransformer.fit">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Fit the transformer. This transformer does not learn anything.</span>
 
 <span class="sd">        Args:</span>
@@ -119,14 +119,14 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            self: Returns the instance itself.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="PassthroughTransformer.transform">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.nodes.html#pyrregular.models.nodes.PassthroughTransformer.transform">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return the input data unchanged.</span>
 
 <span class="sd">        Args:</span>
@@ -134,7 +134,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The unchanged input data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">X</span></div>
 </div>
 
@@ -143,16 +143,16 @@
 <div class="viewcode-block" id="DropNATransformer">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.nodes.html#pyrregular.models.nodes.DropNATransformer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DropNATransformer</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A transformer that applies a function to drop or handle NA values in a DataFrame.</span>
 
 <span class="sd">    This transformer applies the `_dropna` function element-wise to the input DataFrame.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DropNATransformer.fit">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.nodes.html#pyrregular.models.nodes.DropNATransformer.fit">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Fit the transformer. This transformer does not learn anything.</span>
 
 <span class="sd">        Args:</span>
@@ -161,14 +161,14 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            self: Returns the instance itself.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="DropNATransformer.transform">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.nodes.html#pyrregular.models.nodes.DropNATransformer.transform">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Apply the `_dropna` function element-wise to the DataFrame.</span>
 
 <span class="sd">        Args:</span>
@@ -176,7 +176,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Transformed DataFrame with `_dropna` applied to each element.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="n">_dropna</span><span class="p">)</span></div>
 </div>
 
@@ -185,29 +185,29 @@
 <div class="viewcode-block" id="ApplyFunc">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.nodes.html#pyrregular.models.nodes.ApplyFunc">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ApplyFunc</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A transformer that applies a specified function to the input data.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        func (callable): The function to apply to the input data.</span>
 <span class="sd">        fn_kwargs (dict, optional): Additional keyword arguments to pass to the function.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">fn_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Initialize the ApplyFunc transformer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            func (callable): The function to apply.</span>
 <span class="sd">            fn_kwargs (dict, optional): Keyword arguments for the function (default is None).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fn_kwargs</span> <span class="o">=</span> <span class="n">fn_kwargs</span> <span class="k">if</span> <span class="n">fn_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ApplyFunc.fit">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.nodes.html#pyrregular.models.nodes.ApplyFunc.fit">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Fit the transformer. This transformer does not learn anything.</span>
 
 <span class="sd">        Args:</span>
@@ -216,14 +216,14 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            self: Returns the instance itself.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="ApplyFunc.transform">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.nodes.html#pyrregular.models.nodes.ApplyFunc.transform">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Apply the specified function to the input data.</span>
 
 <span class="sd">        Args:</span>
@@ -231,7 +231,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The result of applying `func` to `X` with the specified keyword arguments.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">fn_kwargs</span><span class="p">)</span></div>
 </div>
 

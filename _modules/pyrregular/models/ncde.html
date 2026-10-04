@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.models.ncde &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -71,9 +71,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyrregular.models.ncde</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;NCDE.</span>
+<span></span><span class="sd">"""NCDE.</span>
 <span class="sd">Neural CDE for time series classification.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
 
@@ -88,36 +88,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.conversion_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_fill_time_index</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.models.nodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">_standardize</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_fill_time_index</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">nan_delta</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">T</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
-
-    <span class="c1"># time delta</span>
-    <span class="n">a_diff</span> <span class="o">=</span> <span class="n">T</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">T</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-    <span class="c1"># mean time delta</span>
-    <span class="n">delta_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">a_diff</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">nans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">delta_mean</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span>
-        <span class="n">nans</span>
-    <span class="p">):</span>  <span class="c1"># this can happen if there is only 1 valid value in the time series</span>
-        <span class="n">delta_mean</span><span class="p">[</span><span class="n">nans</span><span class="p">]</span> <span class="o">=</span> <span class="n">nan_delta</span>
-
-    <span class="c1"># last timestep</span>
-    <span class="n">last_valid_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="c1"># find where the nans are</span>
-    <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
-
-    <span class="c1"># where nans are there is an increasing value from 1 to the last nan</span>
-    <span class="n">nan_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-    <span class="n">replacement</span> <span class="o">=</span> <span class="p">(</span><span class="n">last_valid_t</span> <span class="o">+</span> <span class="n">delta_mean</span> <span class="o">*</span> <span class="n">nan_indices</span><span class="p">)[</span><span class="n">nan_mask</span><span class="p">]</span>
-    <span class="n">T</span><span class="p">[</span><span class="n">nan_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">replacement</span>
-    <span class="k">return</span> <span class="n">T</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_fill_all_nans_signals</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
@@ -133,10 +105,10 @@
     <span class="n">hidden_size</span><span class="p">:</span> <span class="nb">int</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">width_size</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        data_size: number of input channels (control channels).</span>
 <span class="sd">        hidden_size: dimension of the hidden state y(t).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_size</span> <span class="o">=</span> <span class="n">data_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MLP</span><span class="p">(</span>
@@ -161,11 +133,11 @@
     <span class="n">readout</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span>  <span class="c1"># maps hidden_size -&gt; n_classes</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">width_size</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        data_size: number of input channels (including time if you use it as a channel).</span>
 <span class="sd">        hidden_size: dimension of hidden state y(t).</span>
 <span class="sd">        n_classes: number of classes for multiclass classification.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">key1</span><span class="p">,</span> <span class="n">key2</span><span class="p">,</span> <span class="n">key3</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initial</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MLP</span><span class="p">(</span>
             <span class="n">in_size</span><span class="o">=</span><span class="n">data_size</span><span class="p">,</span>
@@ -236,7 +208,7 @@
 <div class="viewcode-block" id="NeuralCDEClassifier">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.ncde.html#pyrregular.models.ncde.NeuralCDEClassifier">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NeuralCDEClassifier</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A minimal scikit-learn API wrapper for a Neural CDE multiclass classifier.</span>
 
 <span class="sd">    X.shape = (n_instances, n_signals, n_timesteps)</span>
@@ -260,7 +232,7 @@
 <span class="sd">        solver (diffrax.AbstractSolver): Numerical solver for the ODE.</span>
 <span class="sd">        max_steps (int): Maximum number of steps for the ODE solver.</span>
 <span class="sd">        reset_loss_after_lr_reduction (bool): Whether to reset loss tracking after learning rate reduction.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -309,7 +281,7 @@
                     <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
                 <span class="p">)</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="c1"># Fallback if y can&#39;t be stratified</span>
+                <span class="c1"># Fallback if y can't be stratified</span>
                 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
                     <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
                 <span class="p">)</span>
@@ -403,10 +375,10 @@
             <span class="k">return</span> <span class="n">_train_loss_fn</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
         <span class="c1"># 8) Early stopping setup</span>
-        <span class="n">best_val_loss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="n">best_val_loss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span>
         <span class="n">stagnation_counter_lr</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Counter for learning rate reduction</span>
         <span class="n">stagnation_counter_es</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Counter for early stopping</span>
-        <span class="n">best_model_path</span> <span class="o">=</span> <span class="s2">&quot;best_model.eqx&quot;</span>  <span class="c1"># File path to store the best model</span>
+        <span class="n">best_model_path</span> <span class="o">=</span> <span class="s2">"best_model.eqx"</span>  <span class="c1"># File path to store the best model</span>
 
         <span class="n">current_lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span>  <span class="c1"># Initial learning rate</span>
 
@@ -435,20 +407,20 @@
             <span class="c1"># Learning rate reduction</span>
             <span class="k">if</span> <span class="n">stagnation_counter_lr</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">patience_lr</span><span class="p">:</span>
                 <span class="n">current_lr</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr_reduce_factor</span>  <span class="c1"># Reduce learning rate</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reducing learning rate to </span><span class="si">{</span><span class="n">current_lr</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Reducing learning rate to </span><span class="si">{</span><span class="n">current_lr</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="n">stagnation_counter_lr</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Reset counter for learning rate</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_loss_after_lr_reduction</span><span class="p">:</span>
                     <span class="n">best_val_loss</span> <span class="o">=</span> <span class="n">val_loss</span>
 
             <span class="c1"># Early stopping</span>
             <span class="k">if</span> <span class="n">stagnation_counter_es</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">patience_es</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Early stopping triggered!&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Early stopping triggered!"</span><span class="p">)</span>
                 <span class="k">break</span>
 
             <span class="c1"># Display progress</span>
             <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_step</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">step</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2"> | Train Loss: </span><span class="si">{</span><span class="n">train_loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Val Loss: </span><span class="si">{</span><span class="n">val_loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2"> | Train Loss: </span><span class="si">{</span><span class="n">train_loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Val Loss: </span><span class="si">{</span><span class="n">val_loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
 
         <span class="c1"># Reload the best model</span>
@@ -461,12 +433,12 @@
 <div class="viewcode-block" id="NeuralCDEClassifier.predict_proba">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.ncde.html#pyrregular.models.ncde.NeuralCDEClassifier.predict_proba">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Predict class probabilities for each instance in X.</span>
 <span class="sd">        Return shape: (n_instances, n_classes).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fitted_</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;NeuralCDEClassifier is not fitted yet.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"NeuralCDEClassifier is not fitted yet."</span><span class="p">)</span>
 
         <span class="n">data_channels</span> <span class="o">=</span> <span class="n">_fill_all_nans_signals</span><span class="p">(</span><span class="n">_standardize</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]))</span>
         <span class="n">times</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
@@ -496,10 +468,10 @@
 <div class="viewcode-block" id="NeuralCDEClassifier.predict">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.ncde.html#pyrregular.models.ncde.NeuralCDEClassifier.predict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Predict the most likely class for each instance in X.</span>
 <span class="sd">        Return shape: (n_instances,).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
 
@@ -507,9 +479,9 @@
 <div class="viewcode-block" id="NeuralCDEClassifier.score">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.models.ncde.html#pyrregular.models.ncde.NeuralCDEClassifier.score">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return the mean accuracy on the given test data and labels.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">preds</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span></div>
 </div>
@@ -531,7 +503,7 @@
     <span class="n">solver</span><span class="o">=</span><span class="n">diffrax</span><span class="o">.</span><span class="n">Euler</span><span class="p">(),</span>
     <span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="sd">&quot;&quot;&quot;This pipeline applies NeuralCDE.&quot;&quot;&quot;</span>
+<span class="sd">"""This pipeline applies NeuralCDE."""</span>
 </pre></div>
 
            </div>

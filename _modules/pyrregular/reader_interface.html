@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.reader_interface &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
@@ -93,7 +93,7 @@
 <div class="viewcode-block" id="ReaderInterface">
 <a class="viewcode-back" href="../../api/_autosummary/pyrregular.reader_interface.html#pyrregular.reader_interface.ReaderInterface">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ReaderInterface</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Abstract base class defining the interface for reading, fixing, and</span>
 <span class="sd">    saving datasets as xarray DataArray objects in a consistent pipeline.</span>
 
@@ -105,7 +105,7 @@
 <span class="sd">      - writing the “intermediate” and “final” HDF5 files</span>
 <span class="sd">      - enriching metadata (timestamps, YAML metadata)</span>
 <span class="sd">      - loading back intermediate and final versions</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">fast_to_test</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -126,7 +126,7 @@
         <span class="n">save_to_file</span><span class="p">(</span>
             <span class="n">data_array</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
             <span class="n">filename</span><span class="o">=</span><span class="n">data_final_folder</span><span class="p">()</span>
-            <span class="o">/</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__get_name_from_classname</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;.h5&quot;</span><span class="p">),</span>
+            <span class="o">/</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__get_name_from_classname</span><span class="p">())</span> <span class="o">+</span> <span class="s2">".h5"</span><span class="p">),</span>
         <span class="p">)</span></div>
 
 
@@ -137,7 +137,7 @@
         <span class="n">save_to_file</span><span class="p">(</span>
             <span class="n">data_array</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">read_original_version</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">),</span>
             <span class="n">filename</span><span class="o">=</span><span class="n">data_intermediate_folder</span><span class="p">()</span>
-            <span class="o">/</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__get_name_from_classname</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;.h5&quot;</span><span class="p">),</span>
+            <span class="o">/</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__get_name_from_classname</span><span class="p">())</span> <span class="o">+</span> <span class="s2">".h5"</span><span class="p">),</span>
         <span class="p">)</span></div>
 
 
@@ -152,9 +152,9 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">fix_intermediate_version</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">DataArray</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_fix_intermediate_version</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_metadata</span><span class="p">()</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c1"># shouldn&#39;t be necessary, but just to be sure</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;_is_fixed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;_fixed_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_current_aoe_time</span><span class="p">()</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c1"># shouldn't be necessary, but just to be sure</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"_is_fixed"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"_fixed_at"</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_current_aoe_time</span><span class="p">()</span>
         <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
@@ -164,7 +164,7 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_intermediate_version</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">load_from_file</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_intermediate_folder</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="bp">cls</span><span class="o">.</span><span class="n">__get_name_from_classname</span><span class="p">()</span><span class="si">}</span><span class="s2">.h5&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">data_intermediate_folder</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="bp">cls</span><span class="o">.</span><span class="n">__get_name_from_classname</span><span class="p">()</span><span class="si">}</span><span class="s2">.h5"</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
@@ -174,14 +174,14 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_final_version</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">load_from_file</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_final_folder</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="bp">cls</span><span class="o">.</span><span class="n">__get_name_from_classname</span><span class="p">()</span><span class="si">}</span><span class="s2">.h5&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">data_final_folder</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="bp">cls</span><span class="o">.</span><span class="n">__get_name_from_classname</span><span class="p">()</span><span class="si">}</span><span class="s2">.h5"</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_metadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="n">metadata_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metadata_folder</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="bp">cls</span><span class="o">.</span><span class="n">__get_name_from_classname</span><span class="p">()</span><span class="si">}</span><span class="s2">.yml&quot;</span>
+        <span class="n">metadata_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">metadata_folder</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="bp">cls</span><span class="o">.</span><span class="n">__get_name_from_classname</span><span class="p">()</span><span class="si">}</span><span class="s2">.yml"</span>
 
         <span class="k">return</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">metadata_file</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">metadata_file</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 

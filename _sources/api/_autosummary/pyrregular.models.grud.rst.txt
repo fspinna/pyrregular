@@ -1,4 +1,4 @@
-﻿pyrregular.models.grud
+pyrregular.models.grud
 ======================
 
 .. automodule:: pyrregular.models.grud

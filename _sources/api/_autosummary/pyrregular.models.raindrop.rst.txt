@@ -1,4 +1,4 @@
-﻿pyrregular.models.raindrop
+pyrregular.models.raindrop
 ==========================
 
 .. automodule:: pyrregular.models.raindrop

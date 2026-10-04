@@ -1,4 +1,4 @@
-﻿pyrregular.models.rocket
+pyrregular.models.rocket
 ========================
 
 .. automodule:: pyrregular.models.rocket

@@ -1,4 +1,4 @@
-﻿pyrregular.models.brits
+pyrregular.models.brits
 =======================
 
 .. automodule:: pyrregular.models.brits

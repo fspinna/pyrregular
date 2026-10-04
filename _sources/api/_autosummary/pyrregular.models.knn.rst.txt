@@ -1,4 +1,4 @@
-﻿pyrregular.models.knn
+pyrregular.models.knn
 =====================
 
 .. automodule:: pyrregular.models.knn

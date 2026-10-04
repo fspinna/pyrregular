@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.datasets.ais &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -101,18 +101,18 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_fix_intermediate_version</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">DataArray</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
         <span class="c1"># we use the length of the vessel as the class label (3 sizes)</span>
-        <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"length"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
         <span class="n">train_indices</span><span class="p">,</span> <span class="n">test_indices</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">])),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"length"</span><span class="p">])),</span>
             <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
             <span class="n">stratify</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
             <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">split</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;train&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">]))</span>
-        <span class="n">split</span><span class="p">[</span><span class="n">test_indices</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span>
+        <span class="n">split</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">"train"</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"length"</span><span class="p">]))</span>
+        <span class="n">split</span><span class="p">[</span><span class="n">test_indices</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"test"</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
-            <span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">split</span><span class="p">),</span> <span class="n">class_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+            <span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">split</span><span class="p">),</span> <span class="n">class_default</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
@@ -122,16 +122,16 @@
     <span class="c1"># Read the CSV file into a Pandas DataFrame</span>
     <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;date_time_utc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
-            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;date_time_utc&quot;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">"date_time_utc"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">"date_time_utc"</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S"</span>
         <span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
         <span class="p">)</span>  <span class="c1"># FIXME</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)):</span>
             <span class="n">row</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-                <span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mmsi&quot;</span><span class="p">,</span> <span class="s2">&quot;date_time_utc&quot;</span><span class="p">,</span> <span class="s2">&quot;imo_nr&quot;</span><span class="p">,</span> <span class="s2">&quot;length&quot;</span><span class="p">])</span>
-                <span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">"mmsi"</span><span class="p">,</span> <span class="s2">"date_time_utc"</span><span class="p">,</span> <span class="s2">"imo_nr"</span><span class="p">,</span> <span class="s2">"length"</span><span class="p">])</span>
+                <span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">new_row</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">new_row</span>
@@ -143,21 +143,21 @@
     <span class="n">attrs</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span>
         <span class="nb">str</span><span class="p">(</span>
             <span class="n">data_original_folder</span><span class="p">()</span>
-            <span class="o">/</span> <span class="s2">&quot;terrestrial_vessel_automatic_identification_system/attrs.yml&quot;</span>
+            <span class="o">/</span> <span class="s2">"terrestrial_vessel_automatic_identification_system/attrs.yml"</span>
         <span class="p">)</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
         <span class="n">filenames</span><span class="o">=</span><span class="p">[</span>
             <span class="n">data_original_folder</span><span class="p">()</span>
-            <span class="o">/</span> <span class="s2">&quot;terrestrial_vessel_automatic_identification_system&quot;</span>
-            <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;2020-2_group_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="o">/</span> <span class="s2">"terrestrial_vessel_automatic_identification_system"</span>
+            <span class="o">/</span> <span class="sa">f</span><span class="s2">"2020-2_group_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
         <span class="p">],</span>
-        <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;mmsi&quot;</span><span class="p">,</span>
-        <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;date_time_utc&quot;</span><span class="p">,</span>
-        <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span>
-        <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
-        <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;imo_nr&quot;</span><span class="p">,</span> <span class="s2">&quot;length&quot;</span><span class="p">],</span> <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[]},</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">"mmsi"</span><span class="p">,</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="s2">"date_time_utc"</span><span class="p">,</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="s2">"variable"</span><span class="p">,</span>
+        <span class="n">value_id</span><span class="o">=</span><span class="s2">"value"</span><span class="p">,</span>
+        <span class="n">dims</span><span class="o">=</span><span class="p">{</span><span class="s2">"ts_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"imo_nr"</span><span class="p">,</span> <span class="s2">"length"</span><span class="p">],</span> <span class="s2">"signal_id"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"time_id"</span><span class="p">:</span> <span class="p">[]},</span>
         <span class="n">reader_fun</span><span class="o">=</span><span class="n">_dataset_ais</span><span class="p">,</span>
         <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
@@ -165,7 +165,7 @@
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="c1"># Ais.save_fixed()</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">Ais</span><span class="o">.</span><span class="n">load_final_version</span><span class="p">()</span>
 </pre></div>

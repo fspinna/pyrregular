@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular documentation &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -125,13 +125,13 @@
 <p>To load a dataset, you can use the <code class="docutils literal notranslate"><span class="pre">load_dataset</span></code> function. For example, to load the “Garment” dataset, you can do:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;Garment.h5&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">"Garment.h5"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The dataset is saved in the default os cache directory, which can be found with:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pooch</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">pooch</span><span class="o">.</span><span class="n">os_cache</span><span class="p">(</span><span class="s2">&quot;pyrregular&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pooch</span><span class="o">.</span><span class="n">os_cache</span><span class="p">(</span><span class="s2">"pyrregular"</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>The repository is hosted at: https://huggingface.co/datasets/splandi/pyrregular/</p>
@@ -143,17 +143,114 @@
 <p>To use the dataset for classification, you can just “densify” it:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;Garment.h5&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">"Garment.h5"</span><span class="p">)</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">irr</span><span class="o">.</span><span class="n">to_dense</span><span class="p">()</span>
 <span class="n">y</span><span class="p">,</span> <span class="n">split</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">irr</span><span class="o">.</span><span class="n">get_task_target_and_split</span><span class="p">()</span>
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">split</span> <span class="o">!=</span> <span class="s2">&quot;test&quot;</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">split</span> <span class="o">==</span> <span class="s2">&quot;test&quot;</span><span class="p">]</span>
-<span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">split</span> <span class="o">!=</span> <span class="s2">&quot;test&quot;</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">split</span> <span class="o">==</span> <span class="s2">&quot;test&quot;</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">split</span> <span class="o">!=</span> <span class="s2">"test"</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">split</span> <span class="o">==</span> <span class="s2">"test"</span><span class="p">]</span>
+<span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">split</span> <span class="o">!=</span> <span class="s2">"test"</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">split</span> <span class="o">==</span> <span class="s2">"test"</span><span class="p">]</span>
 
 <span class="c1"># We have ready-to-go models from various libraries:</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.models.rocket</span><span class="w"> </span><span class="kn">import</span> <span class="n">rocket_pipeline</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">rocket_pipeline</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There are several pipelines available in <code class="docutils literal notranslate"><span class="pre">pyrregular.models</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>💾 <strong>Library</strong></p></th>
+<th class="head"><p>📖 Source</p></th>
+<th class="head"><p>🔗 <strong>Pipeline</strong></p></th>
+<th class="head"><p>ℹ️ <strong>Type</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">aeon</span></code></p></td>
+<td><p>Spinnato et al. (2024)</p></td>
+<td><p><strong>borf</strong></p></td>
+<td><p>dictionary-based transform + <strong>lgbm</strong> classifier</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">aeon</span></code></p></td>
+<td><p></p></td>
+<td><p><strong>rifc</strong></p></td>
+<td><p>interval-based transform + <strong>lgbm</strong> classifier</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">diffrax</span></code></p></td>
+<td><p>Kidger et al. (2020)</p></td>
+<td><p><strong>ncde</strong></p></td>
+<td><p>neural controlled differential equations</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
+<td><p>Cao et al. (2018)</p></td>
+<td><p><strong>brits</strong></p></td>
+<td><p>bidirectional recurrent imputation network</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
+<td><p>Che et al. (2018)</p></td>
+<td><p><strong>grud</strong></p></td>
+<td><p>gated recurrent unit with decay</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
+<td><p>Zhang et al. (2021)</p></td>
+<td><p><strong>raindrop</strong></p></td>
+<td><p>graph neural network</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
+<td><p>Du et al. (2023)</p></td>
+<td><p><strong>saits</strong></p></td>
+<td><p>self-attention-based imputation transformer</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pypots</span></code></p></td>
+<td><p>Wu et al. (2022)</p></td>
+<td><p><strong>timesnet</strong></p></td>
+<td><p>temporal 2d-variation transformer</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
+<td><p>Ke et al. (2017)</p></td>
+<td><p><strong>lgbm</strong></p></td>
+<td><p>gradient boosted tree</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
+<td><p>Dempster et al. (2021)</p></td>
+<td><p><strong>rocket</strong></p></td>
+<td><p>kernel-based transform + <strong>lgbm</strong> classifier</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sktime</span></code></p></td>
+<td><p>Bagheri et al. (2016)</p></td>
+<td><p><strong>svm</strong></p></td>
+<td><p>support vector machine with distance kernel</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tslearn</span></code></p></td>
+<td><p>Sakoe &amp; Chiba (1978)</p></td>
+<td><p><strong>knn</strong></p></td>
+<td><p>distance-based with dynamic time warping</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="regression">
+<h4>Regression<a class="headerlink" href="#regression" title="Link to this heading"></a></h4>
+<p>Regression is still work in progress, but is available for some datasets:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aeon.transformations.collection.dictionary_based</span><span class="w"> </span><span class="kn">import</span> <span class="n">BORF</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LassoCV</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">"Garment.h5"</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">irr</span><span class="o">.</span><span class="n">to_dense</span><span class="p">()</span>
+<span class="n">y</span><span class="p">,</span> <span class="n">split</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">irr</span><span class="o">.</span><span class="n">get_task_target_and_split</span><span class="p">(</span><span class="s2">"regression"</span><span class="p">)</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">split</span> <span class="o">!=</span> <span class="s2">"test"</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">split</span> <span class="o">==</span> <span class="s2">"test"</span><span class="p">]</span>
+<span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">split</span> <span class="o">!=</span> <span class="s2">"test"</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">split</span> <span class="o">==</span> <span class="s2">"test"</span><span class="p">]</span>
+
+<span class="n">borf_pipeline</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    <span class="n">BORF</span><span class="p">(),</span>
+    <span class="n">LassoCV</span><span class="p">(),</span>
+<span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">borf_pipeline</span>
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
 </pre></div>
@@ -278,14 +375,13 @@
 <section id="citation">
 <h2>Citation<a class="headerlink" href="#citation" title="Link to this heading"></a></h2>
 <p>If you use this package in your research, please cite the following paper:</p>
-<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@misc</span><span class="p">{</span><span class="nl">spinnato2025pyrregular</span><span class="p">,</span>
-<span class="w">      </span><span class="na">title</span><span class="p">=</span><span class="s">{PYRREGULAR: A Unified Framework for Irregular Time Series, with Classification Benchmarks}</span><span class="p">,</span>
-<span class="w">      </span><span class="na">author</span><span class="p">=</span><span class="s">{Francesco Spinnato and Cristiano Landi}</span><span class="p">,</span>
-<span class="w">      </span><span class="na">year</span><span class="p">=</span><span class="s">{2025}</span><span class="p">,</span>
-<span class="w">      </span><span class="na">eprint</span><span class="p">=</span><span class="s">{2505.06047}</span><span class="p">,</span>
-<span class="w">      </span><span class="na">archivePrefix</span><span class="p">=</span><span class="s">{arXiv}</span><span class="p">,</span>
-<span class="w">      </span><span class="na">primaryClass</span><span class="p">=</span><span class="s">{cs.LG}</span><span class="p">,</span>
-<span class="w">      </span><span class="na">url</span><span class="p">=</span><span class="s">{https://arxiv.org/abs/2505.06047}</span><span class="p">,</span>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@inproceedings</span><span class="p">{</span>
+<span class="w">    </span><span class="nl">spinnato2026pyrregular</span><span class="p">,</span>
+<span class="w">    </span><span class="na">title</span><span class="p">=</span><span class="s">{{PYRREGULAR}: A Unified Framework for Irregular Time Series, with Classification Benchmarks}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">author</span><span class="p">=</span><span class="s">{Francesco Spinnato and Cristiano Landi}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">booktitle</span><span class="p">=</span><span class="s">{The Fourteenth International Conference on Learning Representations}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">year</span><span class="p">=</span><span class="s">{2026}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">url</span><span class="p">=</span><span class="s">{https://openreview.net/forum?id=qetBM8nLkf}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -299,6 +395,7 @@
 <li class="toctree-l2"><a class="reference internal" href="notebooks/quick_start.html#Downstream-Tasks">Downstream Tasks</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="notebooks/quick_start.html#Train-test-split">Train-test split</a></li>
 <li class="toctree-l3"><a class="reference internal" href="notebooks/quick_start.html#Classification">Classification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/quick_start.html#Regression-(work-in-progress)">Regression (work in progress)</a></li>
 </ul>
 </li>
 </ul>

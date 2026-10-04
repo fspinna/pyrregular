@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.datasets.garment &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -96,32 +96,32 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_fix_intermediate_version</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">DataArray</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
-        <span class="n">productivity_numerical</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;actual_productivity&quot;</span><span class="p">][:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">productivity_numerical</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">"actual_productivity"</span><span class="p">][:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
         <span class="n">productivity_binary</span> <span class="o">=</span> <span class="p">(</span><span class="n">productivity_numerical</span> <span class="o">&gt;</span> <span class="mf">0.75</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span>
-        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;low&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">}</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">"low"</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">"high"</span><span class="p">}</span>
         <span class="n">productivity_class</span> <span class="o">=</span> <span class="p">[</span><span class="n">mapping</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">productivity_binary</span><span class="p">]</span>
         <span class="n">split</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span>
-                <span class="s2">&quot;test&quot;</span>
+                <span class="s2">"test"</span>
                 <span class="k">if</span> <span class="n">i</span>
                 <span class="ow">in</span> <span class="p">[</span>
-                    <span class="s2">&quot;finishing_3&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;finishing_7&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;finishing_11&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;sweing_1&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;sweing_6&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;sweing_12&quot;</span><span class="p">,</span>
+                    <span class="s2">"finishing_3"</span><span class="p">,</span>
+                    <span class="s2">"finishing_7"</span><span class="p">,</span>
+                    <span class="s2">"finishing_11"</span><span class="p">,</span>
+                    <span class="s2">"sweing_1"</span><span class="p">,</span>
+                    <span class="s2">"sweing_6"</span><span class="p">,</span>
+                    <span class="s2">"sweing_12"</span><span class="p">,</span>
                 <span class="p">]</span>
-                <span class="k">else</span> <span class="s2">&quot;train&quot;</span>
+                <span class="k">else</span> <span class="s2">"train"</span>
             <span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"ts_id"</span><span class="p">]</span>
         <span class="p">]</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop_sel</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;actual_productivity&quot;</span><span class="p">))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop_sel</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">signal_id</span><span class="o">=</span><span class="s2">"actual_productivity"</span><span class="p">))</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
-            <span class="n">productivity_numerical</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">productivity_numerical</span><span class="p">),</span>
-            <span class="n">productivity_class</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">productivity_class</span><span class="p">),</span>
-            <span class="n">productivity_binary</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">productivity_binary</span><span class="p">),</span>
-            <span class="n">split</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">split</span><span class="p">),</span>
+            <span class="n">productivity_numerical</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">productivity_numerical</span><span class="p">),</span>
+            <span class="n">productivity_class</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">productivity_class</span><span class="p">),</span>
+            <span class="n">productivity_binary</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">productivity_binary</span><span class="p">),</span>
+            <span class="n">split</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">split</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
@@ -132,15 +132,15 @@
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
 
-    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%m/</span><span class="si">%d</span><span class="s2">/%Y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"date"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"date"</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"%m/</span><span class="si">%d</span><span class="s2">/%Y"</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
     <span class="p">)</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">department</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">department</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">department</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">df</span><span class="o">.</span><span class="n">team</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">department</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">department</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"ts_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">department</span> <span class="o">+</span> <span class="s2">"_"</span> <span class="o">+</span> <span class="n">df</span><span class="o">.</span><span class="n">team</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;ts_id&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;department&quot;</span><span class="p">,</span> <span class="s2">&quot;team&quot;</span><span class="p">,</span> <span class="s2">&quot;quarter&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">])</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">"date"</span><span class="p">,</span> <span class="s2">"ts_id"</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"department"</span><span class="p">,</span> <span class="s2">"team"</span><span class="p">,</span> <span class="s2">"quarter"</span><span class="p">,</span> <span class="s2">"day"</span><span class="p">])</span>
 
-    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">):</span>
         <span class="k">yield</span> <span class="n">row</span>
 
 
@@ -148,19 +148,19 @@
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.garment.html#pyrregular.datasets.garment.read_garment">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">read_garment</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">attrs</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span>
-        <span class="nb">str</span><span class="p">(</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;garments_worker_productivity/attrs.yml&quot;</span><span class="p">)</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"garments_worker_productivity/attrs.yml"</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
         <span class="n">filenames</span><span class="o">=</span><span class="n">data_original_folder</span><span class="p">()</span>
-        <span class="o">/</span> <span class="s2">&quot;garments_worker_productivity/garments_worker_productivity.csv&quot;</span><span class="p">,</span>
-        <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span>
-        <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;date&quot;</span><span class="p">,</span>
-        <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span>
-        <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+        <span class="o">/</span> <span class="s2">"garments_worker_productivity/garments_worker_productivity.csv"</span><span class="p">,</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">"ts_id"</span><span class="p">,</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="s2">"date"</span><span class="p">,</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="s2">"variable"</span><span class="p">,</span>
+        <span class="n">value_id</span><span class="o">=</span><span class="s2">"value"</span><span class="p">,</span>
         <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;department&quot;</span><span class="p">,</span> <span class="s2">&quot;team&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;quarter&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">],</span>
+            <span class="s2">"ts_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"department"</span><span class="p">,</span> <span class="s2">"team"</span><span class="p">],</span>
+            <span class="s2">"signal_id"</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"time_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"quarter"</span><span class="p">,</span> <span class="s2">"day"</span><span class="p">],</span>
         <span class="p">},</span>
         <span class="n">reader_fun</span><span class="o">=</span><span class="n">_dataset_garment</span><span class="p">,</span>
         <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
@@ -169,7 +169,7 @@
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="c1"># Garment.save_fixed()</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">Garment</span><span class="o">.</span><span class="n">load_final_version</span><span class="p">()</span>
 </pre></div>

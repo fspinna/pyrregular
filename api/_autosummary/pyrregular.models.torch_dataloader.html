@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyrregular.wrappers &mdash; pyrregular  documentation</title>
+  <title>pyrregular.models.torch_dataloader &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
@@ -20,8 +20,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="pyrregular.wrappers.pypots_wrapper" href="pyrregular.wrappers.pypots_wrapper.html" />
-    <link rel="prev" title="pyrregular.uea_ucr_datasets" href="pyrregular.uea_ucr_datasets.html" /> 
+    <link rel="next" title="pyrregular.reader_interface" href="pyrregular.reader_interface.html" />
+    <link rel="prev" title="pyrregular.models.timesnet" href="pyrregular.models.timesnet.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,15 +56,28 @@
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.describe.html">pyrregular.describe</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.dev.html">pyrregular.dev</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.io_utils.html">pyrregular.io_utils</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pyrregular.models.html">pyrregular.models</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="pyrregular.models.html">pyrregular.models</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.borf.html">pyrregular.models.borf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.brits.html">pyrregular.models.brits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.grud.html">pyrregular.models.grud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.knn.html">pyrregular.models.knn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.lgbm.html">pyrregular.models.lgbm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.ncde.html">pyrregular.models.ncde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.nodes.html">pyrregular.models.nodes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.raindrop.html">pyrregular.models.raindrop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.ridge_cv.html">pyrregular.models.ridge_cv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.rifc.html">pyrregular.models.rifc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.rocket.html">pyrregular.models.rocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.saits.html">pyrregular.models.saits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.svm.html">pyrregular.models.svm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyrregular.models.timesnet.html">pyrregular.models.timesnet</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">pyrregular.models.torch_dataloader</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.reader_interface.html">pyrregular.reader_interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.repository.html">pyrregular.repository</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.uea_ucr_datasets.html">pyrregular.uea_ucr_datasets</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">pyrregular.wrappers</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyrregular.wrappers.pypots_wrapper.html">pyrregular.wrappers.pypots_wrapper</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyrregular.wrappers.tslearn_wrapper.html">pyrregular.wrappers.tslearn_wrapper</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="pyrregular.wrappers.html">pyrregular.wrappers</a></li>
 </ul>
 </li>
 </ul>
@@ -87,9 +100,10 @@
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
           <li class="breadcrumb-item"><a href="pyrregular.html">pyrregular</a></li>
-      <li class="breadcrumb-item active">pyrregular.wrappers</li>
+          <li class="breadcrumb-item"><a href="pyrregular.models.html">pyrregular.models</a></li>
+      <li class="breadcrumb-item active">pyrregular.models.torch_dataloader</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/api/_autosummary/pyrregular.wrappers.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/api/_autosummary/pyrregular.models.torch_dataloader.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -97,27 +111,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-pyrregular.wrappers">
-<span id="pyrregular-wrappers"></span><h1>pyrregular.wrappers<a class="headerlink" href="#module-pyrregular.wrappers" title="Link to this heading"></a></h1>
-<p class="rubric">Modules</p>
+  <section id="module-pyrregular.models.torch_dataloader">
+<span id="pyrregular-models-torch-dataloader"></span><h1>pyrregular.models.torch_dataloader<a class="headerlink" href="#module-pyrregular.models.torch_dataloader" title="Link to this heading"></a></h1>
+<p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyrregular.wrappers.pypots_wrapper.html#module-pyrregular.wrappers.pypots_wrapper" title="pyrregular.wrappers.pypots_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pypots_wrapper</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyrregular.wrappers.tslearn_wrapper.html#module-pyrregular.wrappers.tslearn_wrapper" title="pyrregular.wrappers.tslearn_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tslearn_wrapper</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.models.torch_dataloader.IrregularDataset" title="pyrregular.models.torch_dataloader.IrregularDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IrregularDataset</span></code></a>(X, **kwargs)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyrregular.models.torch_dataloader.IrregularDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyrregular.models.torch_dataloader.</span></span><span class="sig-name descname"><span class="pre">IrregularDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/models/torch_dataloader.html#IrregularDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.models.torch_dataloader.IrregularDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TensorDataset</span></code></p>
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="pyrregular.uea_ucr_datasets.html" class="btn btn-neutral float-left" title="pyrregular.uea_ucr_datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="pyrregular.wrappers.pypots_wrapper.html" class="btn btn-neutral float-right" title="pyrregular.wrappers.pypots_wrapper" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pyrregular.models.timesnet.html" class="btn btn-neutral float-left" title="pyrregular.models.timesnet" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyrregular.reader_interface.html" class="btn btn-neutral float-right" title="pyrregular.reader_interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

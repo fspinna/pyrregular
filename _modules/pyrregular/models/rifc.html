@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.models.rifc &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -71,9 +71,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyrregular.models.rifc</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;RIFC Pipeline.</span>
+<span></span><span class="sd">"""RIFC Pipeline.</span>
 <span class="sd">Baseline classifier that uses RandomIntervalFeatureExtractor to extract simple statistical features from windows.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LGBMClassifier</span>
@@ -84,11 +84,11 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_nanskew</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">skew</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s2">&quot;omit&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">skew</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s2">"omit"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_nankurtosis</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">kurtosis</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s2">&quot;omit&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">kurtosis</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s2">"omit"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="RandomIntervalFeatureClassifier">
@@ -106,7 +106,7 @@
             <span class="n">_nankurtosis</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">n_intervals</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">,</span>
+        <span class="n">n_intervals</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">features</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
@@ -142,7 +142,7 @@
 
 
 <span class="n">rifc_pipeline</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">RandomIntervalFeatureClassifier</span><span class="p">())</span>
-<span class="sd">&quot;&quot;&quot;This pipeline applies RandomIntervalFeatureClassifier.&quot;&quot;&quot;</span>
+<span class="sd">"""This pipeline applies RandomIntervalFeatureClassifier."""</span>
 </pre></div>
 
            </div>

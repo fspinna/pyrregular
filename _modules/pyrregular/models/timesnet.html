@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.models.timesnet &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -71,9 +71,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyrregular.models.timesnet</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;TimesNet.</span>
+<span></span><span class="sd">"""TimesNet.</span>
 <span class="sd">TimesNet: Temporal 2D-Variation Modeling for General Time Series Analysis</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pypots.classification.timesnet</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimesNet</span>
 
@@ -101,19 +101,19 @@
 <span class="n">timesnet_pipeline</span> <span class="o">=</span> <span class="n">TimesNetWrapper</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">TimesNet</span><span class="p">,</span>
     <span class="n">model_params</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;n_layers&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">&quot;top_k&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="s2">&quot;d_model&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-        <span class="s2">&quot;d_ffn&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
-        <span class="s2">&quot;n_kernels&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-        <span class="s2">&quot;epochs&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-        <span class="s2">&quot;patience&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-        <span class="s2">&quot;num_workers&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">"n_layers"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"top_k"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">"d_model"</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
+        <span class="s2">"d_ffn"</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
+        <span class="s2">"n_kernels"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">"batch_size"</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="s2">"epochs"</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="s2">"patience"</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="s2">"num_workers"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">"device"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">)</span>
-<span class="sd">&quot;&quot;&quot;This pipeline applies TimesNet.&quot;&quot;&quot;</span>
+<span class="sd">"""This pipeline applies TimesNet."""</span>
 </pre></div>
 
            </div>

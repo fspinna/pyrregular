@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.datasets.physionet2019 &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -103,25 +103,25 @@
         <span class="c1"># Each patient has a time series of sepsis label, given that the problem is early classification</span>
         <span class="c1"># we label a patient as septic if at least one of the time points is septic (label=1)</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span>
-            <span class="n">data</span><span class="o">.</span><span class="n">sel</span><span class="p">({</span><span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="s2">&quot;SepsisLabel&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">todense</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">sel</span><span class="p">({</span><span class="s2">"signal_id"</span><span class="p">:</span> <span class="s2">"SepsisLabel"</span><span class="p">})</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">todense</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
         <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">}</span>
-        <span class="n">split</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;set&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"a"</span><span class="p">:</span> <span class="s2">"train"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">:</span> <span class="s2">"test"</span><span class="p">}</span>
+        <span class="n">split</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"set"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
         <span class="n">split</span> <span class="o">=</span> <span class="p">[</span><span class="n">mapping</span><span class="p">[</span><span class="n">split</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">split</span><span class="p">))]</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop_sel</span><span class="p">(</span>
-            <span class="nb">dict</span><span class="p">(</span><span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;SepsisLabel&quot;</span><span class="p">)</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">signal_id</span><span class="o">=</span><span class="s2">"SepsisLabel"</span><span class="p">)</span>
         <span class="p">)</span>  <span class="c1"># the sepis label is not a signal</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
-            <span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">split</span><span class="p">),</span> <span class="n">class_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+            <span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">split</span><span class="p">),</span> <span class="n">class_default</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="c1"># there are 2 nan instances generated by dropping the sepsis label</span>
         <span class="n">to_drop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sparse</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sparse</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">todense</span><span class="p">())[</span>
             <span class="mi">0</span>
         <span class="p">]</span>
-        <span class="n">to_drop_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="n">to_drop</span><span class="p">][</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]}</span>
+        <span class="n">to_drop_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"ts_id"</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="n">to_drop</span><span class="p">][</span><span class="s2">"ts_id"</span><span class="p">]}</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop_sel</span><span class="p">(</span><span class="n">to_drop_dict</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span></div>
@@ -129,53 +129,53 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_dataset_physionet2019</span><span class="p">(</span><span class="n">filenames</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-    <span class="n">static_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Age&quot;</span><span class="p">,</span> <span class="s2">&quot;Gender&quot;</span><span class="p">,</span> <span class="s2">&quot;Unit1&quot;</span><span class="p">,</span> <span class="s2">&quot;Unit2&quot;</span><span class="p">,</span> <span class="s2">&quot;HospAdmTime&quot;</span><span class="p">]</span>
+    <span class="n">static_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Age"</span><span class="p">,</span> <span class="s2">"Gender"</span><span class="p">,</span> <span class="s2">"Unit1"</span><span class="p">,</span> <span class="s2">"Unit2"</span><span class="p">,</span> <span class="s2">"HospAdmTime"</span><span class="p">]</span>
 
-    <span class="n">set_a_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">[</span><span class="s2">&quot;set-a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.psv&quot;</span><span class="p">)])</span>
-    <span class="n">set_b_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">[</span><span class="s2">&quot;set-b&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.psv&quot;</span><span class="p">)])</span>
+    <span class="n">set_a_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">[</span><span class="s2">"set-a"</span><span class="p">]</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*.psv"</span><span class="p">)])</span>
+    <span class="n">set_b_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">[</span><span class="s2">"set-b"</span><span class="p">]</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*.psv"</span><span class="p">)])</span>
 
     <span class="n">dfs_a</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">set_a_files</span><span class="p">):</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">stem</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;set&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"|"</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">"tid"</span><span class="p">]</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">stem</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">"set"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"a"</span>
         <span class="n">dfs_a</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dfs_a</span><span class="p">,</span> <span class="n">df</span><span class="p">])</span>
         <span class="c1"># break</span>
 
     <span class="n">dfs_b</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">set_b_files</span><span class="p">):</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">stem</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;set&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"|"</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">"tid"</span><span class="p">]</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">stem</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">"set"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"b"</span>
         <span class="n">dfs_b</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dfs_b</span><span class="p">,</span> <span class="n">df</span><span class="p">])</span>
         <span class="c1"># break</span>
 
     <span class="n">dfs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dfs_a</span><span class="p">,</span> <span class="n">dfs_b</span><span class="p">])</span>
-    <span class="n">dfs_melted</span> <span class="o">=</span> <span class="n">dfs</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="n">static_columns</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span> <span class="s2">&quot;ICULOS&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;set&quot;</span><span class="p">])</span>
+    <span class="n">dfs_melted</span> <span class="o">=</span> <span class="n">dfs</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="n">static_columns</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"tid"</span><span class="p">,</span> <span class="s2">"ICULOS"</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"set"</span><span class="p">])</span>
 
-    <span class="n">dfs_melted</span> <span class="o">=</span> <span class="n">dfs_melted</span><span class="p">[</span><span class="n">dfs_melted</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">dfs_melted</span> <span class="o">=</span> <span class="n">dfs_melted</span><span class="p">[</span><span class="n">dfs_melted</span><span class="p">[</span><span class="s2">"value"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">dfs_melted</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dfs_melted</span><span class="p">)):</span>
-        <span class="k">yield</span> <span class="n">dfs_melted</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">yield</span> <span class="n">dfs_melted</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="read_physionet2019">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.physionet2019.html#pyrregular.datasets.physionet2019.read_physionet2019">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">read_physionet2019</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="n">attrs</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;physionet2019/attrs.yml&quot;</span><span class="p">))</span>
+    <span class="n">attrs</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"physionet2019/attrs.yml"</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
         <span class="n">filenames</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;set-a&quot;</span><span class="p">:</span> <span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;physionet2019/training/training_setA&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;set-b&quot;</span><span class="p">:</span> <span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;physionet2019/training/training_setB&quot;</span><span class="p">,</span>
+            <span class="s2">"set-a"</span><span class="p">:</span> <span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"physionet2019/training/training_setA"</span><span class="p">,</span>
+            <span class="s2">"set-b"</span><span class="p">:</span> <span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"physionet2019/training/training_setB"</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span>
-        <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;ICULOS&quot;</span><span class="p">,</span>
-        <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span>
-        <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">"tid"</span><span class="p">,</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="s2">"ICULOS"</span><span class="p">,</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="s2">"variable"</span><span class="p">,</span>
+        <span class="n">value_id</span><span class="o">=</span><span class="s2">"value"</span><span class="p">,</span>
         <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Age&quot;</span><span class="p">,</span> <span class="s2">&quot;Gender&quot;</span><span class="p">,</span> <span class="s2">&quot;Unit1&quot;</span><span class="p">,</span> <span class="s2">&quot;Unit2&quot;</span><span class="p">,</span> <span class="s2">&quot;HospAdmTime&quot;</span><span class="p">,</span> <span class="s2">&quot;set&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"ts_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Age"</span><span class="p">,</span> <span class="s2">"Gender"</span><span class="p">,</span> <span class="s2">"Unit1"</span><span class="p">,</span> <span class="s2">"Unit2"</span><span class="p">,</span> <span class="s2">"HospAdmTime"</span><span class="p">,</span> <span class="s2">"set"</span><span class="p">],</span>
+            <span class="s2">"signal_id"</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"time_id"</span><span class="p">:</span> <span class="p">[],</span>
         <span class="p">},</span>
         <span class="n">reader_fun</span><span class="o">=</span><span class="n">_dataset_physionet2019</span><span class="p">,</span>
         <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
@@ -185,7 +185,7 @@
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">Physionet2019</span><span class="o">.</span><span class="n">save_final_version</span><span class="p">()</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">Physionet2019</span><span class="o">.</span><span class="n">load_final_version</span><span class="p">()</span>
 </pre></div>

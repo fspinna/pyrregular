@@ -1,4 +1,4 @@
-﻿pyrregular.conversion\_utils
+pyrregular.conversion\_utils
 ============================
 
 .. automodule:: pyrregular.conversion_utils

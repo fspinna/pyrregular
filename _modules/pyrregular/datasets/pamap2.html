@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.datasets.pamap2 &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -99,25 +99,25 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_fix_intermediate_version</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">DataArray</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
-        <span class="n">activity</span><span class="p">,</span> <span class="n">activity_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;activity_name&quot;</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">activity</span><span class="p">,</span> <span class="n">activity_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"activity_name"</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">activity</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="n">activity_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">activity_name</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">activity</span><span class="p">),</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># as suggested by the authors, we discard all the 0s activities (transient activities)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">activity_name</span> <span class="o">!=</span> <span class="s2">&quot;transient&quot;</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">activity_name</span> <span class="o">!=</span> <span class="s2">"transient"</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;activity_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"activity_id"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
         <span class="n">ts_id_train</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">"ts_id"</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
         <span class="p">)</span>
         <span class="n">ts_id_train</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ts_id_train</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
         <span class="n">train_or_test</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;train&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ts_id_train</span> <span class="k">else</span> <span class="s2">&quot;test&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="s2">"train"</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ts_id_train</span> <span class="k">else</span> <span class="s2">"test"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"ts_id"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
         <span class="p">]</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
-            <span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">train_or_test</span><span class="p">),</span> <span class="n">class_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">train_or_test</span><span class="p">),</span> <span class="n">class_default</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">data</span></div>
@@ -125,53 +125,53 @@
 
 
 <span class="n">activity_names</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;transient&quot;</span><span class="p">,</span>
-    <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;lying&quot;</span><span class="p">,</span>
-    <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;sitting&quot;</span><span class="p">,</span>
-    <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;standing&quot;</span><span class="p">,</span>
-    <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;walking&quot;</span><span class="p">,</span>
-    <span class="mi">5</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span>
-    <span class="mi">6</span><span class="p">:</span> <span class="s2">&quot;cycling&quot;</span><span class="p">,</span>
-    <span class="mi">7</span><span class="p">:</span> <span class="s2">&quot;Nordic_walking&quot;</span><span class="p">,</span>
-    <span class="mi">9</span><span class="p">:</span> <span class="s2">&quot;watching_TV&quot;</span><span class="p">,</span>
-    <span class="mi">10</span><span class="p">:</span> <span class="s2">&quot;computer_work&quot;</span><span class="p">,</span>
-    <span class="mi">11</span><span class="p">:</span> <span class="s2">&quot;car driving&quot;</span><span class="p">,</span>
-    <span class="mi">12</span><span class="p">:</span> <span class="s2">&quot;ascending_stairs&quot;</span><span class="p">,</span>
-    <span class="mi">13</span><span class="p">:</span> <span class="s2">&quot;descending_stairs&quot;</span><span class="p">,</span>
-    <span class="mi">16</span><span class="p">:</span> <span class="s2">&quot;vacuum_cleaning&quot;</span><span class="p">,</span>
-    <span class="mi">17</span><span class="p">:</span> <span class="s2">&quot;ironing&quot;</span><span class="p">,</span>
-    <span class="mi">18</span><span class="p">:</span> <span class="s2">&quot;folding_laundry&quot;</span><span class="p">,</span>
-    <span class="mi">19</span><span class="p">:</span> <span class="s2">&quot;house_cleaning&quot;</span><span class="p">,</span>
-    <span class="mi">20</span><span class="p">:</span> <span class="s2">&quot;playing_soccer&quot;</span><span class="p">,</span>
-    <span class="mi">24</span><span class="p">:</span> <span class="s2">&quot;rope_jumping&quot;</span><span class="p">,</span>
+    <span class="mi">0</span><span class="p">:</span> <span class="s2">"transient"</span><span class="p">,</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="s2">"lying"</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="s2">"sitting"</span><span class="p">,</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="s2">"standing"</span><span class="p">,</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="s2">"walking"</span><span class="p">,</span>
+    <span class="mi">5</span><span class="p">:</span> <span class="s2">"running"</span><span class="p">,</span>
+    <span class="mi">6</span><span class="p">:</span> <span class="s2">"cycling"</span><span class="p">,</span>
+    <span class="mi">7</span><span class="p">:</span> <span class="s2">"Nordic_walking"</span><span class="p">,</span>
+    <span class="mi">9</span><span class="p">:</span> <span class="s2">"watching_TV"</span><span class="p">,</span>
+    <span class="mi">10</span><span class="p">:</span> <span class="s2">"computer_work"</span><span class="p">,</span>
+    <span class="mi">11</span><span class="p">:</span> <span class="s2">"car driving"</span><span class="p">,</span>
+    <span class="mi">12</span><span class="p">:</span> <span class="s2">"ascending_stairs"</span><span class="p">,</span>
+    <span class="mi">13</span><span class="p">:</span> <span class="s2">"descending_stairs"</span><span class="p">,</span>
+    <span class="mi">16</span><span class="p">:</span> <span class="s2">"vacuum_cleaning"</span><span class="p">,</span>
+    <span class="mi">17</span><span class="p">:</span> <span class="s2">"ironing"</span><span class="p">,</span>
+    <span class="mi">18</span><span class="p">:</span> <span class="s2">"folding_laundry"</span><span class="p">,</span>
+    <span class="mi">19</span><span class="p">:</span> <span class="s2">"house_cleaning"</span><span class="p">,</span>
+    <span class="mi">20</span><span class="p">:</span> <span class="s2">"playing_soccer"</span><span class="p">,</span>
+    <span class="mi">24</span><span class="p">:</span> <span class="s2">"rope_jumping"</span><span class="p">,</span>
 <span class="p">}</span>
 
 
 <div class="viewcode-block" id="get_column_names">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.pamap2.html#pyrregular.datasets.pamap2.get_column_names">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_column_names</span><span class="p">():</span>
-    <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;timestamp_s&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_id&quot;</span><span class="p">,</span> <span class="s2">&quot;heart_rate&quot;</span><span class="p">]</span>
+    <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"timestamp_s"</span><span class="p">,</span> <span class="s2">"activity_id"</span><span class="p">,</span> <span class="s2">"heart_rate"</span><span class="p">]</span>
     <span class="n">IMU</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;temperature&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;acceleration_16g_0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;acceleration_16g_1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;acceleration_16g_2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;acceleration_6g_0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;acceleration_6g_1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;acceleration_6g_2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;gyroscope_0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;gyroscope_1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;gyroscope_2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;magnetometer_0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;magnetometer_1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;magnetometer_2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;orientation_0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;orientation_1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;orientation_2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;orientation_3&quot;</span><span class="p">,</span>
+        <span class="s2">"temperature"</span><span class="p">,</span>
+        <span class="s2">"acceleration_16g_0"</span><span class="p">,</span>
+        <span class="s2">"acceleration_16g_1"</span><span class="p">,</span>
+        <span class="s2">"acceleration_16g_2"</span><span class="p">,</span>
+        <span class="s2">"acceleration_6g_0"</span><span class="p">,</span>
+        <span class="s2">"acceleration_6g_1"</span><span class="p">,</span>
+        <span class="s2">"acceleration_6g_2"</span><span class="p">,</span>
+        <span class="s2">"gyroscope_0"</span><span class="p">,</span>
+        <span class="s2">"gyroscope_1"</span><span class="p">,</span>
+        <span class="s2">"gyroscope_2"</span><span class="p">,</span>
+        <span class="s2">"magnetometer_0"</span><span class="p">,</span>
+        <span class="s2">"magnetometer_1"</span><span class="p">,</span>
+        <span class="s2">"magnetometer_2"</span><span class="p">,</span>
+        <span class="s2">"orientation_0"</span><span class="p">,</span>
+        <span class="s2">"orientation_1"</span><span class="p">,</span>
+        <span class="s2">"orientation_2"</span><span class="p">,</span>
+        <span class="s2">"orientation_3"</span><span class="p">,</span>
     <span class="p">]</span>
-    <span class="k">for</span> <span class="n">imu_position</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;hand&quot;</span><span class="p">,</span> <span class="s2">&quot;chest&quot;</span><span class="p">,</span> <span class="s2">&quot;ankle&quot;</span><span class="p">]:</span>
-        <span class="n">column_names</span> <span class="o">+=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">imu_position</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">signal_name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">signal_name</span> <span class="ow">in</span> <span class="n">IMU</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">imu_position</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"hand"</span><span class="p">,</span> <span class="s2">"chest"</span><span class="p">,</span> <span class="s2">"ankle"</span><span class="p">]:</span>
+        <span class="n">column_names</span> <span class="o">+=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">imu_position</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">signal_name</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">signal_name</span> <span class="ow">in</span> <span class="n">IMU</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">column_names</span></div>
 
@@ -183,26 +183,26 @@
     <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
         <span class="n">filenames</span><span class="p">,</span>
         <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">,</span>
-        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;reading PAMAP2 files&quot;</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">"reading PAMAP2 files"</span><span class="p">,</span>
         <span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="n">subject_id</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">file</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">subject_id</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">file</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"subject"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="n">df_subject</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span>
-            <span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">get_column_names</span><span class="p">()</span>
+            <span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"\s+"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">get_column_names</span><span class="p">()</span>
         <span class="p">)</span>
-        <span class="n">df_subject</span><span class="p">[</span><span class="s2">&quot;activity_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_subject</span><span class="o">.</span><span class="n">activity_id</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="n">df_subject</span><span class="p">[</span><span class="s2">"activity_name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_subject</span><span class="o">.</span><span class="n">activity_id</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">activity_names</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
         <span class="p">)</span>
-        <span class="n">df_subject</span><span class="p">[</span><span class="s2">&quot;subject_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject_id</span>
+        <span class="n">df_subject</span><span class="p">[</span><span class="s2">"subject_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject_id</span>
 
         <span class="n">ts_ids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
-            <span class="n">df_subject</span><span class="p">[[</span><span class="s2">&quot;activity_id&quot;</span><span class="p">,</span> <span class="s2">&quot;subject_id&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">df_subject</span><span class="p">[[</span><span class="s2">"activity_id"</span><span class="p">,</span> <span class="s2">"subject_id"</span><span class="p">]]</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
             <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">,</span>
             <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">df_subject</span><span class="p">),</span>
-            <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;partitioning the data&quot;</span><span class="p">,</span>
+            <span class="n">desc</span><span class="o">=</span><span class="s2">"partitioning the data"</span><span class="p">,</span>
             <span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">):</span>
@@ -210,20 +210,20 @@
                 <span class="n">last_values</span> <span class="o">=</span> <span class="n">row</span>
                 <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">ts_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
-        <span class="n">df_subject</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ts_ids</span>
+        <span class="n">df_subject</span><span class="p">[</span><span class="s2">"ts_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ts_ids</span>
 
         <span class="n">melted_df_subject</span> <span class="o">=</span> <span class="n">df_subject</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
             <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span>
-                <span class="s2">&quot;ts_id&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;timestamp_s&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;activity_id&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;activity_name&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;subject_id&quot;</span><span class="p">,</span>
+                <span class="s2">"ts_id"</span><span class="p">,</span>
+                <span class="s2">"timestamp_s"</span><span class="p">,</span>
+                <span class="s2">"activity_id"</span><span class="p">,</span>
+                <span class="s2">"activity_name"</span><span class="p">,</span>
+                <span class="s2">"subject_id"</span><span class="p">,</span>
             <span class="p">],</span>
             <span class="n">value_vars</span><span class="o">=</span><span class="n">get_column_names</span><span class="p">()[</span><span class="mi">1</span><span class="p">:],</span>
         <span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">melted_df_subject</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">melted_df_subject</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">row</span>
 
 
@@ -231,15 +231,15 @@
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.pamap2.html#pyrregular.datasets.pamap2.read_pamap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">read_pamap</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
-        <span class="n">filenames</span><span class="o">=</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_original_folder</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;/PAMAP2/*/*.dat&quot;</span><span class="p">),</span>
-        <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span>
-        <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;timestamp_s&quot;</span><span class="p">,</span>
-        <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span>
-        <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+        <span class="n">filenames</span><span class="o">=</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_original_folder</span><span class="p">())</span> <span class="o">+</span> <span class="s2">"/PAMAP2/*/*.dat"</span><span class="p">),</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">"ts_id"</span><span class="p">,</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="s2">"timestamp_s"</span><span class="p">,</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="s2">"variable"</span><span class="p">,</span>
+        <span class="n">value_id</span><span class="o">=</span><span class="s2">"value"</span><span class="p">,</span>
         <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;activity_id&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_name&quot;</span><span class="p">,</span> <span class="s2">&quot;subject_id&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;timestamp_s&quot;</span><span class="p">],</span>
+            <span class="s2">"ts_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"activity_id"</span><span class="p">,</span> <span class="s2">"activity_name"</span><span class="p">,</span> <span class="s2">"subject_id"</span><span class="p">],</span>
+            <span class="s2">"signal_id"</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"time_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"timestamp_s"</span><span class="p">],</span>
         <span class="p">},</span>
         <span class="n">reader_fun</span><span class="o">=</span><span class="n">_read_pamap</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
@@ -247,7 +247,7 @@
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="c1"># Pamap2.save_unfixed(verbose=True)</span>
 
     <span class="c1"># Pamap2.save_fixed(verbose=True)</span>

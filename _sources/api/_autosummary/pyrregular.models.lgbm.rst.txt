@@ -1,4 +1,4 @@
-﻿pyrregular.models.lgbm
+pyrregular.models.lgbm
 ======================
 
 .. automodule:: pyrregular.models.lgbm

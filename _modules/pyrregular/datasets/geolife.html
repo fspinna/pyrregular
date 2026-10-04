@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.datasets.geolife &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -101,15 +101,15 @@
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.geolife.html#pyrregular.datasets.geolife.read_geolife">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">read_geolife</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
-        <span class="n">filenames</span><span class="o">=</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;geolife/Data/*&quot;</span><span class="p">,</span>
-        <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span>
-        <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span>
-        <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span>
-        <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+        <span class="n">filenames</span><span class="o">=</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"geolife/Data/*"</span><span class="p">,</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">"tid"</span><span class="p">,</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="s2">"time"</span><span class="p">,</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="s2">"variable"</span><span class="p">,</span>
+        <span class="n">value_id</span><span class="o">=</span><span class="s2">"value"</span><span class="p">,</span>
         <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"ts_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"user"</span><span class="p">],</span>
+            <span class="s2">"signal_id"</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"time_id"</span><span class="p">:</span> <span class="p">[],</span>
         <span class="p">},</span>
         <span class="n">reader_fun</span><span class="o">=</span><span class="n">_read_geolife</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
@@ -118,17 +118,17 @@
 
 
 <span class="n">mode_names</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;walk&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;bike&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;bus&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;car&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;subway&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;train&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;airplane&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;boat&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;run&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;motorcycle&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;taxi&quot;</span><span class="p">,</span>
+    <span class="s2">"walk"</span><span class="p">,</span>
+    <span class="s2">"bike"</span><span class="p">,</span>
+    <span class="s2">"bus"</span><span class="p">,</span>
+    <span class="s2">"car"</span><span class="p">,</span>
+    <span class="s2">"subway"</span><span class="p">,</span>
+    <span class="s2">"train"</span><span class="p">,</span>
+    <span class="s2">"airplane"</span><span class="p">,</span>
+    <span class="s2">"boat"</span><span class="p">,</span>
+    <span class="s2">"run"</span><span class="p">,</span>
+    <span class="s2">"motorcycle"</span><span class="p">,</span>
+    <span class="s2">"taxi"</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -136,7 +136,7 @@
     <span class="n">points</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">plt_file</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>
 
     <span class="c1"># for clarity rename columns</span>
-    <span class="n">points</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;5_6&quot;</span><span class="p">:</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;alt&quot;</span><span class="p">})</span>
+    <span class="n">points</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"5_6"</span><span class="p">:</span> <span class="s2">"time"</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="s2">"lat"</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">"lon"</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">"alt"</span><span class="p">})</span>
 
     <span class="c1"># points.time = points.time.apply(lambda x: x.timestamp())</span>
     <span class="n">points</span><span class="o">.</span><span class="n">alt</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">alt</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="o">-</span><span class="mi">777</span> <span class="k">else</span> <span class="n">x</span><span class="p">)</span>
@@ -144,7 +144,7 @@
     <span class="c1"># remove unused columns</span>
     <span class="n">points</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
 
-    <span class="n">points</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">points</span><span class="p">[</span><span class="s2">"tid"</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">points</span>
 
@@ -161,10 +161,10 @@
     <span class="p">)</span>
 
     <span class="c1"># for clarity rename columns</span>
-    <span class="n">labels</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;start_time&quot;</span><span class="p">,</span> <span class="s2">&quot;end_time&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span>
+    <span class="n">labels</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"start_time"</span><span class="p">,</span> <span class="s2">"end_time"</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">]</span>
 
-    <span class="c1"># replace &#39;label&#39; column with integer encoding</span>
-    <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">mode_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]]</span>
+    <span class="c1"># replace 'label' column with integer encoding</span>
+    <span class="n">labels</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">mode_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]]</span>
 
     <span class="k">return</span> <span class="n">labels</span>
 
@@ -172,25 +172,25 @@
 <div class="viewcode-block" id="apply_labels">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.geolife.html#pyrregular.datasets.geolife.apply_labels">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">apply_labels</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
-    <span class="n">indices</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;start_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">],</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="s2">"start_time"</span><span class="p">]</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="s2">"time"</span><span class="p">],</span> <span class="n">side</span><span class="o">=</span><span class="s2">"right"</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="n">no_label</span> <span class="o">=</span> <span class="p">(</span><span class="n">indices</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span>
-        <span class="n">points</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;end_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">points</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">labels</span><span class="p">[</span><span class="s2">"end_time"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
     <span class="p">)</span>
-    <span class="n">points</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">points</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">no_label</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span></div>
+    <span class="n">points</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">points</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">no_label</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_read_user</span><span class="p">(</span><span class="n">user_folder</span><span class="p">):</span>
-    <span class="n">plt_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_folder</span><span class="p">,</span> <span class="s2">&quot;Trajectory&quot;</span><span class="p">,</span> <span class="s2">&quot;*.plt&quot;</span><span class="p">))</span>
+    <span class="n">plt_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_folder</span><span class="p">,</span> <span class="s2">"Trajectory"</span><span class="p">,</span> <span class="s2">"*.plt"</span><span class="p">))</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">_read_plt</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">plt_files</span><span class="p">])</span>
 
-    <span class="n">labels_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_folder</span><span class="p">,</span> <span class="s2">&quot;labels.txt&quot;</span><span class="p">)</span>
+    <span class="n">labels_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_folder</span><span class="p">,</span> <span class="s2">"labels.txt"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">labels_file</span><span class="p">):</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="n">_read_labels</span><span class="p">(</span><span class="n">labels_file</span><span class="p">)</span>
         <span class="n">apply_labels</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NAN</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NAN</span>
 
     <span class="k">return</span> <span class="n">df</span>
 
@@ -201,10 +201,10 @@
     <span class="n">bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">subfolders</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bar</span><span class="p">):</span>
         <span class="n">bar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span>
-            <span class="s2">&quot;[</span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2">] processing user </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">subfolders</span><span class="p">),</span> <span class="n">sf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="s2">"[</span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2">] processing user </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">subfolders</span><span class="p">),</span> <span class="n">sf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">_read_user</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">"user"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span>
 
@@ -236,23 +236,23 @@
 
         <span class="n">tids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span>
 
-    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tids</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"tid"</span><span class="p">]</span> <span class="o">=</span> <span class="n">tids</span>
     <span class="k">del</span> <span class="n">tids</span>
 
     <span class="n">melted_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
-        <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">],</span>
+        <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">"tid"</span><span class="p">,</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">],</span>
         <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span>
-            <span class="s2">&quot;lat&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;lon&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;alt&quot;</span><span class="p">,</span>
+            <span class="s2">"lat"</span><span class="p">,</span>
+            <span class="s2">"lon"</span><span class="p">,</span>
+            <span class="s2">"alt"</span><span class="p">,</span>
         <span class="p">],</span>
     <span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">melted_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">melted_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">):</span>
         <span class="k">yield</span> <span class="n">row</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="c1"># Geolife.save_unfixed(True)</span>
     <span class="c1"># Geolife.save_fixed(True)</span>
 

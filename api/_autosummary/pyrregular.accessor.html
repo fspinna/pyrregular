@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.accessor &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
@@ -142,7 +142,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyrregular.accessor.IrregularAccessor.to_hdf5">
-<span class="sig-name descname"><span class="pre">to_hdf5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gzip'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/accessor.html#IrregularAccessor.to_hdf5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.accessor.IrregularAccessor.to_hdf5" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_hdf5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gzip'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/accessor.html#IrregularAccessor.to_hdf5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.accessor.IrregularAccessor.to_hdf5" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -152,8 +152,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyrregular.accessor.IrregularAccessor.to_long">
-<span class="sig-name descname"><span class="pre">to_long</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reset_time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/accessor.html#IrregularAccessor.to_long"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.accessor.IrregularAccessor.to_long" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">to_long</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reset_time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/accessor.html#IrregularAccessor.to_long"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.accessor.IrregularAccessor.to_long" title="Link to this definition"></a></dt>
+<dd><p>Return the data in long format: one row per observation.</p>
+<p>Columns are ts_id, signal_id, time_id and value_id, as read by read_csv.
+Ids are categoricals with the original labels. Times are the original
+values unless index_scale is given (then float, scaled like to_dense).
+absolute_time=False makes times relative to the first one of each series
+(or of each series/signal pair if ts_level=False). static=True adds every
+other coordinate as a column, repeated on each row.
+reset_time_index has no effect and is kept for backward compatibility.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyrregular.accessor.IrregularAccessor.to_sktime">

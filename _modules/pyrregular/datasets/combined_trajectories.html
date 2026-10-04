@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pyrregular.datasets.combined_trajectories &mdash; pyrregular  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -99,22 +99,22 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_fix_intermediate_version</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">DataArray</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
         <span class="n">instances_per_class</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;individual_id&quot;</span><span class="p">]</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">"individual_id"</span><span class="p">]</span>
             <span class="o">.</span><span class="n">to_dataframe</span><span class="p">()</span>
             <span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]</span>
-            <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;individual_id&quot;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">"individual_id"</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="o">.</span><span class="n">size</span><span class="p">()</span>
         <span class="p">)</span>
         <span class="n">individual_to_consider</span> <span class="o">=</span> <span class="n">instances_per_class</span><span class="p">[</span>
-            <span class="n">instances_per_class</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">3</span>
+            <span class="n">instances_per_class</span><span class="p">[</span><span class="s2">"size"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">3</span>
         <span class="p">]</span><span class="o">.</span><span class="n">individual_id</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">individual_id</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">individual_to_consider</span><span class="p">)]</span>
 
         <span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;individual_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"individual_id"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
         <span class="n">ts_id_train</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">],</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">"ts_id"</span><span class="p">],</span>
             <span class="n">y</span><span class="p">,</span>
             <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
             <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
@@ -122,12 +122,12 @@
         <span class="p">)</span>
         <span class="n">ts_id_train</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ts_id_train</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
         <span class="n">train_or_test</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;train&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ts_id_train</span> <span class="k">else</span> <span class="s2">&quot;test&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ts_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="s2">"train"</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ts_id_train</span> <span class="k">else</span> <span class="s2">"test"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"ts_id"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
         <span class="p">]</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
-            <span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">train_or_test</span><span class="p">),</span>
-            <span class="n">class_default</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ts_id&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+            <span class="n">split_default</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">train_or_test</span><span class="p">),</span>
+            <span class="n">class_default</span><span class="o">=</span><span class="p">(</span><span class="s2">"ts_id"</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">data</span></div>
@@ -136,7 +136,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">__convert_date</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S"</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
     <span class="k">except</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
@@ -145,37 +145,37 @@
     <span class="n">filename</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="n">dtypes</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;latitude&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="s2">&quot;longitude&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="s2">&quot;altitude&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="s2">&quot;individual_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="s2">&quot;trajectory_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">"latitude"</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="s2">"longitude"</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="s2">"altitude"</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="s2">"date"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="s2">"time"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="s2">"individual_id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">"trajectory_id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="c1"># Read the CSV file into a Pandas DataFrame</span>
     <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtypes</span><span class="p">):</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">"timestamp"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"date"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
             <span class="n">__convert_date</span><span class="p">,</span>
             <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;absolute_trajectory_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;individual_id&quot;</span><span class="p">,</span> <span class="s2">&quot;trajectory_id&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"date"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">"absolute_trajectory_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"individual_id"</span><span class="p">,</span> <span class="s2">"trajectory_id"</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">"_"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
         <span class="p">)</span>
 
         <span class="n">melted_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
             <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span>
-                <span class="s2">&quot;absolute_trajectory_id&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;trajectory_id&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;individual_id&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
+                <span class="s2">"absolute_trajectory_id"</span><span class="p">,</span>
+                <span class="s2">"trajectory_id"</span><span class="p">,</span>
+                <span class="s2">"individual_id"</span><span class="p">,</span>
+                <span class="s2">"timestamp"</span><span class="p">,</span>
             <span class="p">],</span>
-            <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">,</span> <span class="s2">&quot;latitude&quot;</span><span class="p">,</span> <span class="s2">&quot;altitude&quot;</span><span class="p">],</span>
+            <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">"longitude"</span><span class="p">,</span> <span class="s2">"latitude"</span><span class="p">,</span> <span class="s2">"altitude"</span><span class="p">],</span>
         <span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">melted_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">melted_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">"records"</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">row</span>
 
 
@@ -184,15 +184,15 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">read_combined_trajectories</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
         <span class="n">filenames</span><span class="o">=</span><span class="n">data_original_folder</span><span class="p">()</span>
-        <span class="o">/</span> <span class="s2">&quot;combined_trajectories/combined_trajectories.csv&quot;</span><span class="p">,</span>
-        <span class="n">ts_id</span><span class="o">=</span><span class="s2">&quot;absolute_trajectory_id&quot;</span><span class="p">,</span>
-        <span class="n">time_id</span><span class="o">=</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
-        <span class="n">signal_id</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span>
-        <span class="n">value_id</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+        <span class="o">/</span> <span class="s2">"combined_trajectories/combined_trajectories.csv"</span><span class="p">,</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">"absolute_trajectory_id"</span><span class="p">,</span>
+        <span class="n">time_id</span><span class="o">=</span><span class="s2">"timestamp"</span><span class="p">,</span>
+        <span class="n">signal_id</span><span class="o">=</span><span class="s2">"variable"</span><span class="p">,</span>
+        <span class="n">value_id</span><span class="o">=</span><span class="s2">"value"</span><span class="p">,</span>
         <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;ts_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;trajectory_id&quot;</span><span class="p">,</span> <span class="s2">&quot;individual_id&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;signal_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;time_id&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"ts_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"trajectory_id"</span><span class="p">,</span> <span class="s2">"individual_id"</span><span class="p">],</span>
+            <span class="s2">"signal_id"</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"time_id"</span><span class="p">:</span> <span class="p">[],</span>
         <span class="p">},</span>
         <span class="n">reader_fun</span><span class="o">=</span><span class="n">_read_combined_trajectories</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
@@ -200,7 +200,7 @@
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="c1"># CombinedTrajectories.save_unfixed(True)</span>
     <span class="c1"># CombinedTrajectories.save_fixed(True)</span>
     <span class="c1">#</span>
