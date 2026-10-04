@@ -35,25 +35,28 @@ class RandomIntervalFeatureClassifier(BaseEstimator, ClassifierMixin):
     ):
         self.features = features
         self.random_state = random_state
-        self.transformer = RandomIntervalFeatureExtractor(
-            features=list(self.features),
-            random_state=self.random_state,
-            n_intervals=n_intervals,
-        )
-        self.clf = LGBMClassifier(n_jobs=1, random_state=self.random_state)
+        self.n_intervals = n_intervals
 
     def fit(self, X, y):
-        X = self.transformer.fit_transform(X)
-        self.clf.fit(X, y)
+        # built here, not in __init__, so that set_params/clone take effect
+        self.transformer_ = RandomIntervalFeatureExtractor(
+            features=list(self.features),
+            random_state=self.random_state,
+            n_intervals=self.n_intervals,
+        )
+        self.clf_ = LGBMClassifier(n_jobs=1, random_state=self.random_state)
+        X = self.transformer_.fit_transform(X)
+        self.clf_.fit(X, y)
+        self.classes_ = self.clf_.classes_
         return self
 
     def predict(self, X):
-        X = self.transformer.transform(X)
-        return self.clf.predict(X)
+        X = self.transformer_.transform(X)
+        return self.clf_.predict(X)
 
     def predict_proba(self, X):
-        X = self.transformer.transform(X)
-        return self.clf.predict_proba(X)
+        X = self.transformer_.transform(X)
+        return self.clf_.predict_proba(X)
 
 
 rifc_pipeline = make_pipeline(RandomIntervalFeatureClassifier())
