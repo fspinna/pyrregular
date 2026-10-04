@@ -134,7 +134,7 @@ def _to_tslearn(X):
     return X.swapaxes(1, 2)
 
 
-def _fill_time_index(arr):
+def _fill_time_index(arr, nan_delta=1):
     T = deepcopy(arr)
 
     # time delta
@@ -142,6 +142,12 @@ def _fill_time_index(arr):
 
     # mean time delta
     delta_mean = np.nanmean(a_diff, axis=2, keepdims=True)
+
+    nans = np.isnan(delta_mean)
+    if np.any(
+        nans
+    ):  # this can happen if there is only 1 valid value in the time series
+        delta_mean[nans] = nan_delta
 
     # last timestep
     last_valid_t = np.nanmax(T, axis=2, keepdims=True)

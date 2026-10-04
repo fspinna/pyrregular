@@ -15,36 +15,8 @@ import optax
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.model_selection import train_test_split
 
+from pyrregular.conversion_utils import _fill_time_index
 from pyrregular.models.nodes import _standardize
-
-
-def _fill_time_index(arr, nan_delta=1):
-    T = deepcopy(arr)
-
-    # time delta
-    a_diff = T[:, :, 1:] - T[:, :, :-1]
-
-    # mean time delta
-    delta_mean = np.nanmean(a_diff, axis=2, keepdims=True)
-
-    nans = np.isnan(delta_mean)
-    if np.any(
-        nans
-    ):  # this can happen if there is only 1 valid value in the time series
-        delta_mean[nans] = nan_delta
-
-    # last timestep
-    last_valid_t = np.nanmax(T, axis=2, keepdims=True)
-
-    # find where the nans are
-    nan_mask = np.isnan(T)
-
-    # where nans are there is an increasing value from 1 to the last nan
-    nan_indices = np.cumsum(nan_mask, axis=2)
-
-    replacement = (last_valid_t + delta_mean * nan_indices)[nan_mask]
-    T[nan_mask] = replacement
-    return T
 
 
 def _fill_all_nans_signals(X):

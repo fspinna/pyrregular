@@ -394,3 +394,16 @@ def test_api_token_is_sent(monkeypatch):
     )
     assert seen["name"] == "Garment.h5"
     assert seen["downloader"].kwargs["headers"] == {"Authorization": "Bearer hf_x"}
+
+
+def test_fill_time_index():
+    from pyrregular.conversion_utils import _fill_time_index
+
+    T = np.array(
+        [
+            [[0.0, 1.0, 3.0, nan, nan]],  # mean step 1.5
+            [[5.0, nan, nan, nan, nan]],  # one timestamp: no step, use nan_delta
+        ]
+    )
+    assert_equal_nan(_fill_time_index(T)[:, 0, :], [[0, 1, 3, 4.5, 6], [5, 6, 7, 8, 9]])
+    assert_equal_nan(_fill_time_index(T, nan_delta=2)[1, 0], [5, 7, 9, 11, 13])

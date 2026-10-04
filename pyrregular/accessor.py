@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-from pyrregular.conversion_utils import _ak_dropnan, _fill_time_index, _reset_time_index
+from pyrregular.conversion_utils import _ak_dropnan, _reset_time_index
 from pyrregular.io_utils import save_to_file
 
 
