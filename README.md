@@ -1,14 +1,29 @@
-![Logo](https://github.com/fspinna/pyrregular/blob/main/assets/images/logo_01.png?raw=true)
+![Pyrregular: irregular time series datasets and benchmarks](https://github.com/fspinna/pyrregular/blob/main/assets/images/logo_01.png?raw=true)
 
+# Pyrregular: Irregular Time Series Datasets and Benchmarks
+
+**Published at ICLR 2026** · benchmark of 34 datasets and 12 classifiers · `pip install pyrregular`
+
+Pyrregular is a Python framework for irregular time series: irregularly sampled
+data with uneven sampling, missing observations, signals recorded at different
+times, and variable-length sequences. It provides:
+
+- **datasets**: the 34 naturally irregular datasets of the ICLR 2026 benchmark,
+  and more added over time, in one standardized format, downloaded on demand
+  with `load_dataset` (`list_datasets()` shows them all);
+- **a representation that keeps the irregularity**: a sparse xarray format, with
+  conversions to dense arrays for sktime, aeon, tslearn and PyPOTS;
+- **models and benchmarks**: ready-to-use classification and regression pipelines,
+  including the 12 classifiers evaluated in the paper.
+
+*Irregular time series made easy.*
 
 |               | **[📖 Documentation](https://fspinna.github.io/pyrregular/)** · **[⚙️ Tutorials](https://github.com/fspinna/pyrregular/blob/main/docs/notebooks)**                                                                                                                                                                                               |
 |---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **CI/CD**     | [![build](https://github.com/fspinna/pyrregular/actions/workflows/build.yml/badge.svg)](https://github.com/fspinna/pyrregular/actions/workflows/build.yml) [![docs](https://github.com/fspinna/pyrregular/actions/workflows/sphinx.yml/badge.svg)](https://github.com/fspinna/pyrregular/actions/workflows/sphinx.yml) [![pypi publish](https://github.com/fspinna/pyrregular/actions/workflows/python-publish.yml/badge.svg)](https://github.com/fspinna/pyrregular/actions/workflows/python-publish.yml) [![models](https://github.com/fspinna/pyrregular/actions/workflows/models.yml/badge.svg)](https://github.com/fspinna/pyrregular/actions/workflows/models.yml) 
 | **Code**      | [![PyPI version](https://img.shields.io/pypi/v/pyrregular.svg)](https://pypi.org/project/pyrregular/) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyrregular) [![!black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)                                                   |
 | **Community** | [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/fspinna/pyrregular/issues)                                                                                                                                                                                   |
-| **Paper**     | [![arXiv](https://img.shields.io/badge/arXiv-2505.06047-b31b1b.svg)](https://arxiv.org/pdf/2505.06047)                                                                                                                                                                                                                                                                                                                            |
-
-
+| **Paper**     | [![ICLR 2026](https://img.shields.io/badge/ICLR-2026-4b44ce.svg)](https://openreview.net/forum?id=qetBM8nLkf) [![arXiv](https://img.shields.io/badge/arXiv-2505.06047-b31b1b.svg)](https://arxiv.org/pdf/2505.06047)                                                                                                                                                                                                              |
 
 # Installation
 

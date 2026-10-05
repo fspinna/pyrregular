@@ -22,10 +22,25 @@ CARD_FIELDS = ("license", "license_source", "source", "citation")
 REPO = "https://github.com/fspinna/pyrregular"
 
 BODY = """
-# pyrregular datasets
+![Pyrregular: irregular time series datasets and benchmarks](https://github.com/fspinna/pyrregular/blob/main/assets/images/logo_01.png?raw=true)
 
-Irregular time series datasets converted to the format of the
-[pyrregular]({repo}) library ([paper](https://openreview.net/forum?id=qetBM8nLkf)).
+# Pyrregular: Irregular Time Series Datasets and Benchmarks
+
+**Published at ICLR 2026** · {n_datasets} datasets, including the benchmark of
+34 datasets and 12 classifiers ·
+[GitHub]({repo}) · [Documentation](https://fspinna.github.io/pyrregular/) ·
+[PyPI](https://pypi.org/project/pyrregular/) ·
+[Paper](https://openreview.net/forum?id=qetBM8nLkf)
+
+Naturally irregular time series (uneven sampling, missing observations, signals
+recorded at different times, variable-length sequences) in one standardized
+format, for classification and regression. These are the datasets of the
+[pyrregular]({repo}) Python library, including the 34 of the ICLR 2026
+benchmark. The files are HDF5, read by the library (the dataset viewer is off):
+
+```bash
+pip install pyrregular
+```
 
 ```python
 from pyrregular import load_dataset
@@ -83,12 +98,13 @@ def dataset_card():
             f"| {file.stem} | {_link(meta['license'], meta['license_source'])} "
             f"| {_link('source', meta['source'])} | {_link('cite', meta['citation'])} |"
         )
-    header = ["---", "pretty_name: pyrregular", "license:"]
+    header = ["---", "pretty_name: pyrregular", "viewer: false", "license:"]
     header += [f"- {license}" for license in sorted(licenses)]
     if "other" in licenses:
         header.append("license_name: dataset-specific")
     header.append("---")
-    return "\n".join(header) + "\n" + BODY.format(repo=REPO, table="\n".join(rows))
+    body = BODY.format(repo=REPO, n_datasets=len(rows), table="\n".join(rows))
+    return "\n".join(header) + "\n" + body
 
 
 if __name__ == "__main__":
