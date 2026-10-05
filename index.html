@@ -4,9 +4,11 @@
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Pyrregular: a Python framework with the 34 irregular time series datasets and 12 classifiers of the ICLR 2026 benchmark, for irregularly sampled time series classification and regression." name="description" />
+<meta content="irregular time series, irregularly sampled time series, time series classification, datasets, benchmark, Python" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyrregular documentation &mdash; pyrregular  documentation</title>
+  <title>Pyrregular: Irregular Time Series Datasets and Benchmarks &mdash; Pyrregular</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
@@ -64,7 +66,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">pyrregular documentation</li>
+      <li class="breadcrumb-item active">Pyrregular: Irregular Time Series Datasets and Benchmarks</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -74,9 +76,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pyrregular-documentation">
-<h1>pyrregular documentation<a class="headerlink" href="#pyrregular-documentation" title="Link to this heading"></a></h1>
-<p><img alt="Logo" src="https://github.com/fspinna/pyrregular/blob/main/assets/images/logo_01.png?raw=true" /></p>
+  <p><img alt="Pyrregular: irregular time series datasets and benchmarks" src="https://github.com/fspinna/pyrregular/blob/main/assets/images/logo_01.png?raw=true" /></p>
+<section id="pyrregular-irregular-time-series-datasets-and-benchmarks">
+<h1>Pyrregular: Irregular Time Series Datasets and Benchmarks<a class="headerlink" href="#pyrregular-irregular-time-series-datasets-and-benchmarks" title="Link to this heading"></a></h1>
+<p><strong>Published at ICLR 2026</strong> · benchmark of 34 datasets and 12 classifiers · <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pyrregular</span></code></p>
+<p>Pyrregular is a Python framework for irregular time series: irregularly sampled
+data with uneven sampling, missing observations, signals recorded at different
+times, and variable-length sequences. It provides:</p>
+<ul class="simple">
+<li><p><strong>datasets</strong>: the 34 naturally irregular datasets of the ICLR 2026 benchmark,
+and more added over time, in one standardized format, downloaded on demand
+with <code class="docutils literal notranslate"><span class="pre">load_dataset</span></code> (<code class="docutils literal notranslate"><span class="pre">list_datasets()</span></code> shows them all);</p></li>
+<li><p><strong>a representation that keeps the irregularity</strong>: a sparse xarray format, with
+conversions to dense arrays for sktime, aeon, tslearn and PyPOTS;</p></li>
+<li><p><strong>models and benchmarks</strong>: ready-to-use classification and regression pipelines,
+including the 12 classifiers evaluated in the paper.</p></li>
+</ul>
+<p><em>Irregular time series made easy.</em></p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p></p></th>
@@ -94,12 +110,13 @@
 <td><p><a class="reference external" href="https://github.com/fspinna/pyrregular/issues"><img alt="contributions welcome" src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" /></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Paper</strong></p></td>
-<td><p><a class="reference external" href="https://arxiv.org/pdf/2505.06047"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-2505.06047-b31b1b.svg" /></a></p></td>
+<td><p><a class="reference external" href="https://openreview.net/forum?id=qetBM8nLkf"><img alt="ICLR 2026" src="https://img.shields.io/badge/ICLR-2026-4b44ce.svg" /></a> <a class="reference external" href="https://arxiv.org/pdf/2505.06047"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-2505.06047-b31b1b.svg" /></a></p></td>
 </tr>
 </tbody>
 </table>
+</section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
 <p>You can install via pip with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pyrregular
 </pre></div>
@@ -112,9 +129,9 @@
 (e.g. <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;pyrregular[sktime]&quot;</span></code>). The extra for each pipeline is listed in the table below.</p>
 </section>
 <section id="quick-guide">
-<h2>Quick Guide<a class="headerlink" href="#quick-guide" title="Link to this heading"></a></h2>
+<h1>Quick Guide<a class="headerlink" href="#quick-guide" title="Link to this heading"></a></h1>
 <section id="list-datasets">
-<h3>List datasets<a class="headerlink" href="#list-datasets" title="Link to this heading"></a></h3>
+<h2>List datasets<a class="headerlink" href="#list-datasets" title="Link to this heading"></a></h2>
 <p>If you want to see all the datasets available, you can use the <code class="docutils literal notranslate"><span class="pre">list_datasets</span></code> function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular</span><span class="w"> </span><span class="kn">import</span> <span class="n">list_datasets</span>
 
@@ -123,7 +140,7 @@
 </div>
 </section>
 <section id="load-a-dataset">
-<h3>Load a dataset<a class="headerlink" href="#load-a-dataset" title="Link to this heading"></a></h3>
+<h2>Load a dataset<a class="headerlink" href="#load-a-dataset" title="Link to this heading"></a></h2>
 <p>To load a dataset, you can use the <code class="docutils literal notranslate"><span class="pre">load_dataset</span></code> function. For example, to load the “Garment” dataset, you can do:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 
@@ -142,9 +159,9 @@ tagged on Hugging Face (currently <a class="reference external" href="https://hu
 To use the data of an older release, install that release (e.g. <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;pyrregular==0.3.1&quot;</span></code>).</p>
 </section>
 <section id="downstream-tasks">
-<h3>Downstream tasks<a class="headerlink" href="#downstream-tasks" title="Link to this heading"></a></h3>
+<h2>Downstream tasks<a class="headerlink" href="#downstream-tasks" title="Link to this heading"></a></h2>
 <section id="classification">
-<h4>Classification<a class="headerlink" href="#classification" title="Link to this heading"></a></h4>
+<h3>Classification<a class="headerlink" href="#classification" title="Link to this heading"></a></h3>
 <p>To use the dataset for classification, you can just “densify” it:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 
@@ -269,7 +286,7 @@ results exactly, pin the library versions.</p></li>
 </ul>
 </section>
 <section id="regression">
-<h4>Regression<a class="headerlink" href="#regression" title="Link to this heading"></a></h4>
+<h3>Regression<a class="headerlink" href="#regression" title="Link to this heading"></a></h3>
 <p>Regression is still work in progress, but is available for some datasets:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pipeline</span>
@@ -296,7 +313,7 @@ results exactly, pin the library versions.</p></li>
 </section>
 </section>
 <section id="available-datasets">
-<h2>Available Datasets<a class="headerlink" href="#available-datasets" title="Link to this heading"></a></h2>
+<h1>Available Datasets<a class="headerlink" href="#available-datasets" title="Link to this heading"></a></h1>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>📈 Dataset</p></th>
@@ -410,7 +427,7 @@ results exactly, pin the library versions.</p></li>
 </table>
 </section>
 <section id="citation">
-<h2>Citation<a class="headerlink" href="#citation" title="Link to this heading"></a></h2>
+<h1>Citation<a class="headerlink" href="#citation" title="Link to this heading"></a></h1>
 <p>If you use this package in your research, please cite the following paper:</p>
 <div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@inproceedings</span><span class="p">{</span>
 <span class="w">    </span><span class="nl">spinnato2026pyrregular</span><span class="p">,</span>
@@ -451,6 +468,7 @@ results exactly, pin the library versions.</p></li>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyrregular.backend.html">pyrregular.backend</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyrregular.conversion_utils.html">pyrregular.conversion_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyrregular.data_utils.html">pyrregular.data_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyrregular.dataset_card.html">pyrregular.dataset_card</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyrregular.datasets.html">pyrregular.datasets</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyrregular.describe.html">pyrregular.describe</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyrregular.dev.html">pyrregular.dev</a></li>
@@ -466,7 +484,6 @@ results exactly, pin the library versions.</p></li>
 </li>
 </ul>
 </div>
-</section>
 
 
            </div>

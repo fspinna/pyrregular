@@ -1,0 +1,12 @@
+pyrregular.dataset\_card
+========================
+
+.. automodule:: pyrregular.dataset_card
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      dataset_card
+   

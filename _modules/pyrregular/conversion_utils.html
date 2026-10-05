@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyrregular.conversion_utils &mdash; pyrregular  documentation</title>
+  <title>pyrregular.conversion_utils &mdash; Pyrregular</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
@@ -186,12 +186,6 @@
             <span class="p">),</span>
             <span class="n">new_time_idx</span><span class="p">,</span>
         <span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_ak_dropnan</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">awkward</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ak</span>
-
-    <span class="k">return</span> <span class="n">ak</span><span class="o">.</span><span class="n">drop_none</span><span class="p">(</span><span class="n">ak</span><span class="o">.</span><span class="n">nan_to_none</span><span class="p">(</span><span class="n">arr</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_to_pypots</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

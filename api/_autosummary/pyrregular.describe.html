@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyrregular.describe &mdash; pyrregular  documentation</title>
+  <title>pyrregular.describe &mdash; Pyrregular</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
@@ -52,6 +52,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.backend.html">pyrregular.backend</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.conversion_utils.html">pyrregular.conversion_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.data_utils.html">pyrregular.data_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyrregular.dataset_card.html">pyrregular.dataset_card</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.datasets.html">pyrregular.datasets</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">pyrregular.describe</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pyrregular.describe.are_all_signals_equal_length"><code class="docutils literal notranslate"><span class="pre">are_all_signals_equal_length()</span></code></a></li>
@@ -105,53 +106,76 @@
              
   <section id="module-pyrregular.describe">
 <span id="pyrregular-describe"></span><h1>pyrregular.describe<a class="headerlink" href="#module-pyrregular.describe" title="Link to this heading"></a></h1>
+<p>Checks of how regular the time axis of a dataset is.</p>
+<p><code class="docutils literal notranslate"><span class="pre">check_regularity(fn,</span> <span class="pre">df,</span> <span class="pre">ts_level)</span></code> applies one of the checks below:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ts_level=False</span></code>: each series is checked on the timestamps of its signals;
+one answer per series.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ts_level=True</span></code>: each series is reduced to its merged timeline (the union of
+the timestamps of its signals) and all series are checked together, as the
+signals of one group; one answer for the whole dataset.</p></li>
+</ul>
+<p>Correspondence with the taxonomy in the paper’s appendix (a check returning
+False means the irregularity is present):</p>
+<ul class="simple">
+<li><p>uneven sampling: <code class="docutils literal notranslate"><span class="pre">are_all_signals_sampled_at_constant_intervals</span></code></p></li>
+<li><p>ragged length: <code class="docutils literal notranslate"><span class="pre">are_all_signals_equal_length</span></code></p></li>
+<li><p>shift: <code class="docutils literal notranslate"><span class="pre">are_all_signals_not_strongly_offset</span></code></p></li>
+<li><p>ragged sampling: <code class="docutils literal notranslate"><span class="pre">do_all_signals_have_equal_sampling</span></code> (the k-th intervals of
+two signals are compared, for the intervals both signals have)</p></li>
+<li><p>partial observation (NaN where a value was expected) is not checked here.</p></li>
+</ul>
+<p>Each check receives <code class="docutils literal notranslate"><span class="pre">T</span></code>: a list (one item per series) of lists (one item per
+signal) of sorted timestamp arrays. Timestamps are the original values, compared
+exactly (datetimes as integer nanoseconds), so no rounding makes equal intervals
+look different.</p>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.describe.are_all_signals_equal_length" title="pyrregular.describe.are_all_signals_equal_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">are_all_signals_equal_length</span></code></a>(T)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.describe.are_all_signals_equal_length" title="pyrregular.describe.are_all_signals_equal_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">are_all_signals_equal_length</span></code></a>(signals)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyrregular.describe.are_all_signals_not_offset" title="pyrregular.describe.are_all_signals_not_offset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">are_all_signals_not_offset</span></code></a>(T)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrregular.describe.are_all_signals_not_offset" title="pyrregular.describe.are_all_signals_not_offset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">are_all_signals_not_offset</span></code></a>(signals)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.describe.are_all_signals_not_strongly_offset" title="pyrregular.describe.are_all_signals_not_strongly_offset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">are_all_signals_not_strongly_offset</span></code></a>(T)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.describe.are_all_signals_not_strongly_offset" title="pyrregular.describe.are_all_signals_not_strongly_offset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">are_all_signals_not_strongly_offset</span></code></a>(signals)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyrregular.describe.are_all_signals_sampled_at_constant_intervals" title="pyrregular.describe.are_all_signals_sampled_at_constant_intervals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">are_all_signals_sampled_at_constant_intervals</span></code></a>(T)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrregular.describe.are_all_signals_sampled_at_constant_intervals" title="pyrregular.describe.are_all_signals_sampled_at_constant_intervals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">are_all_signals_sampled_at_constant_intervals</span></code></a>(signals)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.describe.check_regularity" title="pyrregular.describe.check_regularity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_regularity</span></code></a>(fn, df[, ts_level, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyrregular.describe.do_all_signals_have_equal_sampling" title="pyrregular.describe.do_all_signals_have_equal_sampling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_all_signals_have_equal_sampling</span></code></a>(T)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrregular.describe.do_all_signals_have_equal_sampling" title="pyrregular.describe.do_all_signals_have_equal_sampling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_all_signals_have_equal_sampling</span></code></a>(signals)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.describe.get_lengths" title="pyrregular.describe.get_lengths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_lengths</span></code></a>(T)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrregular.describe.get_lengths" title="pyrregular.describe.get_lengths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_lengths</span></code></a>(signals)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyrregular.describe.get_time_delta" title="pyrregular.describe.get_time_delta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_delta</span></code></a>(T)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrregular.describe.get_time_delta" title="pyrregular.describe.get_time_delta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_delta</span></code></a>(signals)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrregular.describe.are_all_signals_equal_length">
-<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">are_all_signals_equal_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#are_all_signals_equal_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.are_all_signals_equal_length" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">are_all_signals_equal_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#are_all_signals_equal_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.are_all_signals_equal_length" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrregular.describe.are_all_signals_not_offset">
-<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">are_all_signals_not_offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#are_all_signals_not_offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.are_all_signals_not_offset" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">are_all_signals_not_offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#are_all_signals_not_offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.are_all_signals_not_offset" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrregular.describe.are_all_signals_not_strongly_offset">
-<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">are_all_signals_not_strongly_offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#are_all_signals_not_strongly_offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.are_all_signals_not_strongly_offset" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">are_all_signals_not_strongly_offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#are_all_signals_not_strongly_offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.are_all_signals_not_strongly_offset" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrregular.describe.are_all_signals_sampled_at_constant_intervals">
-<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">are_all_signals_sampled_at_constant_intervals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#are_all_signals_sampled_at_constant_intervals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.are_all_signals_sampled_at_constant_intervals" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">are_all_signals_sampled_at_constant_intervals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#are_all_signals_sampled_at_constant_intervals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.are_all_signals_sampled_at_constant_intervals" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -161,17 +185,17 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrregular.describe.do_all_signals_have_equal_sampling">
-<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">do_all_signals_have_equal_sampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#do_all_signals_have_equal_sampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.do_all_signals_have_equal_sampling" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">do_all_signals_have_equal_sampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#do_all_signals_have_equal_sampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.do_all_signals_have_equal_sampling" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrregular.describe.get_lengths">
-<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">get_lengths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#get_lengths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.get_lengths" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">get_lengths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#get_lengths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.get_lengths" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyrregular.describe.get_time_delta">
-<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">get_time_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#get_time_delta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.get_time_delta" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyrregular.describe.</span></span><span class="sig-name descname"><span class="pre">get_time_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/describe.html#get_time_delta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.describe.get_time_delta" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>

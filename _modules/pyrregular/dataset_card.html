@@ -1,0 +1,217 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyrregular.dataset_card &mdash; Pyrregular</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyrregular
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/dataset_conversion.html">Convert your Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyrregular</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyrregular.dataset_card</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyrregular.dataset_card</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Generate the Hugging Face dataset card (README.md) from ``metadata/*.yml``.</span>
+
+<span class="sd">Usage, from the repository root:</span>
+
+<span class="sd">    python -m pyrregular.dataset_card &gt; card.md</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.data_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">list_metadata_files</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_yaml</span>
+
+<span class="c1"># metadata license (SPDX id) -&gt; Hugging Face license id, for the card header</span>
+<span class="n">HF_LICENSES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"CC-BY-4.0"</span><span class="p">:</span> <span class="s2">"cc-by-4.0"</span><span class="p">,</span>
+    <span class="s2">"CC-BY-NC-SA-4.0"</span><span class="p">:</span> <span class="s2">"cc-by-nc-sa-4.0"</span><span class="p">,</span>
+    <span class="s2">"CC0-1.0"</span><span class="p">:</span> <span class="s2">"cc0-1.0"</span><span class="p">,</span>
+    <span class="s2">"ODC-By-1.0"</span><span class="p">:</span> <span class="s2">"odc-by"</span><span class="p">,</span>
+    <span class="s2">"ODbL-1.0"</span><span class="p">:</span> <span class="s2">"odbl"</span><span class="p">,</span>
+    <span class="s2">"unknown"</span><span class="p">:</span> <span class="s2">"unknown"</span><span class="p">,</span>
+    <span class="s2">"other"</span><span class="p">:</span> <span class="s2">"other"</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">CARD_FIELDS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"license"</span><span class="p">,</span> <span class="s2">"license_source"</span><span class="p">,</span> <span class="s2">"source"</span><span class="p">,</span> <span class="s2">"citation"</span><span class="p">)</span>
+<span class="n">REPO</span> <span class="o">=</span> <span class="s2">"https://github.com/fspinna/pyrregular"</span>
+
+<span class="n">BODY</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">![Pyrregular: irregular time series datasets and benchmarks](https://github.com/fspinna/pyrregular/blob/main/assets/images/logo_01.png?raw=true)</span>
+
+<span class="s2"># Pyrregular: Irregular Time Series Datasets and Benchmarks</span>
+
+<span class="s2">**Published at ICLR 2026** · </span><span class="si">{n_datasets}</span><span class="s2"> datasets, including the benchmark of</span>
+<span class="s2">34 datasets and 12 classifiers ·</span>
+<span class="s2">[GitHub](</span><span class="si">{repo}</span><span class="s2">) · [Documentation](https://fspinna.github.io/pyrregular/) ·</span>
+<span class="s2">[PyPI](https://pypi.org/project/pyrregular/) ·</span>
+<span class="s2">[Paper](https://openreview.net/forum?id=qetBM8nLkf)</span>
+
+<span class="s2">Naturally irregular time series (uneven sampling, missing observations, signals</span>
+<span class="s2">recorded at different times, variable-length sequences) in one standardized</span>
+<span class="s2">format, for classification and regression. These are the datasets of the</span>
+<span class="s2">[pyrregular](</span><span class="si">{repo}</span><span class="s2">) Python library, including the 34 of the ICLR 2026</span>
+<span class="s2">benchmark. The files are HDF5, read by the library (the dataset viewer is off):</span>
+
+<span class="s2">```bash</span>
+<span class="s2">pip install pyrregular</span>
+<span class="s2">```</span>
+
+<span class="s2">```python</span>
+<span class="s2">from pyrregular import load_dataset</span>
+<span class="s2">df = load_dataset("Garment.h5")</span>
+<span class="s2">```</span>
+
+<span class="s2">The files are versioned with git tags (`data-v1`, ...); each pyrregular release</span>
+<span class="s2">downloads one fixed version.</span>
+
+<span class="s2">## Licenses</span>
+
+<span class="s2">Each dataset keeps the license of its original source; we redistribute it in a</span>
+<span class="s2">converted format, with attribution. `unknown` means the source states no license</span>
+<span class="s2">(most of these come from the UEA &amp; UCR time series archive). If you hold the rights</span>
+<span class="s2">to a dataset and want it removed or its attribution changed, please open an issue</span>
+<span class="s2">at </span><span class="si">{repo}</span><span class="s2">/issues.</span>
+
+<span class="s2">| Dataset | License | Source | Citation |</span>
+<span class="s2">|---|---|---|---|</span>
+<span class="si">{table}</span>
+
+<span class="s2">## Citation</span>
+
+<span class="s2">Please cite the original source of each dataset (Citation column) and pyrregular:</span>
+
+<span class="s2">```bibtex</span>
+<span class="s2">@inproceedings{{</span>
+<span class="s2">    spinnato2026pyrregular,</span>
+<span class="s2">    title={{{{PYRREGULAR}}: A Unified Framework for Irregular Time Series, with Classification Benchmarks}},</span>
+<span class="s2">    author={{Francesco Spinnato and Cristiano Landi}},</span>
+<span class="s2">    booktitle={{The Fourteenth International Conference on Learning Representations}},</span>
+<span class="s2">    year={{2026}},</span>
+<span class="s2">    url={{https://openreview.net/forum?id=qetBM8nLkf}}</span>
+<span class="s2">}}</span>
+<span class="s2">```</span>
+<span class="s2">"""</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_link</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">text</span> <span class="k">if</span> <span class="n">url</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"NA"</span><span class="p">,</span> <span class="s2">"tbd"</span><span class="p">)</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">](</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">)"</span>
+
+
+<div class="viewcode-block" id="dataset_card">
+<a class="viewcode-back" href="../../api/_autosummary/pyrregular.dataset_card.html#pyrregular.dataset_card.dataset_card">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dataset_card</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Return the dataset card as a string; fail on incomplete metadata."""</span>
+    <span class="n">rows</span><span class="p">,</span> <span class="n">licenses</span> <span class="o">=</span> <span class="p">[],</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">list_metadata_files</span><span class="p">():</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">CARD_FIELDS</span> <span class="k">if</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">meta</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: missing </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">meta</span><span class="p">[</span><span class="s2">"license"</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">HF_LICENSES</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: unmapped license </span><span class="si">{</span><span class="n">meta</span><span class="p">[</span><span class="s1">'license'</span><span class="p">]</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">licenses</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">HF_LICENSES</span><span class="p">[</span><span class="n">meta</span><span class="p">[</span><span class="s2">"license"</span><span class="p">]])</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"| </span><span class="si">{</span><span class="n">file</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">_link</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s1">'license'</span><span class="p">],</span><span class="w"> </span><span class="n">meta</span><span class="p">[</span><span class="s1">'license_source'</span><span class="p">])</span><span class="si">}</span><span class="s2"> "</span>
+            <span class="sa">f</span><span class="s2">"| </span><span class="si">{</span><span class="n">_link</span><span class="p">(</span><span class="s1">'source'</span><span class="p">,</span><span class="w"> </span><span class="n">meta</span><span class="p">[</span><span class="s1">'source'</span><span class="p">])</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">_link</span><span class="p">(</span><span class="s1">'cite'</span><span class="p">,</span><span class="w"> </span><span class="n">meta</span><span class="p">[</span><span class="s1">'citation'</span><span class="p">])</span><span class="si">}</span><span class="s2"> |"</span>
+        <span class="p">)</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"---"</span><span class="p">,</span> <span class="s2">"pretty_name: pyrregular"</span><span class="p">,</span> <span class="s2">"viewer: false"</span><span class="p">,</span> <span class="s2">"license:"</span><span class="p">]</span>
+    <span class="n">header</span> <span class="o">+=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"- </span><span class="si">{</span><span class="n">license</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">license</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">licenses</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="s2">"other"</span> <span class="ow">in</span> <span class="n">licenses</span><span class="p">:</span>
+        <span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"license_name: dataset-specific"</span><span class="p">)</span>
+    <span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"---"</span><span class="p">)</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">BODY</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span> <span class="n">n_datasets</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="n">table</span><span class="o">=</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span>
+    <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">header</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">body</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dataset_card</span><span class="p">())</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Francesco Spinnato, Cristiano Landi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

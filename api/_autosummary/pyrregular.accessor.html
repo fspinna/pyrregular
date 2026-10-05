@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyrregular.accessor &mdash; pyrregular  documentation</title>
+  <title>pyrregular.accessor &mdash; Pyrregular</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
@@ -55,6 +55,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.backend.html">pyrregular.backend</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.conversion_utils.html">pyrregular.conversion_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.data_utils.html">pyrregular.data_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyrregular.dataset_card.html">pyrregular.dataset_card</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.datasets.html">pyrregular.datasets</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.describe.html">pyrregular.describe</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyrregular.dev.html">pyrregular.dev</a></li>
@@ -133,7 +134,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pyrregular.accessor.IrregularAccessor.to_awkward">
 <span class="sig-name descname"><span class="pre">to_awkward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reset_time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concatenate_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/accessor.html#IrregularAccessor.to_awkward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.accessor.IrregularAccessor.to_awkward" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">to_list</span></code> as awkward arrays (needs <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">awkward</span></code>).</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyrregular.accessor.IrregularAccessor.to_dense">
@@ -148,7 +150,13 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pyrregular.accessor.IrregularAccessor.to_list">
 <span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reset_time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concatenate_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyrregular/accessor.html#IrregularAccessor.to_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrregular.accessor.IrregularAccessor.to_list" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Return X and T as nested lists, X[i][j] being signal j of series i.</p>
+<p>dropna=True removes the padding. With ts_level=True each series has one
+timeline, T[i][0]: the timestamps where at least one signal has a value;
+X[i][j] keeps a NaN where signal j has no value at one of them, so
+X[i][j][k] is observed at T[i][0][k]. With ts_level=False each signal
+has its own timeline, T[i][j], and X[i][j] has no NaNs.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyrregular.accessor.IrregularAccessor.to_long">

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyrregular.accessor &mdash; pyrregular  documentation</title>
+  <title>pyrregular.accessor &mdash; Pyrregular</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
@@ -73,9 +73,10 @@
   <h1>Source code for pyrregular.accessor</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sparse</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.conversion_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_ak_dropnan</span><span class="p">,</span> <span class="n">_reset_time_index</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.conversion_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_reset_time_index</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyrregular.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_to_file</span>
 
 
@@ -91,9 +92,28 @@
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_da</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">out</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">out</span>
-        <span class="c1"># keep only the timestamps where the selection has at least one value</span>
+        <span class="c1"># keep only the timestamps where the selection has at least one value,</span>
+        <span class="c1"># renumbering the time coordinates (sparse fancy indexing is slow)</span>
         <span class="n">time_idx</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">dims</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">"time_id"</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time_id</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">time_idx</span><span class="p">]))</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">coords</span>
+        <span class="n">times</span><span class="p">,</span> <span class="n">new_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">time_idx</span><span class="p">],</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">times</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="n">out</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">out</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">coords</span><span class="p">[</span><span class="n">time_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_time</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">shape</span><span class="p">[</span><span class="n">time_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">times</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">COO</span><span class="p">(</span>
+            <span class="n">coords</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fill_value</span>
+        <span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time_id</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">times</span><span class="o">.</span><span class="n">size</span><span class="p">))</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="n">name</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time_id</span><span class="o">=</span><span class="n">times</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s2">"time_id"</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">dims</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="IrregularAccessor.get_task">
 <a class="viewcode-back" href="../../api/_autosummary/pyrregular.accessor.html#pyrregular.accessor.IrregularAccessor.get_task">[docs]</a>
@@ -230,21 +250,21 @@
         <span class="n">concatenate_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">dropna</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">awkward</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ak</span>
+<span class="w">        </span><span class="sd">"""Return ``to_list`` as awkward arrays (needs ``pip install awkward``)."""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">awkward</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ak</span>
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">"to_awkward needs awkward: pip install awkward"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
-        <span class="n">X</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dense</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_list</span><span class="p">(</span>
             <span class="n">reset_time_index</span><span class="o">=</span><span class="n">reset_time_index</span><span class="p">,</span>
             <span class="n">ts_level</span><span class="o">=</span><span class="n">ts_level</span><span class="p">,</span>
             <span class="n">index_scale</span><span class="o">=</span><span class="n">index_scale</span><span class="p">,</span>
             <span class="n">absolute_time</span><span class="o">=</span><span class="n">absolute_time</span><span class="p">,</span>
             <span class="n">concatenate_time</span><span class="o">=</span><span class="n">concatenate_time</span><span class="p">,</span>
+            <span class="n">dropna</span><span class="o">=</span><span class="n">dropna</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">ak</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">T</span> <span class="o">=</span> <span class="n">ak</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">dropna</span><span class="p">:</span>
-            <span class="n">X</span> <span class="o">=</span> <span class="n">_ak_dropnan</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-            <span class="n">T</span> <span class="o">=</span> <span class="n">_ak_dropnan</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">T</span></div>
+        <span class="k">return</span> <span class="n">ak</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">ak</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">T</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="IrregularAccessor.to_list">
@@ -258,15 +278,38 @@
         <span class="n">concatenate_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">dropna</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_awkward</span><span class="p">(</span>
+<span class="w">        </span><span class="sd">"""Return X and T as nested lists, X[i][j] being signal j of series i.</span>
+
+<span class="sd">        dropna=True removes the padding. With ts_level=True each series has one</span>
+<span class="sd">        timeline, T[i][0]: the timestamps where at least one signal has a value;</span>
+<span class="sd">        X[i][j] keeps a NaN where signal j has no value at one of them, so</span>
+<span class="sd">        X[i][j][k] is observed at T[i][0][k]. With ts_level=False each signal</span>
+<span class="sd">        has its own timeline, T[i][j], and X[i][j] has no NaNs.</span>
+<span class="sd">        """</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dense</span><span class="p">(</span>
             <span class="n">reset_time_index</span><span class="o">=</span><span class="n">reset_time_index</span><span class="p">,</span>
             <span class="n">ts_level</span><span class="o">=</span><span class="n">ts_level</span><span class="p">,</span>
             <span class="n">index_scale</span><span class="o">=</span><span class="n">index_scale</span><span class="p">,</span>
             <span class="n">absolute_time</span><span class="o">=</span><span class="n">absolute_time</span><span class="p">,</span>
             <span class="n">concatenate_time</span><span class="o">=</span><span class="n">concatenate_time</span><span class="p">,</span>
-            <span class="n">dropna</span><span class="o">=</span><span class="n">dropna</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span> <span class="n">T</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dropna</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">T</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>  <span class="c1"># reset_time_index=False: one time axis for all series</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),)</span> <span class="o">+</span> <span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">X_out</span><span class="p">,</span> <span class="n">T_out</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">ts_level</span><span class="p">:</span>
+                <span class="n">keep</span> <span class="o">=</span> <span class="o">~</span><span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">X_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="n">keep</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                <span class="n">T_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">[:,</span> <span class="n">keep</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">X_out</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">row</span><span class="p">)]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># one time axis shared by the signals</span>
+                    <span class="n">T_out</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">row</span><span class="p">)]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">T_out</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="o">~</span><span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">row</span><span class="p">)]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">t</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">X_out</span><span class="p">,</span> <span class="n">T_out</span></div>
 
 
 <div class="viewcode-block" id="IrregularAccessor.to_long">

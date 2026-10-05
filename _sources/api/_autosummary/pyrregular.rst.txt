@@ -14,6 +14,7 @@
    backend
    conversion_utils
    data_utils
+   dataset_card
    datasets
    describe
    dev
