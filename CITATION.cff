@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use pyrregular, please cite the paper below."
+title: "pyrregular: irregular time series datasets and benchmarks"
+type: software
+authors:
+  - given-names: Francesco
+    family-names: Spinnato
+    orcid: "https://orcid.org/0000-0002-3203-6716"
+  - given-names: Cristiano
+    family-names: Landi
+    orcid: "https://orcid.org/0000-0003-4907-9728"
+repository-code: "https://github.com/fspinna/pyrregular"
+url: "https://fspinna.github.io/pyrregular/"
+keywords:
+  - irregular time series
+  - irregularly sampled time series
+  - time series classification
+  - datasets
+  - benchmark
+preferred-citation:
+  type: conference-paper
+  title: "PYRREGULAR: A Unified Framework for Irregular Time Series, with Classification Benchmarks"
+  authors:
+    - given-names: Francesco
+      family-names: Spinnato
+      orcid: "https://orcid.org/0000-0002-3203-6716"
+    - given-names: Cristiano
+      family-names: Landi
+      orcid: "https://orcid.org/0000-0003-4907-9728"
+  collection-title: "The Fourteenth International Conference on Learning Representations (ICLR 2026)"
+  year: 2026
+  url: "https://openreview.net/forum?id=qetBM8nLkf"
