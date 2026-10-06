@@ -495,3 +495,33 @@ def test_regularity_checks_are_exact_for_subsecond_datetimes(tmp_path):
     check = describe.are_all_signals_sampled_at_constant_intervals
     assert describe.check_regularity(check, da, ts_level=False) == 1.0
     assert describe.check_regularity(check, da, ts_level=True) == 1.0
+
+
+def test_read_csv_datetimes_are_ns_and_to_dense_gives_seconds(tmp_path):
+    rows = [
+        ("a", "s", "2023-01-01 00:00:00", 1.0),
+        ("a", "s", "2023-01-01 01:00:00", 2.0),
+    ]
+    da = read_csv(_write_csv(tmp_path / "t.csv", rows))
+    assert da["time_id"].dtype == np.dtype("datetime64[ns]")
+    _, T = da.irr.to_dense()
+    assert np.diff(T.ravel())[0] == pytest.approx(3600.0)
+
+
+def test_read_csv_epoch_seconds_are_utc(tmp_path, monkeypatch):
+    import time
+
+    if not hasattr(time, "tzset"):
+        pytest.skip("needs time.tzset (Unix)")
+    monkeypatch.setenv("TZ", "Europe/Rome")  # a machine not on UTC
+    time.tzset()
+    try:
+        rows = [("a", "s", 1672531200, 1.0), ("a", "s", 1672534800, 2.0)]
+        da = read_csv(_write_csv(tmp_path / "t.csv", rows))
+    finally:
+        monkeypatch.undo()
+        time.tzset()
+    expected = np.array(
+        ["2023-01-01T00:00", "2023-01-01T01:00"], dtype="datetime64[ns]"
+    )
+    np.testing.assert_array_equal(da["time_id"].values, expected)

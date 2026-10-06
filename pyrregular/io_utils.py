@@ -284,9 +284,10 @@ def read_csv(
     if parsed_dates is not None:
         date = [parsed_dates[d] for d in dims_mapping["time_id"].keys()]
     elif time_index_as_datetime:
-        date = [
-            datetime.fromtimestamp(float(d[0])) for d in dims_mapping["time_id"].keys()
-        ]
+        # epoch seconds as UTC, so the result does not depend on the machine's timezone
+        date = pd.to_datetime(
+            [float(d[0]) for d in dims_mapping["time_id"].keys()], unit="s"
+        )
     else:
         date = [d[0] for d in dims_mapping["time_id"].keys()]
 
@@ -319,6 +320,10 @@ def read_csv(
     )
     xarr["ts_id"] = xarr["ts_id"].astype("str")
     xarr["signal_id"] = xarr["signal_id"].astype("str")
+    if xarr["time_id"].dtype.kind == "M":
+        # one unit everywhere (pandas >= 3 parses to [us]): to_dense's default
+        # index_scale=1e-9 and load_from_file both assume nanoseconds
+        xarr["time_id"] = xarr["time_id"].values.astype("datetime64[ns]")
 
     # Replace None with np.nan
     for coord in xarr.coords:
