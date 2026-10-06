@@ -29,6 +29,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx.ext.mathjax",
+    "sphinx_sitemap",
 ]
 
 autosummary_generate = True
@@ -56,3 +57,8 @@ html_theme = "sphinx_rtd_theme"
 html_title = "Pyrregular"
 html_static_path = ["_static"]
 html_search_language = "en"
+
+# Full URL of the published docs, used for the sitemap and canonical links
+html_baseurl = "https://fspinna.github.io/pyrregular/"
+sitemap_url_scheme = "{link}"
+sitemap_excludes = ["search.html", "genindex.html", "py-modindex.html", "_modules/*"]
