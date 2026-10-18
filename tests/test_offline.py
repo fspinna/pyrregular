@@ -525,3 +525,20 @@ def test_read_csv_epoch_seconds_are_utc(tmp_path, monkeypatch):
         ["2023-01-01T00:00", "2023-01-01T01:00"], dtype="datetime64[ns]"
     )
     np.testing.assert_array_equal(da["time_id"].values, expected)
+
+
+def test_read_csv_missing_static_across_reader_chunks(tmp_path):
+    # the rows of series "a" span several chunks of the CSV reader, each with its
+    # own NaN objects; the series must stay one series and pass the static check
+    rows = [("a", "s", t, 1.0, nan) for t in range(1500)] + [("b", "s", 0, 2.0, "x")]
+    df = pd.DataFrame(
+        rows, columns=["ts_id", "signal_id", "time_id", "value_id", "lab"]
+    )
+    df.to_csv(tmp_path / "t.csv", index=False)
+    da = read_csv(
+        tmp_path / "t.csv",
+        dims={"ts_id": ["lab"], "signal_id": [], "time_id": []},
+        time_index_as_datetime=False,
+    )
+    assert da.shape == (2, 1, 1500)
+    assert da["ts_id"].values.tolist() == ["a", "b"]

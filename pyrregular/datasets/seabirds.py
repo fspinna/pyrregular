@@ -68,15 +68,17 @@ class Seabirds(ReaderInterface):
         return data
 
 
-def read_seabirds(verbose=False):  # TODO: check con francesco
+def read_seabirds(verbose=False):
+    # one series per bird (108 birds, as in the published dataset); the raw `tid`
+    # column is one id per observation, not a trip id
     return read_csv(
         filenames=data_original_folder() / "seabirds/seabirds.csv",
-        ts_id="tid",
+        ts_id="bird",
         time_id="date_time",
         signal_id="variable",
         value_id="value",
         dims={
-            "ts_id": ["bird", "species", "year", "colony2"],
+            "ts_id": ["species", "year", "colony2"],
             "signal_id": [],
             "time_id": [],
         },

@@ -46,9 +46,11 @@ def process_files(file_list, set_name, possible_columns, general_descriptors):
             list(set(list(pivot_no_agg.columns) + possible_columns))
         )
         final_pivoted_df = pivot_no_agg.reindex(columns=desired_columns)
-        final_pivoted_df[general_descriptors] = final_pivoted_df[
-            general_descriptors
-        ].iloc[0]
+        # the general descriptors (first row) apply to every row of the record;
+        # .to_numpy(): pandas >= 3 no longer broadcasts a Series across rows here
+        final_pivoted_df[general_descriptors] = (
+            final_pivoted_df[general_descriptors].iloc[0].to_numpy()
+        )
         final_pivoted_df["set"] = set_name
         processed_dfs = pd.concat([processed_dfs, final_pivoted_df])
     return processed_dfs

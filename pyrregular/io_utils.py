@@ -132,6 +132,16 @@ def _parse_filenames(filenames):
     return filenames
 
 
+def _key(row, columns):
+    """The id tuple of a row. NaN is not equal to itself, and each chunk of the CSV
+    reader creates its own NaN objects: use a single one, so that equal keys compare
+    (and hash) equal instead of splitting an id or failing the static check."""
+    return tuple(
+        np.nan if isinstance(v, float) and v != v else v
+        for v in (row[c] for c in columns)
+    )
+
+
 def _get_metadata(
     filenames: str | list | dict,
     ts_ids: list,
@@ -151,9 +161,9 @@ def _get_metadata(
         disable=not verbose,
         desc="Getting dataset metadata",
     ):
-        dates.add(tuple([row[time_id] for time_id in time_ids]))
-        ids.add(tuple([row[ts_id] for ts_id in ts_ids]))
-        signals.add(tuple([row[signal_id] for signal_id in signal_ids]))
+        dates.add(_key(row, time_ids))
+        ids.add(_key(row, ts_ids))
+        signals.add(_key(row, signal_ids))
         n_records += 1
 
     return dates, ids, signals, n_records
@@ -264,9 +274,9 @@ def read_csv(
         disable=not verbose,
         desc="Reading dataset",
     ):
-        date = tuple([row[id] for id in [time_id] + dims["time_id"]])
-        signal = tuple([row[id] for id in [signal_id] + dims["signal_id"]])
-        id = tuple([row[id] for id in [ts_id] + dims["ts_id"]])
+        date = _key(row, [time_id] + dims["time_id"])
+        signal = _key(row, [signal_id] + dims["signal_id"])
+        id = _key(row, [ts_id] + dims["ts_id"])
         value = row[value_id]
 
         # these should not happen because a nan value should be omitted in the long format but just in case
