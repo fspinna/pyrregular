@@ -150,15 +150,17 @@
 
 <div class="viewcode-block" id="read_seabirds">
 <a class="viewcode-back" href="../../../api/_autosummary/pyrregular.datasets.seabirds.html#pyrregular.datasets.seabirds.read_seabirds">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">read_seabirds</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>  <span class="c1"># TODO: check con francesco</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_seabirds</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="c1"># one series per bird (108 birds, as in the published dataset); the raw `tid`</span>
+    <span class="c1"># column is one id per observation, not a trip id</span>
     <span class="k">return</span> <span class="n">read_csv</span><span class="p">(</span>
         <span class="n">filenames</span><span class="o">=</span><span class="n">data_original_folder</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"seabirds/seabirds.csv"</span><span class="p">,</span>
-        <span class="n">ts_id</span><span class="o">=</span><span class="s2">"tid"</span><span class="p">,</span>
+        <span class="n">ts_id</span><span class="o">=</span><span class="s2">"bird"</span><span class="p">,</span>
         <span class="n">time_id</span><span class="o">=</span><span class="s2">"date_time"</span><span class="p">,</span>
         <span class="n">signal_id</span><span class="o">=</span><span class="s2">"variable"</span><span class="p">,</span>
         <span class="n">value_id</span><span class="o">=</span><span class="s2">"value"</span><span class="p">,</span>
         <span class="n">dims</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">"ts_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"bird"</span><span class="p">,</span> <span class="s2">"species"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">,</span> <span class="s2">"colony2"</span><span class="p">],</span>
+            <span class="s2">"ts_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"species"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">,</span> <span class="s2">"colony2"</span><span class="p">],</span>
             <span class="s2">"signal_id"</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s2">"time_id"</span><span class="p">:</span> <span class="p">[],</span>
         <span class="p">},</span>

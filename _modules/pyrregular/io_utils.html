@@ -215,6 +215,16 @@
     <span class="k">return</span> <span class="n">filenames</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_key</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The id tuple of a row. NaN is not equal to itself, and each chunk of the CSV</span>
+<span class="sd">    reader creates its own NaN objects: use a single one, so that equal keys compare</span>
+<span class="sd">    (and hash) equal instead of splitting an id or failing the static check."""</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span> <span class="o">!=</span> <span class="n">v</span> <span class="k">else</span> <span class="n">v</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_metadata</span><span class="p">(</span>
     <span class="n">filenames</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">ts_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
@@ -234,9 +244,9 @@
         <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">,</span>
         <span class="n">desc</span><span class="o">=</span><span class="s2">"Getting dataset metadata"</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="n">dates</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="n">time_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">time_id</span> <span class="ow">in</span> <span class="n">time_ids</span><span class="p">]))</span>
-        <span class="n">ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="n">ts_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">ts_id</span> <span class="ow">in</span> <span class="n">ts_ids</span><span class="p">]))</span>
-        <span class="n">signals</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="n">signal_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">signal_id</span> <span class="ow">in</span> <span class="n">signal_ids</span><span class="p">]))</span>
+        <span class="n">dates</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_key</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">time_ids</span><span class="p">))</span>
+        <span class="n">ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_key</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ts_ids</span><span class="p">))</span>
+        <span class="n">signals</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_key</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">signal_ids</span><span class="p">))</span>
         <span class="n">n_records</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="k">return</span> <span class="n">dates</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">signals</span><span class="p">,</span> <span class="n">n_records</span>
@@ -349,9 +359,9 @@
         <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">verbose</span><span class="p">,</span>
         <span class="n">desc</span><span class="o">=</span><span class="s2">"Reading dataset"</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="n">date</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">time_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">]])</span>
-        <span class="n">signal</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">signal_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">"signal_id"</span><span class="p">]])</span>
-        <span class="nb">id</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ts_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">"ts_id"</span><span class="p">]])</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">_key</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">[</span><span class="n">time_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">])</span>
+        <span class="n">signal</span> <span class="o">=</span> <span class="n">_key</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">[</span><span class="n">signal_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">"signal_id"</span><span class="p">])</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">_key</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">[</span><span class="n">ts_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">dims</span><span class="p">[</span><span class="s2">"ts_id"</span><span class="p">])</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">value_id</span><span class="p">]</span>
 
         <span class="c1"># these should not happen because a nan value should be omitted in the long format but just in case</span>
@@ -369,9 +379,10 @@
     <span class="k">if</span> <span class="n">parsed_dates</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">date</span> <span class="o">=</span> <span class="p">[</span><span class="n">parsed_dates</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
     <span class="k">elif</span> <span class="n">time_index_as_datetime</span><span class="p">:</span>
-        <span class="n">date</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-        <span class="p">]</span>
+        <span class="c1"># epoch seconds as UTC, so the result does not depend on the machine's timezone</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+            <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()],</span> <span class="n">unit</span><span class="o">=</span><span class="s2">"s"</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">date</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dims_mapping</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
 
@@ -404,6 +415,10 @@
     <span class="p">)</span>
     <span class="n">xarr</span><span class="p">[</span><span class="s2">"ts_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarr</span><span class="p">[</span><span class="s2">"ts_id"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"str"</span><span class="p">)</span>
     <span class="n">xarr</span><span class="p">[</span><span class="s2">"signal_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarr</span><span class="p">[</span><span class="s2">"signal_id"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"str"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xarr</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">"M"</span><span class="p">:</span>
+        <span class="c1"># one unit everywhere (pandas &gt;= 3 parses to [us]): to_dense's default</span>
+        <span class="c1"># index_scale=1e-9 and load_from_file both assume nanoseconds</span>
+        <span class="n">xarr</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarr</span><span class="p">[</span><span class="s2">"time_id"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"datetime64[ns]"</span><span class="p">)</span>
 
     <span class="c1"># Replace None with np.nan</span>
     <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">xarr</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>

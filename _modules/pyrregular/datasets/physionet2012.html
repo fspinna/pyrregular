@@ -131,9 +131,11 @@
             <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pivot_no_agg</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="n">possible_columns</span><span class="p">))</span>
         <span class="p">)</span>
         <span class="n">final_pivoted_df</span> <span class="o">=</span> <span class="n">pivot_no_agg</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">desired_columns</span><span class="p">)</span>
-        <span class="n">final_pivoted_df</span><span class="p">[</span><span class="n">general_descriptors</span><span class="p">]</span> <span class="o">=</span> <span class="n">final_pivoted_df</span><span class="p">[</span>
-            <span class="n">general_descriptors</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># the general descriptors (first row) apply to every row of the record;</span>
+        <span class="c1"># .to_numpy(): pandas &gt;= 3 no longer broadcasts a Series across rows here</span>
+        <span class="n">final_pivoted_df</span><span class="p">[</span><span class="n">general_descriptors</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">final_pivoted_df</span><span class="p">[</span><span class="n">general_descriptors</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="p">)</span>
         <span class="n">final_pivoted_df</span><span class="p">[</span><span class="s2">"set"</span><span class="p">]</span> <span class="o">=</span> <span class="n">set_name</span>
         <span class="n">processed_dfs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">processed_dfs</span><span class="p">,</span> <span class="n">final_pivoted_df</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">processed_dfs</span></div>
